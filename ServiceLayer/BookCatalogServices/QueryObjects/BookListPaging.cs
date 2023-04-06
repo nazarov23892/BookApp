@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Entities;
 
-namespace ServiceLayer.BookServices.QueryObjects
+namespace ServiceLayer.BookCatalogServices.QueryObjects
 {
     public static class BookListPaging
     {

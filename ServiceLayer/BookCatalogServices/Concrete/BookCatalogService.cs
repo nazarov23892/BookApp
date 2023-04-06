@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.DataContexts;
-using ServiceLayer.BookServices.QueryObjects;
+using ServiceLayer.BookCatalogServices.QueryObjects;
 
-namespace ServiceLayer.BookServices.Concrete
+namespace ServiceLayer.BookCatalogServices.Concrete
 {
     public class BookCatalogService : IBookCatalogService
     {

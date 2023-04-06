@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.BookServices
+namespace ServiceLayer.BookCatalogServices
 {
     public class PageOptionsIn
     {
