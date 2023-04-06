@@ -12,29 +12,176 @@ namespace DataLayer.Data
     {
         public static void RunSeed(AppIdentityDbContext efDbContext)
         {
-            const int numBooks = 64;
-
             SeedBooks(
                 efDbContext: efDbContext,
-                books: GetBooks(num: numBooks));
+                books: GetBooks());
         }
 
-        private static IEnumerable<Book> GetBooks(int num)
+        private static IEnumerable<Book> GetBooks()
         {
             List<Book> books = new List<Book>();
 
-            decimal itemPrice = 10.0M;
-            for (int i = 0; i < num; i++)
+            var martin_r = new Author
             {
-                books.Add(new Book
-                {
-                    BookId = default(Guid),
-                    Title = $"book-title={1 + i}",
-                    Price = itemPrice
-                });
-                itemPrice += (i / 10M);
-            }
+                Lastname = "Martin",
+                Firstname = "Robert"
+            };
+            var evans_e = new Author
+            {
+                Lastname = "Evans",
+                Firstname = "Eric"
+            };
+            var fowler_m = new Author
+            {
+                Lastname = "Fowler",
+                Firstname = "Martin"
+            };
+            var troelsen_a = new Author
+            {
+                Lastname = "Troelsen",
+                Firstname = "Andrew"
+            };
+            var freeman_a = new Author
+            {
+                Lastname = "Freeman",
+                Firstname = "Adam"
+            };
+
+            books.Add(CreateBook(
+                title: "ASP.NET Core in Action, Second Edition",
+                price: 51.99M,
+                authors: new[] { 
+                    new Author
+                    {
+                        Firstname = "Andrew",
+                        Lastname = "Lock"
+                    },
+                    new Author
+                    {
+                        Firstname = "Julie",
+                        Lastname = "Brierley"
+                    }
+                }));
+
+            books.Add(CreateBook(
+                title: "Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed.",
+                price: 43.49M,
+                authors: new[] {
+                    freeman_a
+                }));
+
+            books.Add(CreateBook(
+               title: "ASP.NET Core 6 and Angular: Full-stack web development with ASP.NET 6 and Angular 13, 5th Edition",
+               price: 38.99M,
+               authors: new[] {
+                    new Author
+                    {
+                        Firstname = "Valerio", 
+                        Lastname = "De Sanctis"
+                    }
+               }));
+            books.Add(CreateBook(
+               title: "Apps and Services with .NET 7: Build practical projects with Blazor, .NET MAUI, gRPC, GraphQL, and other enterprise technologies",
+               price: 48.99M,
+               authors: new[] {
+                    new Author
+                    {
+                        Firstname = "Mark",
+                        Lastname = "Price"
+                    }
+               }));
+            books.Add(CreateBook(
+               title: "Pro C# 10 with .NET 6: Foundational Principles and Practices in Programming 11st ed. Edition",
+               price: 36.49M,
+               authors: new[] {
+                    troelsen_a,
+                    new Author
+                    {
+                        Firstname = "Phil",
+                        Lastname = "Japikse"
+                    }
+               }));
+
+            books.Add(CreateBook(
+               title: "An Atypical ASP.NET Core 6 Design Patterns Guide: A SOLID adventure into architectural principles and design patterns using .NET 6 and C# 10, 2nd Edition 2nd",
+               price: 32.49M,
+               authors: new[] {
+                    new Author
+                    {
+                        Firstname = "Carl-Hugo",
+                        Lastname = "Marcotte"
+                    },
+                    new Author
+                    {
+                        Firstname = "Abdelhamid",
+                        Lastname = "Zebdi"
+                    }
+               }));
+            books.Add(CreateBook(
+               title: "ASP.NET Core Razor Pages in Action",
+               price: 44.99M,
+               authors: new[] {
+                    new Author
+                    {
+                        Firstname = "Mike",
+                        Lastname = "Brind"
+                    }
+               }));
+
+            books.Add(CreateBook(
+               title: "Patterns of Enterprise Application Architecture 1st Edition",
+               price: 52.39M,
+               authors: new[] {
+                    fowler_m
+               }));
+
+            books.Add(CreateBook(
+               title: "Refactoring: Improving the Design of Existing Code 2nd Edition",
+               price: 45.99M,
+               authors: new[] {
+                    fowler_m
+               }));
+
+            books.Add(CreateBook(
+              title: "Clean Code: A Handbook of Agile Software Craftsmanship 1st Edition",
+              price: 42.29M,
+              authors: new[] {
+                    martin_r
+              }));
+
+            books.Add(CreateBook(
+              title: "Clean Architecture: A Craftsman's Guide to Software Structure and Design 1st Edition",
+              price: 64.99M,
+              authors: new[] {
+                    martin_r
+              }));
+
+            books.Add(CreateBook(
+              title: "Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition",
+              price: 62.49M,
+              authors: new[] {
+                    evans_e
+              }));
+
             return books;
+        }
+
+        private static Book CreateBook(
+            string title,
+            decimal price,
+            IEnumerable<Author> authors)
+        {
+            return new Book
+            {
+                Title = title,
+                Price = price,
+                AuthorsLink = authors.Select((a, index) => new BookAuthor
+                {
+                    Order = index,
+                    Author = a
+                })
+                .ToList()
+            };
         }
 
         private static void SeedBooks(

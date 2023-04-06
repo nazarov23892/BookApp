@@ -3,14 +3,12 @@
 
 <table>
     <tr>
-        <th>book-id</th>
         <th>book-title</th>
         <th>book-price</th>
     </tr>
     @foreach (var book in Model.Books ?? Enumerable.Empty<DataLayer.Entities.Book>())
     {
         <tr>
-            <td>@book.BookId</td>
             <td>@book.Title</td>
             <td>@book.Price</td>
         </tr>
@@ -25,7 +23,8 @@
         }
         <a asp-action="Index"
            asp-controller="Home"
-           asp-route-page="@i">
+           asp-route-page="@i"
+           asp-route-pageSize="@Model.PageOptionsOut.PageSize">
             @i
         </a>
     }
