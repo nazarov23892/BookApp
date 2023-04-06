@@ -4,12 +4,17 @@
 <table>
     <tr>
         <th>book-title</th>
+        <th>book-authors</th>
         <th>book-price</th>
     </tr>
-    @foreach (var book in Model.Books ?? Enumerable.Empty<DataLayer.Entities.Book>())
+    @foreach (var book in Model.Books ?? Enumerable.Empty<BookCatalogDto>())
     {
+        string authors = string.Join(
+            separator: ", ",
+            values: book.Authors.Select(a => $"{a.LastName} {a.FirstName.ElementAt(0)}."));
         <tr>
             <td>@book.Title</td>
+            <td>@authors</td>
             <td>@book.Price</td>
         </tr>
     }

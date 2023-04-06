@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using DataLayer.DataContexts;
 using ServiceLayer.BookCatalogServices.QueryObjects;
 
@@ -26,7 +27,9 @@ namespace ServiceLayer.BookCatalogServices.Concrete
                 + (booksNum % pageSize > 0 ? 1 : 0);
 
             var books = efDbContext.Books
-                .OrderBy(b=>b.BookId)
+                .AsNoTracking()
+                .MapToBookCatalogDto()
+                .OrderBy(b=>b.Title)
                 .Paging(
                     pageNumZeroStart: pageOptionsIn.Page - 1,
                     pageSize: pageOptionsIn.PageSize)

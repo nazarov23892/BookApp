@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.Entities;
 
 namespace ServiceLayer.BookCatalogServices.QueryObjects
 {
     public static class BookListPaging
     {
-        public static IQueryable<Book> Paging(
-            this IQueryable<Book> query, 
+        public static IQueryable<BookCatalogDto> Paging(
+            this IQueryable<BookCatalogDto> query, 
             int pageNumZeroStart,
             int pageSize)
         {

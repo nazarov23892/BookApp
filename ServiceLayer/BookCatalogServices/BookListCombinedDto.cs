@@ -10,6 +10,6 @@ namespace ServiceLayer.BookCatalogServices
     public class BookListCombinedDto
     {
         public PageOptionsOut PageOptionsOut { get; set; }
-        public IEnumerable<Book> Books { get; set; }
+        public IEnumerable<BookCatalogDto> Books { get; set; }
     }
 }
