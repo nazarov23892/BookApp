@@ -12,6 +12,7 @@ using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
+using DataLayer.Data;
 
 namespace WebApplication
 {
@@ -47,6 +48,15 @@ namespace WebApplication
                 app.UseDeveloperExceptionPage();
             }
 
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                AppIdentityDbContext efDbContext = serviceProvider
+                    .GetRequiredService<AppIdentityDbContext>();
+
+                SeedData.RunSeed(efDbContext: efDbContext);
+            }
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -59,6 +69,8 @@ namespace WebApplication
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }
