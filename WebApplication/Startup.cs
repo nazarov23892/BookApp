@@ -61,6 +61,7 @@ namespace WebApplication
                 SeedData.RunSeed(efDbContext: efDbContext);
             }
 
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

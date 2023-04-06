@@ -1,11 +1,13 @@
 ﻿
 @model BookListCombinedDto
 
-<table>
+<h2>Catalog</h2>
+
+<table class="table">
     <tr>
-        <th>book-title</th>
-        <th>book-authors</th>
-        <th>book-price</th>
+        <th>Ttitle</th>
+        <th>Authors</th>
+        <th>Price</th>
     </tr>
     @foreach (var book in Model.Books ?? Enumerable.Empty<BookCatalogDto>())
     {
@@ -27,9 +29,9 @@
             <text>|</text>
         }
         <a asp-action="Index"
-           asp-controller="Home"
-           asp-route-page="@i"
-           asp-route-pageSize="@Model.PageOptionsOut.PageSize">
+            asp-controller="Home"
+            asp-route-page="@i"
+            asp-route-pageSize="@Model.PageOptionsOut.PageSize">
             @i
         </a>
     }
