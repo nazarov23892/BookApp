@@ -41,7 +41,7 @@ namespace DataLayer.Data
             AppIdentityDbContext efDbContext,
             IEnumerable<Book> books)
         {
-            if (efDbContext.Books.SingleOrDefault() != null)
+            if (efDbContext.Books.Any())
             {
                 return;
             }

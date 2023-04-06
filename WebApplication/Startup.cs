@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using DataLayer.Data;
+using ServiceLayer.BookServices;
+using ServiceLayer.BookServices.Concrete;
 
 namespace WebApplication
 {
@@ -36,6 +38,8 @@ namespace WebApplication
             });
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
+
+            services.AddTransient<IBookCatalogService, BookCatalogService>();
 
             services.AddMvc();
         }

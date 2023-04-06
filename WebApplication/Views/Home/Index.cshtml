@@ -1,4 +1,18 @@
 ﻿
-<p>
-    Home-Index
-</p>
+@model IEnumerable<DataLayer.Entities.Book>
+
+<table>
+    <tr>
+        <th>book-id</th>
+        <th>book-title</th>
+        <th>book-price</th>
+    </tr>
+    @foreach (var book in Model ?? Enumerable.Empty<DataLayer.Entities.Book>())
+    {
+        <tr>
+            <td>@book.BookId</td>
+            <td>@book.Title</td>
+            <td>@book.Price</td>
+        </tr>
+    }
+</table>
