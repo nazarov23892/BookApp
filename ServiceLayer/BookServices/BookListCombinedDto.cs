@@ -7,8 +7,9 @@ using DataLayer.Entities;
 
 namespace ServiceLayer.BookServices
 {
-    public interface IBookCatalogService
+    public class BookListCombinedDto
     {
-        public BookListCombinedDto GetList(PageOptionsIn pageOptionsIn);
+        public PageOptionsOut PageOptionsOut { get; set; }
+        public IEnumerable<Book> Books { get; set; }
     }
 }

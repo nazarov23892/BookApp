@@ -16,10 +16,10 @@ namespace WebApplication.Controllers
             this.bookService = bookService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(PageOptionsIn pageOptions)
         {
-            var books = bookService.GetList();
-            return View(model: books);
+            var bookListDto = bookService.GetList(pageOptionsIn: pageOptions);
+            return View(model: bookListDto);
         }
     }
 }

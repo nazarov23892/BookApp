@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<DataLayer.Entities.Book>
+@model BookListCombinedDto
 
 <table>
     <tr>
@@ -7,7 +7,7 @@
         <th>book-title</th>
         <th>book-price</th>
     </tr>
-    @foreach (var book in Model ?? Enumerable.Empty<DataLayer.Entities.Book>())
+    @foreach (var book in Model.Books ?? Enumerable.Empty<DataLayer.Entities.Book>())
     {
         <tr>
             <td>@book.BookId</td>
@@ -16,3 +16,17 @@
         </tr>
     }
 </table>
+<div>
+    @for (int i = 1; i <= Model.PageOptionsOut.PageCount; i++)
+    {
+        if (i > 1)
+        {
+            <text>|</text>
+        }
+        <a asp-action="Index"
+           asp-controller="Home"
+           asp-route-page="@i">
+            @i
+        </a>
+    }
+</div>
