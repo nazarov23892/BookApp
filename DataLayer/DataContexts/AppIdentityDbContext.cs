@@ -9,12 +9,13 @@ using DataLayer.Entities;
 
 namespace DataLayer.DataContexts
 {
-    public class AppIdentityDbContext: IdentityDbContext<AppUser>
+    public class AppIdentityDbContext : IdentityDbContext<AppUser>
     {
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
             : base(options)
         {
-
         }
+
+        public DbSet<Book> Books { get; set; }
     }
 }
