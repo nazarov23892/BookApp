@@ -21,5 +21,11 @@ namespace WebApplication.Controllers
             var bookListDto = bookService.GetList(pageOptionsIn: pageOptions);
             return View(model: bookListDto);
         }
+
+        public ViewResult Details(Guid id)
+        {
+            var bookDetailsDto = bookService.GetItem(bookId: id);
+            return View(model: bookDetailsDto);
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace ServiceLayer.BookCatalogServices
     public interface IBookCatalogService
     {
         public BookListCombinedDto GetList(PageOptionsIn pageOptionsIn);
+
+        public BookDetailsDto GetItem(Guid bookId);
     }
 }

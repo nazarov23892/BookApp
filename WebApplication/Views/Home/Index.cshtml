@@ -15,7 +15,14 @@
             separator: ", ",
             values: book.Authors.Select(a => $"{a.LastName} {a.FirstName.ElementAt(0)}."));
         <tr>
-            <td>@book.Title</td>
+            <td>
+                <a asp-action="Details"
+                   asp-controller="Home"
+                   asp-route-id="@book.BookId"
+                   class="text-dark">
+                    @book.Title
+                </a>
+            </td>
             <td>@authors</td>
             <td>@book.Price</td>
         </tr>

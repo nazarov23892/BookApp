@@ -19,6 +19,15 @@ namespace ServiceLayer.BookCatalogServices.Concrete
             this.efDbContext = efDbContext;
         }
 
+        public BookDetailsDto GetItem(Guid bookId)
+        {
+            var book = efDbContext.Books
+                .AsNoTracking()
+                .MapToBookDetailsDto()
+                .SingleOrDefault(b => b.BookId == bookId);
+            return book;
+        }
+
         public BookListCombinedDto GetList(PageOptionsIn pageOptionsIn)
         {
             int booksNum = efDbContext.Books.Count();
