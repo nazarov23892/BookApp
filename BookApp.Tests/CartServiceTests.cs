@@ -452,6 +452,53 @@ namespace BookApp.Tests
                 Times.Exactly(1));
         }
 
+        [Fact]
+        public void Test_SaveWhenClear()
+        {
+            var book1 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var book2 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                Title = "book-2",
+                Price = 2.2M
+            };
+
+            CartLine[] tmpLines = null;
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read())
+                .Returns(
+                () =>
+                {
+                    return new[]
+                    {
+                        new CartLine { Book = book1, Quantity = 5 },
+                        new CartLine { Book = book2, Quantity = 10 }
+                    };
+                });
+            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
+                .Callback<IEnumerable<CartLine>>(x =>
+                {
+                    tmpLines = x.ToArray();
+                });
+
+            SessionCartService target = new SessionCartService(saver: mock.Object);
+
+            // actions
+
+            target.Clear();
+
+            // asserts
+
+            Assert.False(tmpLines.Any());
+            mock.Verify(x => x.Write(
+                It.IsAny<IEnumerable<CartLine>>()),
+                Times.Exactly(1));
+        }
 
         private CartLine[] CopyArray(CartLine[] sourceArr)
         {
