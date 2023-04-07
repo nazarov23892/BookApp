@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Identity;
 using DataLayer.Data;
 using ServiceLayer.BookCatalogServices;
 using ServiceLayer.BookCatalogServices.Concrete;
+using ServiceLayer.CartServices;
+using ServiceLayer.CartServices.Concrete;
+using WebApplication.Infrastructure;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace WebApplication
 {
@@ -39,6 +43,10 @@ namespace WebApplication
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
 
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddTransient<ICartLinesSessionSaver, CartLinesSessionSaver>();
+            services.AddTransient<ICartService, SessionCartService>();
             services.AddTransient<IBookCatalogService, BookCatalogService>();
 
             services.AddMvc();
@@ -62,6 +70,7 @@ namespace WebApplication
             }
 
             app.UseStaticFiles();
+            app.UseSession();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -1,0 +1,19 @@
+﻿
+@using ServiceLayer.CartServices
+@model IEnumerable<CartLine>
+
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+    @foreach (var line in Model ?? Enumerable.Empty<CartLine>())
+    {
+        <tr>
+            <td>@line.Book.Title</td>
+            <td>@line.Book.Price</td>
+            <td>@line.Quantity</td>
+        </tr>
+    }
+</table>
