@@ -1,18 +1,23 @@
 ﻿
 @model BookDetailsDto
 
-@{ ViewData["Title"] = "Details"; }
+@{ 
+    ViewData["Title"] = "Details";
+    string authors = String.Join(
+        separator: ", ",
+        values: Model.Authors
+            .Select(a => $"{a.LastName} {a.FirstName}"));
+}
 
-<h2>Details</h2>
 <div>
-    <h4>Book</h4>
+    <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model=>model.Authors)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @authors
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Price)
@@ -21,4 +26,10 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
+    <div>
+        <a asp-action="Index"
+           asp-controller="Home"
+           class="btn btn-secondary"
+           >back to catalog</a>
+    </div>
 </div>
