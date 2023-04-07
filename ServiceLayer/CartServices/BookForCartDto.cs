@@ -8,7 +8,7 @@ namespace ServiceLayer.CartServices
 {
     public class BookForCartDto
     {
-        public int BookId { get; set; }
+        public Guid BookId { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
     }
