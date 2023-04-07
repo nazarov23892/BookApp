@@ -275,5 +275,196 @@ namespace BookApp.Tests
 
             Assert.False(target.Lines.Any());
         }
+
+        [Fact]
+        public void Test_SaveWhenAdd()
+        {
+            var book1 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var book2 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                Title = "book-2",
+                Price = 2.2M
+            };
+            var book3 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000003"),
+                Title = "book-3",
+                Price = 3.3M
+            };
+            var line1 = new CartLine
+            {
+                Book = book1,
+                Quantity = 5
+            };
+
+            CartLine[] tmpLines = null;
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read())
+                .Returns(
+                () =>
+                {
+                    return new[] { line1 };
+                });
+            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
+                .Callback<IEnumerable<CartLine>>(x =>
+                {
+                    tmpLines = x.ToArray();
+                });
+
+            SessionCartService target = new SessionCartService(saver: mock.Object);
+
+            // actions
+
+            target.Add(book3);
+            CartLine[] linesAfterAddBook3 = CopyArray(tmpLines);
+
+            target.Add(book2);
+            CartLine[] linesAfterAddBook2 = CopyArray(tmpLines);
+
+            // asserts
+
+            Assert.Equal(2, linesAfterAddBook3.Length);
+            Assert.Equal(book1.BookId, linesAfterAddBook3[0].Book.BookId);
+            Assert.Equal(book3.BookId, linesAfterAddBook3[1].Book.BookId);
+
+            Assert.Equal(3, linesAfterAddBook2.Length);
+            Assert.Equal(book1.BookId, linesAfterAddBook2[0].Book.BookId);
+            Assert.Equal(book3.BookId, linesAfterAddBook2[1].Book.BookId);
+            Assert.Equal(book2.BookId, linesAfterAddBook2[2].Book.BookId);
+
+            mock.Verify(x => x.Write(
+                It.IsAny<IEnumerable<CartLine>>()), 
+                Times.Exactly(2));
+        }
+
+        [Fact]
+        public void Test_SaveWhenSetQuantity()
+        {
+            var book1 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var book2 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                Title = "book-2",
+                Price = 2.2M
+            };
+
+            CartLine[] tmpLines = null;
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read())
+                .Returns(
+                () =>
+                {
+                    return new[] 
+                    {  
+                        new CartLine { Book = book1, Quantity = 5 },
+                        new CartLine { Book = book2, Quantity = 10 }
+                    };
+                });
+            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
+                .Callback<IEnumerable<CartLine>>(x =>
+                {
+                    tmpLines = x.ToArray();
+                });
+
+            SessionCartService target = new SessionCartService(saver: mock.Object);
+
+            // actions
+            
+            target.SetQuantity(
+                book: book2,
+                quantity: 8);
+
+            CartLine[] linesAfterSetQuantity = CopyArray(tmpLines);
+
+            // asserts
+
+            Assert.Equal(2, linesAfterSetQuantity.Length);
+            Assert.Equal(book1.BookId, linesAfterSetQuantity[0].Book.BookId);
+            Assert.Equal(book2.BookId, linesAfterSetQuantity[1].Book.BookId);
+            Assert.Equal(5, linesAfterSetQuantity[0].Quantity);
+            Assert.Equal(8, linesAfterSetQuantity[1].Quantity);
+
+            mock.Verify(x => x.Write(
+                It.IsAny<IEnumerable<CartLine>>()),
+                Times.Exactly(1));
+        }
+
+        [Fact]
+        public void Test_SaveWhenRemove()
+        {
+            var book1 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var book2 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                Title = "book-2",
+                Price = 2.2M
+            };
+
+            CartLine[] tmpLines = null;
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read())
+                .Returns(
+                () =>
+                {
+                    return new[]
+                    {
+                        new CartLine { Book = book1, Quantity = 5 },
+                        new CartLine { Book = book2, Quantity = 10 }
+                    };
+                });
+            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
+                .Callback<IEnumerable<CartLine>>(x =>
+                {
+                    tmpLines = x.ToArray();
+                });
+
+            SessionCartService target = new SessionCartService(saver: mock.Object);
+
+            // actions
+
+            target.Remove(book1);
+
+            CartLine[] linesAfterRemove = CopyArray(tmpLines);
+
+            // asserts
+
+            Assert.Single(linesAfterRemove);
+            Assert.Equal(book2.BookId, linesAfterRemove[0].Book.BookId);
+
+            mock.Verify(x => x.Write(
+                It.IsAny<IEnumerable<CartLine>>()),
+                Times.Exactly(1));
+        }
+
+
+        private CartLine[] CopyArray(CartLine[] sourceArr)
+        {
+            CartLine[] res = new CartLine[sourceArr.Length];
+            for (int i = 0; i < sourceArr.Length; i++)
+            {
+                res[i] = new CartLine
+                {
+                    Book = sourceArr[i].Book,
+                    Quantity = sourceArr[i].Quantity
+                };
+            }
+            return res;
+        }
     }
 }
