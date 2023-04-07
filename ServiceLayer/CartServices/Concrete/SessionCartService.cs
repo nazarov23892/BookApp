@@ -70,6 +70,7 @@ namespace ServiceLayer.CartServices.Concrete
                 return;
             }
             line.Quantity = quantity;
+            Save();
         }
 
         private void Save()
