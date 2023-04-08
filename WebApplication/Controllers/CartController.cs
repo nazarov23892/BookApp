@@ -59,11 +59,18 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Change(Guid id, int quantity)
+        public IActionResult Change(CartLineChangeQuantityDto changesDto)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.EditId = changesDto.BookId;
+                return View(
+                    viewName: "Index",
+                    model: cartService.Lines);
+            }
             cartService.SetQuantity(
-                book: new BookForCartDto { BookId = id },
-                quantity: quantity);
+                book: new BookForCartDto { BookId = changesDto.BookId },
+                quantity: changesDto.Quantity);
 
             return RedirectToAction(
                 actionName: nameof(this.Index),

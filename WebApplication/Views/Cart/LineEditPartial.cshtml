@@ -7,14 +7,14 @@
 }
 
 <form id="edit_form" method="post" asp-action="Change" asp-controller="Cart">
-    <input name="id" value="@Model.Book.BookId" class="input-s" hidden />
+    <input name="BookId" value="@Model.Book.BookId" class="input-s" hidden />
 </form>
 
 <tr>
     <td>@Model.Book.Title</td>
     <td>@Model.Book.Price</td>
     <td>
-        <input form="edit_form" name="quantity" value="@Model.Quantity" class="w-100" />
+        <input form="edit_form" name="Quantity" value="@Model.Quantity" class="w-100" />
     </td>
     <td></td>
     <td>
