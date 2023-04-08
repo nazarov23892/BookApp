@@ -9,10 +9,11 @@
 <div asp-validation-summary="All" class="text-danger"></div>
 <table class="table">
     <tr>
-        <th>Title</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Subtotal</th>
+        <th class="col-md-7">Title</th>
+        <th class="col-md-1">Price</th>
+        <th class="col-md-1">Quantity</th>
+        <th class="col-md-1">Subtotal</th>
+        <th class="col-md-2"></th>
     </tr>
     @{
         decimal total = 0.0M;
