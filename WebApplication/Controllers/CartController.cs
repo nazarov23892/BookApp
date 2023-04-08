@@ -69,7 +69,7 @@ namespace WebApplication.Controllers
                     model: cartService.Lines);
             }
             cartService.SetQuantity(
-                book: new BookForCartDto { BookId = changesDto.BookId },
+                bookId: changesDto.BookId,
                 quantity: changesDto.Quantity);
 
             return RedirectToAction(

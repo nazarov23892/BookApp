@@ -122,10 +122,10 @@ namespace BookApp.Tests
             target.Add(book2);
 
             target.SetQuantity(
-                book: book1,
+                bookId: book1.BookId,
                 quantity: 4);
             target.SetQuantity(
-                book: book2,
+                bookId: book2.BookId,
                 quantity: 9);
 
             CartLine[] lines = target.Lines
@@ -382,7 +382,7 @@ namespace BookApp.Tests
             // actions
             
             target.SetQuantity(
-                book: book2,
+                bookId: book2.BookId,
                 quantity: 8);
 
             CartLine[] linesAfterSetQuantity = CopyArray(tmpLines);

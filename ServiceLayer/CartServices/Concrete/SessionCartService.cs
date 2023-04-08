@@ -55,7 +55,7 @@ namespace ServiceLayer.CartServices.Concrete
             Save();
         }
 
-        public void SetQuantity(BookForCartDto book, int quantity)
+        public void SetQuantity(Guid bookId, int quantity)
         {
             if (quantity <= 0)
             {
@@ -64,7 +64,7 @@ namespace ServiceLayer.CartServices.Concrete
                     message: "cannot be less or equal zero");
             }
             var line = lines
-                .FirstOrDefault(l => l.Book.BookId == book.BookId);
+                .SingleOrDefault(l => l.Book.BookId == bookId);
             if (line == null)
             {
                 return;

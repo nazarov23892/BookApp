@@ -12,7 +12,7 @@ namespace ServiceLayer.CartServices
 
         void Add(BookForCartDto book);
 
-        void SetQuantity(BookForCartDto book, int quantity);
+        void SetQuantity(Guid bookId, int quantity);
 
         void Remove(Guid bookId);
         
