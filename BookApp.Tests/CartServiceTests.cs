@@ -215,15 +215,15 @@ namespace BookApp.Tests
 
             SessionCartService target = new SessionCartService(mock.Object);
 
-            target.Remove(book2);
+            target.Remove(book2.BookId);
             CartLine[] linesAfterRemoveBook2 = target.Lines
                 .ToArray();
 
-            target.Remove(book3);
+            target.Remove(book3.BookId);
             CartLine[] linesAfterRemoveBook3 = target.Lines
                 .ToArray();
 
-            target.Remove(book1);
+            target.Remove(book1.BookId);
             CartLine[] linesAfterRemoveBook1 = target.Lines
                 .ToArray();
 
@@ -438,7 +438,7 @@ namespace BookApp.Tests
 
             // actions
 
-            target.Remove(book1);
+            target.Remove(book1.BookId);
 
             CartLine[] linesAfterRemove = CopyArray(tmpLines);
 

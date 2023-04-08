@@ -43,10 +43,10 @@ namespace ServiceLayer.CartServices.Concrete
             Save();
         }
 
-        public void Remove(BookForCartDto book)
+        public void Remove(Guid bookId)
         {
             var line = lines
-                .FirstOrDefault(l => l.Book.BookId == book.BookId);
+                .FirstOrDefault(l => l.Book.BookId == bookId);
             if (line == null)
             {
                 return;

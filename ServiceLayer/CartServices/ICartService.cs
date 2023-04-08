@@ -14,7 +14,7 @@ namespace ServiceLayer.CartServices
 
         void SetQuantity(BookForCartDto book, int quantity);
 
-        void Remove(BookForCartDto book);
+        void Remove(Guid bookId);
         
         void Clear();
     }
