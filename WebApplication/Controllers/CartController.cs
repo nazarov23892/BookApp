@@ -37,5 +37,15 @@ namespace WebApplication.Controllers
         {
             return View(model: cartService.Lines);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Remove(Guid id)
+        {
+            cartService.Remove(bookId: id);
+            return RedirectToAction(
+                actionName: nameof(this.Index),
+                controllerName: "Cart");
+        }
     }
 }
