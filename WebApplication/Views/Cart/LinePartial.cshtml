@@ -1,0 +1,20 @@
+﻿
+@using ServiceLayer.CartServices
+@model CartLine
+
+@{ 
+    decimal subtotal = Model.Book.Price * Model.Quantity;
+}
+
+<tr>
+    <td>@Model.Book.Title</td>
+    <td>@Model.Book.Price</td>
+    <td>@Model.Quantity</td>
+    <td>@subtotal</td>
+    <td>
+        <form method="post" asp-action="Remove" asp-controller="Cart">
+            <input name="id" value="@Model.Book.BookId" hidden />
+            <button type="submit" class="btn btn-sm btn-danger">remove</button>
+        </form>
+    </td>
+</tr>
