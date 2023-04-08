@@ -48,6 +48,7 @@ namespace WebApplication
             services.AddTransient<ICartLinesSessionSaver, CartLinesSessionSaver>();
             services.AddTransient<ICartService, SessionCartService>();
             services.AddTransient<IBookCatalogService, BookCatalogService>();
+            services.AddTransient<IBookForCartService, BookForCartService>();
 
             services.AddMvc();
         }

@@ -25,6 +25,17 @@
             </td>
             <td>@authors</td>
             <td>@book.Price</td>
+            <td>
+                <form method="post"
+                      asp-action="AddToCart"
+                      asp-controller="Cart">
+                    <input name="id" value="@book.BookId" hidden />
+                    <button type="submit"
+                            class="btn btn-sm btn-primary">
+                        buy
+                    </button>
+                </form>
+            </td>
         </tr>
     }
 </table>

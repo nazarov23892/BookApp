@@ -2,18 +2,36 @@
 @using ServiceLayer.CartServices
 @model IEnumerable<CartLine>
 
-<table>
+<table class="table">
     <tr>
         <th>Title</th>
         <th>Price</th>
         <th>Quantity</th>
+        <th>Subtotal</th>
     </tr>
+    @{ 
+        decimal total = 0.0M;
+    }
     @foreach (var line in Model ?? Enumerable.Empty<CartLine>())
     {
+        decimal subtotal = line.Book.Price * line.Quantity;
+        total += subtotal;
         <tr>
             <td>@line.Book.Title</td>
             <td>@line.Book.Price</td>
             <td>@line.Quantity</td>
+            <td>@subtotal</td>
         </tr>
     }
+    <tr>
+        <th colspan="3">Total</th>
+        <th>@total</th>
+    </tr>
 </table>
+<div>
+    <a asp-action="Index"
+       asp-controller="Home"
+       class="btn btn-secondary">
+        back to catalog
+    </a>
+</div>
