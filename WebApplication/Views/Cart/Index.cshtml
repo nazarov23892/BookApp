@@ -2,6 +2,10 @@
 @using ServiceLayer.CartServices
 @model IEnumerable<CartLine>
 
+@{ 
+    Guid editId = ViewBag.EditId ?? default(Guid);
+}
+
 <table class="table">
     <tr>
         <th>Title</th>
@@ -17,8 +21,13 @@
         decimal subtotal = line.Book.Price * line.Quantity;
         total += subtotal;
 
+        string lineViewName = "LinePartial";
+        if (editId == line.Book.BookId)
+        {
+            lineViewName = "LineEditPartial";
+        }
         @(await Html.PartialAsync(
-            partialViewName: "LinePartial",
+            partialViewName: lineViewName,
             model: line))
     }
     <tr>

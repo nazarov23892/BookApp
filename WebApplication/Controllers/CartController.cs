@@ -47,5 +47,27 @@ namespace WebApplication.Controllers
                 actionName: nameof(this.Index),
                 controllerName: "Cart");
         }
+
+        [HttpGet]
+        public ViewResult Change(Guid id)
+        {
+            ViewBag.EditId = id;
+            return View(
+                viewName: "Index",
+                model: cartService.Lines);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Change(Guid id, int quantity)
+        {
+            cartService.SetQuantity(
+                book: new BookForCartDto { BookId = id },
+                quantity: quantity);
+
+            return RedirectToAction(
+                actionName: nameof(this.Index),
+                controllerName: "Cart");
+        }
     }
 }

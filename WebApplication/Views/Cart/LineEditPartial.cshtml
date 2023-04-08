@@ -1,0 +1,26 @@
+﻿
+@using ServiceLayer.CartServices
+@model CartLine
+
+@{
+    decimal subtotal = Model.Book.Price * Model.Quantity;
+}
+
+<form id="edit_form" method="post" asp-action="Change" asp-controller="Cart">
+    <input name="id" value="@Model.Book.BookId" class="input-s" hidden />
+</form>
+
+<tr>
+    <td>@Model.Book.Title</td>
+    <td>@Model.Book.Price</td>
+    <td>
+        <input form="edit_form" name="quantity" value="@Model.Quantity" class="w-100" />
+    </td>
+    <td></td>
+    <td>
+        <a asp-action="Index"
+           asp-controller="Cart"
+           class="btn btn-sm btn-secondary">cancel</a>
+        <button form="edit_form" type="submit" class="btn btn-sm btn-primary">save</button>
+    </td>
+</tr>	

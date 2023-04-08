@@ -14,6 +14,11 @@
     <td>
         <form method="post" asp-action="Remove" asp-controller="Cart">
             <input name="id" value="@Model.Book.BookId" hidden />
+            <a asp-action="Change" 
+               asp-controller="Cart" 
+               asp-route-id="@Model.Book.BookId"
+               title="change quantity"
+               class="btn btn-sm btn-primary">change</a>
             <button type="submit" class="btn btn-sm btn-danger">remove</button>
         </form>
     </td>
