@@ -7,7 +7,12 @@
 }
 
 <tr>
-    <td>@Model.Book.Title</td>
+    <td>
+        <a asp-action="Details"
+           asp-controller="Home"
+           asp-route-id="@Model.Book.BookId"
+           class="text-dark">@Model.Book.Title</a>
+    </td>
     <td>@Model.Book.Price</td>
     <td>@Model.Quantity</td>
     <td>@subtotal</td>
