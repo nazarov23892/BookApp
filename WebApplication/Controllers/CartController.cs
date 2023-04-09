@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServiceLayer.CartServices;
+using WebApplication.Models;
+using WebApplication.Infrastructure;
 
 namespace WebApplication.Controllers
 {
@@ -27,6 +29,13 @@ namespace WebApplication.Controllers
             if (bookDto != null)
             {
                 cartService.Add(bookDto);
+                TempData.WriteObject(
+                key: "message",
+                value: new PageAlertMessage
+                {
+                    Text = "the book has been successfully added to the cart",
+                    MessageType = TempdataMessageType.Default
+                });
             }
             return RedirectToAction(
                 actionName: nameof(this.Index),

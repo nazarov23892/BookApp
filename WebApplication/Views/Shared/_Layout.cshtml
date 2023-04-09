@@ -1,5 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+@using WebApplication.Infrastructure
 
+@{
+    PageAlertMessage message = TempData.ReadObject<PageAlertMessage>(key: "message");
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -66,6 +72,11 @@
             </div>
         </div>
     </nav>
+    @if (message != null)
+    {
+        string alertClass = GetAllertClassnameByMessageType(message.MessageType);
+        <div class="alert @alertClass">@message.Text</div>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -73,3 +84,26 @@
     </div>
 </body>
 </html>
+
+@functions{
+    public string GetAllertClassnameByMessageType(TempdataMessageType messageType)
+    {
+        string className = "alert-secondary";
+        switch (messageType)
+        {
+            case TempdataMessageType.Default:
+                className = "alert-secondary";
+                break;
+            case TempdataMessageType.Success:
+                className = "alert-success";
+                break;
+            case TempdataMessageType.Danger:
+                className = "alert-danger";
+                break;
+            default:
+                // empty
+                break;
+        }
+        return className;
+    }
+}
