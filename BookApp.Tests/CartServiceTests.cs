@@ -138,6 +138,39 @@ namespace BookApp.Tests
         }
 
         [Fact]
+        public void Test_SetQuantityWhenInvalidQuantity()
+        {
+            var book1 = new BookForCartDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var line1 = new CartLine
+            {
+                Book = book1,
+                Quantity = 2
+            };
+
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read()).Returns(() =>
+            {
+                return new[] { line1 };
+            });
+
+            SessionCartService target = new SessionCartService(mock.Object);
+  
+            Action act = () => target.SetQuantity(
+                bookId: book1.BookId,
+                quantity: -1);
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(
+                testCode: act);
+
+            Assert.NotNull(exception);
+        }
+
+        [Fact]
         public void Test_RestoreState()
         {
             var book1 = new BookForCartDto
