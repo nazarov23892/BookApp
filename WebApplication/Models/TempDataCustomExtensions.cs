@@ -14,7 +14,7 @@ namespace WebApplication.Models
         public static void WriteAlertMessage(
             this ITempDataDictionary tempData, 
             string messageText,
-            TempdataMessageType messageType = TempdataMessageType.Default)
+            TempdataMessageType messageType = TempdataMessageType.Info)
         {
             tempData.WriteObject(
                 key: alertKey,

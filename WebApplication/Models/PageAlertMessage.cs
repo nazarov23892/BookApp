@@ -8,12 +8,12 @@ namespace WebApplication.Models
     public class PageAlertMessage
     {
         public string Text { get; set; }
-        public TempdataMessageType MessageType { get; set; } = TempdataMessageType.Default;
+        public TempdataMessageType MessageType { get; set; } = TempdataMessageType.Info;
     }
 
     public enum TempdataMessageType
     {
-        Default,
+        Info,
         Success,
         Danger
     }
