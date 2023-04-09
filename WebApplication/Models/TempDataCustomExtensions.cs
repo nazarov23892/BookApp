@@ -14,20 +14,20 @@ namespace WebApplication.Models
         public static void WriteAlertMessage(
             this ITempDataDictionary tempData, 
             string messageText,
-            TempdataMessageType messageType = TempdataMessageType.Info)
+            ViewAlertMessageType messageType = ViewAlertMessageType.Info)
         {
             tempData.WriteObject(
                 key: alertKey,
-                value: new PageAlertMessage 
+                value: new ViewAlertMessage 
                 {
                     Text = messageText,
                     MessageType = messageType
                 });
         }
 
-        public static PageAlertMessage ReadAlertMessage(this ITempDataDictionary tempData)
+        public static ViewAlertMessage ReadAlertMessage(this ITempDataDictionary tempData)
         {
-            return tempData.ReadObject<PageAlertMessage>(key: alertKey);
+            return tempData.ReadObject<ViewAlertMessage>(key: alertKey);
         }
     }
 }

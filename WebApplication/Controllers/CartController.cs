@@ -41,7 +41,7 @@ namespace WebApplication.Controllers
             }
             TempData.WriteAlertMessage(
                 messageText: "the book has been successfully added to the cart",
-                messageType: TempdataMessageType.Success);
+                messageType: ViewAlertMessageType.Success);
 
         exit_point:
             return RedirectToAction(

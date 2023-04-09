@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class PageAlertMessage
+    public class ViewAlertMessage
     {
         public string Text { get; set; }
-        public TempdataMessageType MessageType { get; set; } = TempdataMessageType.Info;
+        public ViewAlertMessageType MessageType { get; set; } = ViewAlertMessageType.Info;
     }
 
-    public enum TempdataMessageType
+    public enum ViewAlertMessageType
     {
         Info,
         Success,

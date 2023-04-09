@@ -1,6 +1,6 @@
 ﻿
 @{
-    PageAlertMessage message = TempData.ReadAlertMessage();
+    ViewAlertMessage message = TempData.ReadAlertMessage();
 }
 
 <!DOCTYPE html>
@@ -84,18 +84,18 @@
 </html>
 
 @functions{
-    public string GetAllertClassnameByMessageType(TempdataMessageType messageType)
+    public string GetAllertClassnameByMessageType(ViewAlertMessageType messageType)
     {
         string className = "alert-secondary";
         switch (messageType)
         {
-            case TempdataMessageType.Info:
+            case ViewAlertMessageType.Info:
                 className = "alert-info";
                 break;
-            case TempdataMessageType.Success:
+            case ViewAlertMessageType.Success:
                 className = "alert-success";
                 break;
-            case TempdataMessageType.Danger:
+            case ViewAlertMessageType.Danger:
                 className = "alert-danger";
                 break;
             default:
