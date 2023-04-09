@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ServiceLayer.CartServices;
 using WebApplication.Models;
 using WebApplication.Infrastructure;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication.Controllers
 {
@@ -32,7 +33,7 @@ namespace WebApplication.Controllers
                 goto exit_point;
             }
             cartService.Add(bookDto);
-            if (cartService.HasErrors 
+            if (cartService.HasErrors
                 && cartService.Errors.FirstOrDefault() != null)
             {
                 TempData.WriteAlertMessage(
@@ -59,6 +60,12 @@ namespace WebApplication.Controllers
         public IActionResult Remove(Guid id)
         {
             cartService.Remove(bookId: id);
+            if (cartService.HasErrors
+                && cartService.Errors.FirstOrDefault() != null)
+            {
+                TempData.WriteAlertMessage(
+                    messageText: cartService.Errors.FirstOrDefault().ErrorMessage);
+            }
             return RedirectToAction(
                 actionName: nameof(this.Index),
                 controllerName: "Cart");
@@ -79,18 +86,30 @@ namespace WebApplication.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.EditId = changesDto.BookId;
-                return View(
-                    viewName: "Index",
-                    model: cartService.Lines);
+                goto error_exit;
             }
             cartService.SetQuantity(
                 bookId: changesDto.BookId,
                 quantity: changesDto.Quantity);
-
+            if (cartService.HasErrors)
+            {
+                foreach (var error in cartService.Errors)
+                {
+                    ModelState.AddModelError(
+                        key: "",
+                        errorMessage: error.ErrorMessage);
+                }
+                goto error_exit;
+            }
             return RedirectToAction(
                 actionName: nameof(this.Index),
                 controllerName: "Cart");
+
+        error_exit:
+            ViewBag.EditId = changesDto.BookId;
+            return View(
+                viewName: "Index",
+                model: cartService.Lines);
         }
     }
 }
