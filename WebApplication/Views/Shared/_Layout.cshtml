@@ -1,8 +1,6 @@
 ﻿
-@using WebApplication.Infrastructure
-
 @{
-    PageAlertMessage message = TempData.ReadObject<PageAlertMessage>(key: "message");
+    PageAlertMessage message = TempData.ReadAlertMessage();
 }
 
 <!DOCTYPE html>

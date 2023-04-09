@@ -28,34 +28,20 @@ namespace WebApplication.Controllers
             BookForCartDto bookDto = bookCartService.GetItem(id);
             if (bookDto == null)
             {
-                TempData.WriteObject(
-                    key: "message",
-                    value: new PageAlertMessage
-                    {
-                        Text = "error: book not found",
-                        MessageType = TempdataMessageType.Default
-                    });
+                TempData.WriteAlertMessage(messageText: "error: book not found");
                 goto exit_point;
             }
             cartService.Add(bookDto);
-            if (cartService.Errors.FirstOrDefault() != null)
+            if (cartService.HasErrors 
+                && cartService.Errors.FirstOrDefault() != null)
             {
-                TempData.WriteObject(
-                    key: "message",
-                    value: new PageAlertMessage
-                    {
-                        Text = cartService.Errors.FirstOrDefault().ErrorMessage,
-                        MessageType = TempdataMessageType.Default
-                    });
+                TempData.WriteAlertMessage(
+                    messageText: cartService.Errors.FirstOrDefault().ErrorMessage);
                 goto exit_point;
             }
-            TempData.WriteObject(
-                key: "message",
-                value: new PageAlertMessage
-                {
-                    Text = "the book has been successfully added to the cart",
-                    MessageType = TempdataMessageType.Success
-                });
+            TempData.WriteAlertMessage(
+                messageText: "the book has been successfully added to the cart",
+                messageType: TempdataMessageType.Success);
 
         exit_point:
             return RedirectToAction(
