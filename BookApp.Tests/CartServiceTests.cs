@@ -33,6 +33,8 @@ namespace BookApp.Tests
             CartLine[] lines = target.Lines
                 .ToArray();
 
+            Assert.False(target.HasErrors);
+
             Assert.Equal(3, lines.Length);
             Assert.Equal(book2.BookId, lines[0].Book.BookId);
             Assert.Equal(book1.BookId, lines[1].Book.BookId);
@@ -63,6 +65,10 @@ namespace BookApp.Tests
 
             CartLine[] lines = target.Lines
                 .ToArray();
+
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Equal("item has already been added", target.Errors.First().ErrorMessage);
 
             Assert.Equal(2, lines.Length);
             Assert.Equal(book2.BookId, lines[0].Book.BookId);
@@ -157,6 +163,7 @@ namespace BookApp.Tests
             CartLine[] lines = target.Lines
                 .ToArray();
 
+            Assert.False(target.HasErrors);
             Assert.Equal(2, lines.Length);
             Assert.Equal(line2.Book.BookId, lines[0].Book.BookId);
             Assert.Equal(line1.Book.BookId, lines[1].Book.BookId);
@@ -196,6 +203,8 @@ namespace BookApp.Tests
             CartLine[] linesAfterRemoveBook1 = target.Lines
                 .ToArray();
 
+            Assert.False(target.HasErrors);
+
             Assert.Equal(2, linesAfterRemoveBook2.Length);
             Assert.Equal(book1.BookId, linesAfterRemoveBook2[0].Book.BookId);
             Assert.Equal(book3.BookId, linesAfterRemoveBook2[1].Book.BookId);
@@ -232,6 +241,7 @@ namespace BookApp.Tests
 
             target.Clear();
 
+            Assert.False(target.HasErrors);
             Assert.False(target.Lines.Any());
         }
 
