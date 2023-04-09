@@ -28,6 +28,8 @@ namespace ServiceLayer.CartServices.Concrete
             if (lines
                 .FirstOrDefault(l=>l.Book.BookId == book.BookId) != null)
             {
+                AddError(
+                    errorMessage: "item has already been added");
                 return;
             }
             lines.Add(new CartLine
@@ -50,6 +52,8 @@ namespace ServiceLayer.CartServices.Concrete
                 .FirstOrDefault(l => l.Book.BookId == bookId);
             if (line == null)
             {
+                AddError(
+                    errorMessage: "item not found");
                 return;
             }
             lines.Remove(line);
@@ -70,7 +74,8 @@ namespace ServiceLayer.CartServices.Concrete
             if (line == null)
             {
                 AddError(
-                    errorMessage: $"book id='{bookId}' not found");
+                    errorMessage: $"item not found",
+                    memberNames: nameof(bookId));
                 return;
             }
             line.Quantity = quantity;
