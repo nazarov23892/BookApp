@@ -110,6 +110,34 @@ namespace BookApp.Tests
         }
 
         [Fact]
+        public void Test_SetQuantityWhenNotExist()
+        {
+            var book1 = Books[0];
+            var book2 = Books[1];
+            var line1 = new CartLine
+            {
+                Book = book1,
+                Quantity = 2
+            };
+
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read()).Returns(() =>
+            {
+                return new[] { line1 };
+            });
+
+            SessionCartService target = new SessionCartService(mock.Object);
+
+            target.SetQuantity(
+                bookId: book2.BookId,
+                quantity: 4);
+
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Equal("item not found", target.Errors.First().ErrorMessage);
+        }
+
+        [Fact]
         public void Test_SetQuantityWhenInvalidQuantity()
         {
             var book1 = Books[0];
@@ -216,6 +244,40 @@ namespace BookApp.Tests
             Assert.Equal(11, linesAfterRemoveBook2[0].Quantity);
 
             Assert.False(linesAfterRemoveBook1.Any());
+        }
+
+        [Fact]
+        public void Test_RemoveWhenNotExist()
+        {
+            var book1 = Books[0];
+            var book2 = Books[1];
+            var book3 = Books[2];
+
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read()).Returns(() =>
+            {
+                return new[]
+                {
+                    new CartLine { Book = book1, Quantity = 11 },
+                    new CartLine { Book = book2, Quantity = 12 },
+                };
+            });
+
+            SessionCartService target = new SessionCartService(mock.Object);
+
+            target.Remove(book3.BookId);
+            CartLine[] linesAfterRemoveBook3 = target.Lines
+                .ToArray();
+
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Equal("item not found", target.Errors.First().ErrorMessage);
+
+            Assert.Equal(2, linesAfterRemoveBook3.Length);
+            Assert.Equal(book1.BookId, linesAfterRemoveBook3[0].Book.BookId);
+            Assert.Equal(book2.BookId, linesAfterRemoveBook3[1].Book.BookId);
+            Assert.Equal(11, linesAfterRemoveBook3[0].Quantity);
+            Assert.Equal(12, linesAfterRemoveBook3[1].Quantity);
         }
 
         [Fact]
