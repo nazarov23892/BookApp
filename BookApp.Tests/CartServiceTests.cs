@@ -20,24 +20,9 @@ namespace BookApp.Tests
                     return Enumerable.Empty<CartLine>();
                 });
 
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
-            var book3 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000003"),
-                Title = "book-3",
-                Price = 3.3M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
+            var book3 = Books[2];
 
             SessionCartService target = new SessionCartService(saver: mock.Object);
 
@@ -67,18 +52,8 @@ namespace BookApp.Tests
                 return Enumerable.Empty<CartLine>();
             });
 
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             SessionCartService target = new SessionCartService(saver: mock.Object);
 
@@ -104,18 +79,8 @@ namespace BookApp.Tests
             {
                 return Enumerable.Empty<CartLine>();
             });
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             SessionCartService target = new SessionCartService(saver: mock.Object);
             target.Add(book1);
@@ -140,12 +105,7 @@ namespace BookApp.Tests
         [Fact]
         public void Test_SetQuantityWhenInvalidQuantity()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
+            var book1 = Books[0];
             var line1 = new CartLine
             {
                 Book = book1,
@@ -173,18 +133,8 @@ namespace BookApp.Tests
         [Fact]
         public void Test_RestoreState()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             var line1 = new CartLine
             {
@@ -217,24 +167,10 @@ namespace BookApp.Tests
         [Fact]
         public void Test_Remove()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
-            var book3 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000003"),
-                Title = "book-3",
-                Price = 3.3M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
+            var book3 = Books[2];
+
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
             {
@@ -278,22 +214,12 @@ namespace BookApp.Tests
         {
             var line1 = new CartLine
             {
-                Book = new BookForCartDto
-                {
-                    BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                    Title = "book-1",
-                    Price = 1.1M
-                },
+                Book = Books[0],
                 Quantity = 1
             };
             var line2 = new CartLine
             {
-                Book = new BookForCartDto
-                {
-                    BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                    Title = "book-2",
-                    Price = 2.2M
-                },
+                Book = Books[1],
                 Quantity = 2
             };
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
@@ -312,24 +238,10 @@ namespace BookApp.Tests
         [Fact]
         public void Test_SaveWhenAdd()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
-            var book3 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000003"),
-                Title = "book-3",
-                Price = 3.3M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
+            var book3 = Books[2];
+
             var line1 = new CartLine
             {
                 Book = book1,
@@ -379,18 +291,8 @@ namespace BookApp.Tests
         [Fact]
         public void Test_SaveWhenSetQuantity()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             CartLine[] tmpLines = null;
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
@@ -436,18 +338,8 @@ namespace BookApp.Tests
         [Fact]
         public void Test_SaveWhenRemove()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             CartLine[] tmpLines = null;
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
@@ -488,18 +380,8 @@ namespace BookApp.Tests
         [Fact]
         public void Test_SaveWhenClear()
         {
-            var book1 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                Title = "book-1",
-                Price = 1.1M
-            };
-            var book2 = new BookForCartDto
-            {
-                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
-                Title = "book-2",
-                Price = 2.2M
-            };
+            var book1 = Books[0];
+            var book2 = Books[1];
 
             CartLine[] tmpLines = null;
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
@@ -545,6 +427,31 @@ namespace BookApp.Tests
                 };
             }
             return res;
+        }
+
+        public BookForCartDto[] Books 
+        {
+            get => new[]
+            {
+                new BookForCartDto
+                {
+                    BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                    Title = "book-1",
+                    Price = 1.1M
+                },
+                new BookForCartDto
+                {
+                    BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                    Title = "book-2",
+                    Price = 2.2M
+                },
+                new BookForCartDto
+                {
+                    BookId = new Guid("00000000-0000-0000-0000-000000000003"),
+                    Title = "book-3",
+                    Price = 3.3M
+                }
+            };
         }
     }
 }
