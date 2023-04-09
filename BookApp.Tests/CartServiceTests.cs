@@ -96,6 +96,7 @@ namespace BookApp.Tests
             CartLine[] lines = target.Lines
                 .ToArray();
 
+            Assert.False(target.HasErrors);
             Assert.Equal(book1.BookId, lines[0].Book.BookId);
             Assert.Equal(book2.BookId, lines[1].Book.BookId);
             Assert.Equal(4, lines[0].Quantity);
@@ -120,14 +121,13 @@ namespace BookApp.Tests
 
             SessionCartService target = new SessionCartService(mock.Object);
   
-            Action act = () => target.SetQuantity(
+            target.SetQuantity(
                 bookId: book1.BookId,
                 quantity: -1);
 
-            var exception = Assert.Throws<ArgumentOutOfRangeException>(
-                testCode: act);
-
-            Assert.NotNull(exception);
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Equal("cannot be less or equal zero", target.Errors.First().ErrorMessage);
         }
 
         [Fact]

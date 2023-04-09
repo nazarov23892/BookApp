@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceLayer.Abstract;
 
 namespace ServiceLayer.CartServices.Concrete
 {
-    public class SessionCartService : ICartService
+    public class SessionCartService : ServiceErrors, ICartService
     {
         private readonly ICartLinesSessionSaver saver;
         private List<CartLine> lines = new List<CartLine>();
@@ -59,14 +60,17 @@ namespace ServiceLayer.CartServices.Concrete
         {
             if (quantity <= 0)
             {
-                throw new ArgumentOutOfRangeException(
-                    paramName: nameof(quantity),
-                    message: "cannot be less or equal zero");
+                AddError(
+                    errorMessage: "cannot be less or equal zero",
+                    memberNames: nameof(quantity));
+                return;
             }
             var line = lines
                 .SingleOrDefault(l => l.Book.BookId == bookId);
             if (line == null)
             {
+                AddError(
+                    errorMessage: $"book id='{bookId}' not found");
                 return;
             }
             line.Quantity = quantity;

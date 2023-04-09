@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceLayer.Abstract;
 
 namespace ServiceLayer.CartServices
 {
-    public interface ICartService
+    public interface ICartService: IServiceErrors
     {
         IEnumerable<CartLine> Lines { get; }
 
