@@ -2,7 +2,7 @@
 @using ServiceLayer.CartServices
 @model IEnumerable<CartLine>
 
-@{ 
+@{
     Guid editId = ViewBag.EditId ?? default(Guid);
 }
 
@@ -37,7 +37,12 @@
         <th>@total</th>
     </tr>
 </table>
-<div>
+<div class="text-center">
+    <a asp-action="Checkout" 
+       asp-controller="Order"
+       class="btn btn-primary">
+        check out
+    </a>
     <a asp-action="Index"
        asp-controller="Home"
        class="btn btn-secondary">
