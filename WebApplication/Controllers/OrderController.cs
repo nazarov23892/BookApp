@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServiceLayer.CartServices;
+using ServiceLayer.OrderServices;
 
 namespace WebApplication.Controllers
 {
@@ -16,9 +17,24 @@ namespace WebApplication.Controllers
             this.cartService = cartService;
         }
 
+        [HttpGet]
         public ViewResult Checkout()
         {
-            return View(model: cartService.Lines);
+            var dto = new PlaceOrderDto
+            {
+                Firstname = "",
+                Lastname = "",
+                PhoneNumber = "",
+                Lines = cartService.Lines
+                    .Select(l => new PlaceOrderLineItemDto
+                    {
+                        BookId = l.Book.BookId,
+                        Title = l.Book.Title,
+                        Price = l.Book.Price,
+                        Quantity = l.Quantity
+                    })
+            };
+            return View(model: dto);
         }
     }
 }
