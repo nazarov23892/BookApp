@@ -11,10 +11,14 @@ namespace WebApplication.Controllers
     public class OrderController : Controller
     {
         private readonly  ICartService cartService;
+        private readonly IPlaceOrderService placeOrderService;
 
-        public OrderController(ICartService cartService)
+        public OrderController(
+            ICartService cartService,
+            IPlaceOrderService placeOrderService)
         {
             this.cartService = cartService;
+            this.placeOrderService = placeOrderService;
         }
 
         [HttpGet]
@@ -35,6 +39,41 @@ namespace WebApplication.Controllers
                     })
             };
             return View(model: dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PlaceOrder(PlaceOrderDto inDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto exit_errors;
+            }
+            int orderId = placeOrderService.PlaceOrder(placeOrderDataIn: inDto);
+            if (placeOrderService.HasErrors)
+            {
+                foreach (var error in placeOrderService.Errors)
+                {
+                    ModelState.AddModelError(
+                        key: "",
+                        errorMessage: error.ErrorMessage);
+                }
+                goto exit_errors;
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Success),
+                controllerName: "Order",
+                routeValues: new { id = orderId });
+
+        exit_errors:
+            return View(
+                viewName: nameof(Checkout),
+                model: inDto);
+        }
+
+        public ViewResult Success(int id)
+        {
+            return View();
         }
     }
 }

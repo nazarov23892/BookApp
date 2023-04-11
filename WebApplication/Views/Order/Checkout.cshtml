@@ -4,12 +4,17 @@
 
 @model PlaceOrderDto
 
+@{ 
+    const string formId = "form_submit";
+}
+
 <h2>Check out</h2>
+<div asp-validation-summary="All" class="text-danger"></div>
 <div class="row">
     <div class="col-md-8">
         <hr />
         <h4>Details</h4>
-        <form id="form_submit" method="post" asp-action="PlaceOrder" asp-controller="Orders">
+        <form id="@formId" method="post" asp-action="PlaceOrder" asp-controller="Order">
             <div class="form-group">
                 <label asp-for="Firstname"></label>
                 <input asp-for="Firstname" class="form-control" />
@@ -35,13 +40,24 @@
                 <th>price</th>
                 <th>quantity</th>
             </tr>
-            @foreach (var line in Model.Lines)
+            @{ 
+                int i = 0;
+            }
+            @foreach (var line in Model.Lines ?? Enumerable.Empty<PlaceOrderLineItemDto>())
             {
+                string lineProperty = $"Lines[{i}]";
+                string bookIdProperty = $"{lineProperty}.BookId";
+                string quantityProperty = $"{lineProperty}.Quantity";
                 <tr>
-                    <td>@line.Title</td>
+                    <td>
+                        @line.Title
+                        <input form="@formId" name="@bookIdProperty" value="@line.BookId" hidden />
+                        <input form="@formId" name="@quantityProperty" value="@line.Quantity" hidden />
+                    </td>
                     <td>@line.Price</td>
                     <td>@line.Quantity</td>
                 </tr>
+                i++;
             }
         </table>
     </div>

@@ -17,6 +17,8 @@ using ServiceLayer.BookCatalogServices;
 using ServiceLayer.BookCatalogServices.Concrete;
 using ServiceLayer.CartServices;
 using ServiceLayer.CartServices.Concrete;
+using ServiceLayer.OrderServices;
+using ServiceLayer.OrderServices.Concrete;
 using WebApplication.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -49,6 +51,7 @@ namespace WebApplication
             services.AddTransient<ICartService, SessionCartService>();
             services.AddTransient<IBookCatalogService, BookCatalogService>();
             services.AddTransient<IBookForCartService, BookForCartService>();
+            services.AddTransient<IPlaceOrderService, PlaceOrderService>();
 
             services.AddMvc();
         }
