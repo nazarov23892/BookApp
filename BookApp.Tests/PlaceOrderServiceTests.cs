@@ -82,8 +82,18 @@ namespace BookApp.Tests
                 PhoneNumber = "111",
                 Lines = new[] 
                 { 
-                    new PlaceOrderLineItemDto { BookId = Guid.Parse("1"), Quantity = 1, Price = 10.1M }, 
-                    new PlaceOrderLineItemDto { BookId = Guid.Parse("2"), Quantity = 1, Price = 10.2M }, 
+                    new PlaceOrderLineItemDto 
+                    { 
+                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),    
+                        Quantity = 1, 
+                        Price = 10.1M 
+                    }, 
+                    new PlaceOrderLineItemDto 
+                    {
+                        BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                        Quantity = 2,
+                        Price = 10.2M
+                    } 
                 }
             });
 
@@ -93,7 +103,8 @@ namespace BookApp.Tests
             Assert.Equal(0, orderId1);
             Assert.Single(target1.Errors);
             var error1 = target1.Errors.First();
-
+            Assert.True(error1.ErrorMessage
+                .Contains(value: "Firstname field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
             mock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
             mock.Verify(x => x.SaveChanges(),

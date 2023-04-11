@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
 using DataLayer.Entities;
 using ServiceDbAccessLayer.Orders;
@@ -26,6 +27,24 @@ namespace ServiceLayer.OrderServices.Concrete
             if (!chosenIds.Any())
             {
                 AddError(errorMessage: "No items in your order.");
+                return 0;
+            }
+            var context = new ValidationContext(
+                instance: placeOrderDataIn, 
+                serviceProvider: null, 
+                items: null);
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(
+                instance: placeOrderDataIn,
+                validationContext: context,
+                validationResults: results,
+                validateAllProperties: true);
+            if (!isValid)
+            {
+                foreach (var error in results)
+                {
+                    AddError(errorMessage: error.ErrorMessage);
+                }
                 return 0;
             }
             Dictionary<Guid, Book> booksDict = placeOrderDbAccess
@@ -58,7 +77,7 @@ namespace ServiceLayer.OrderServices.Concrete
             List<OrderLineItem> orderLines = new List<OrderLineItem>();
             foreach (var line in placeOrderLineItems)
             {
-                if (line.Quantity <= 0 
+                if (line.Quantity <= 0
                     || line.Quantity > GlobalConstants.MaxQuantityToBuy)
                 {
                     AddError(errorMessage: "order line: invalid quantity value. ");
