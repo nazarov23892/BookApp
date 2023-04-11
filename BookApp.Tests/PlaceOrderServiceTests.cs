@@ -24,14 +24,14 @@ namespace BookApp.Tests
             PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
 
             // Act
-            var orderId1 = target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
             {
                 Firstname = "firstname",
                 Lastname = "lastname",
                 PhoneNumber = "111",
                 Lines = Enumerable.Empty<PlaceOrderLineItemDto>()
             });
-            var orderId2 = target2.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            target2.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
             {
                 Firstname = "firstname",
                 Lastname = "lastname",
@@ -43,9 +43,6 @@ namespace BookApp.Tests
             // Assert
             Assert.True(target1.HasErrors);
             Assert.True(target2.HasErrors);
-
-            Assert.Equal(0, orderId1);
-            Assert.Equal(0, orderId2);
 
             Assert.Single(target1.Errors);
             Assert.Single(target2.Errors);
@@ -75,7 +72,7 @@ namespace BookApp.Tests
             PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
 
             // Act
-            var orderId1 = target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
             {
                 Firstname = string.Empty,
                 Lastname = "lastname",
@@ -100,11 +97,82 @@ namespace BookApp.Tests
 
             // Assert
             Assert.True(target1.HasErrors);
-            Assert.Equal(0, orderId1);
             Assert.Single(target1.Errors);
             var error1 = target1.Errors.First();
             Assert.True(error1.ErrorMessage
                 .Contains(value: "Firstname field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Lastname_Empty()
+        {
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            // Act
+            target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = string.Empty,
+                PhoneNumber = "111",
+                Lines = new[]
+                {
+                    new PlaceOrderLineItemDto
+                    {
+                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Quantity = 1,
+                        Price = 10.1M
+                    }
+                }
+            });
+
+            // Assert
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            var error1 = target1.Errors.First();
+            Assert.True(error1.ErrorMessage
+                .Contains(value: "Lastname field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Phonenumber_Empty()
+        {
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            // Act
+            target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = string.Empty,
+                Lines = new[]
+                {
+                    new PlaceOrderLineItemDto
+                    {
+                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Quantity = 1,
+                        Price = 10.1M
+                    }
+                }
+            });
+
+            // Assert
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            var error1 = target1.Errors.First();
+            Assert.True(error1.ErrorMessage
+                .Contains(value: "Phonenumber field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
             mock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
             mock.Verify(x => x.SaveChanges(),
