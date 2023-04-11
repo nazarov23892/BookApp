@@ -13,14 +13,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using DataLayer.Data;
+using WebApplication.Infrastructure;
 using ServiceLayer.BookCatalogServices;
 using ServiceLayer.BookCatalogServices.Concrete;
 using ServiceLayer.CartServices;
 using ServiceLayer.CartServices.Concrete;
 using ServiceLayer.OrderServices;
 using ServiceLayer.OrderServices.Concrete;
-using WebApplication.Infrastructure;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using ServiceDbAccessLayer.Orders;
+using ServiceDbAccessLayer.Orders.Concrete;
 
 namespace WebApplication
 {
@@ -52,6 +53,7 @@ namespace WebApplication
             services.AddTransient<IBookCatalogService, BookCatalogService>();
             services.AddTransient<IBookForCartService, BookForCartService>();
             services.AddTransient<IPlaceOrderService, PlaceOrderService>();
+            services.AddTransient<IPlaceOrderDbAccess, PlaceOrderDbAccess>();
 
             services.AddMvc();
         }

@@ -4,19 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceLayer.Abstract;
-using DataLayer.DataContexts;
 using DataLayer.Entities;
-using Microsoft.EntityFrameworkCore;
+using ServiceDbAccessLayer.Orders;
 
 namespace ServiceLayer.OrderServices.Concrete
 {
     public class PlaceOrderService : ServiceErrors, IPlaceOrderService
     {
-        private readonly AppIdentityDbContext efDbContext;
+        private readonly IPlaceOrderDbAccess placeOrderDbAccess;
 
-        public PlaceOrderService(AppIdentityDbContext efDbContext)
+        public PlaceOrderService(IPlaceOrderDbAccess placeOrderDbAccess)
         {
-            this.efDbContext = efDbContext;
+            this.placeOrderDbAccess = placeOrderDbAccess;
         }
 
         public int PlaceOrder(PlaceOrderDto placeOrderDataIn)
@@ -29,9 +28,9 @@ namespace ServiceLayer.OrderServices.Concrete
                 AddError(errorMessage: "No items in your order.");
                 return 0;
             }
-            Dictionary<Guid, Book> booksDict = efDbContext.Books
-                .Where(b => chosenIds.Contains(b.BookId))
-                .ToDictionary(b => b.BookId);
+            Dictionary<Guid, Book> booksDict = placeOrderDbAccess
+                .FindBooksByIds(bookIds: chosenIds);
+
             var orderLines = FormOrderLineItems(
                 placeOrderLineItems: placeOrderDataIn.Lines,
                 booksBaselineDict: booksDict);
@@ -47,8 +46,8 @@ namespace ServiceLayer.OrderServices.Concrete
                 PhoneNumber = placeOrderDataIn.PhoneNumber,
                 Lines = orderLines
             };
-            efDbContext.Orders.Add(order);
-            efDbContext.SaveChanges();
+            placeOrderDbAccess.Add(newOrder: order);
+            placeOrderDbAccess.SaveChanges();
             return order.OrderId;
         }
 
