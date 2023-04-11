@@ -15,31 +15,51 @@ namespace BookApp.Tests
     public class PlaceOrderServiceTests
     {
         [Fact]
-        public void Cannot_PlaceOrder_When_Empty_Lines()
+        public void Cannot_PlaceOrder_When_Empty_or_Null_Lines()
         {
             // Arrange
             Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
 
-            PlaceOrderDto dto = new PlaceOrderDto
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            
+            // Act
+            var orderId1 = target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
             {
                 Firstname = "firstname",
                 Lastname = "lastname",
                 PhoneNumber = "111",
                 Lines = Enumerable.Empty<PlaceOrderLineItemDto>()
-            };
-            PlaceOrderService target = new PlaceOrderService(placeOrderDbAccess: mock.Object);
-            
-            // Act
-            var orderId = target.PlaceOrder(placeOrderDataIn: dto);
+            });
+            var orderId2 = target2.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = null
+            });
+
 
             // Assert
-            Assert.True(target.HasErrors);
-            Assert.Equal(0, orderId);
-            Assert.Single(target.Errors);
-            var error = target.Errors.First();
-            Assert.True(error.ErrorMessage.Contains(
+            Assert.True(target1.HasErrors);
+            Assert.True(target2.HasErrors);
+
+            Assert.Equal(0, orderId1);
+            Assert.Equal(0, orderId2);
+
+            Assert.Single(target1.Errors);
+            Assert.Single(target2.Errors);
+
+            var error1 = target1.Errors.First();
+            var error2 = target2.Errors.First();
+
+            Assert.True(error1.ErrorMessage.Contains(
                 value: "No items in your order.", 
                 comparisonType: StringComparison.OrdinalIgnoreCase));
+            Assert.True(error2.ErrorMessage.Contains(
+                value: "No items in your order.",
+                comparisonType: StringComparison.OrdinalIgnoreCase));
+
             mock.Verify(x => x.SaveChanges(),
                 Times.Never);
             mock.Verify(x => x.Add(It.IsAny<Order>()),
