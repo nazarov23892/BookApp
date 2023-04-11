@@ -178,5 +178,71 @@ namespace BookApp.Tests
             mock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Quantity_is_less_or_equal_zero()
+        {
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = new[]
+                {
+                    new PlaceOrderLineItemDto
+                    {
+                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Quantity = 0,
+                        Price = 10.1M
+                    }
+                }
+            };
+            var dto2 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = new[]
+                {
+                    new PlaceOrderLineItemDto
+                    {
+                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Quantity = -1,
+                        Price = 10.1M
+                    }
+                }
+            };
+
+            // Act
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+            target2.PlaceOrder(placeOrderDataIn: dto2);
+
+            // Assert
+            Assert.True(target1.HasErrors);
+            Assert.True(target2.HasErrors);
+
+            Assert.Single(target1.Errors);
+            Assert.Single(target2.Errors);
+
+            var error1 = target1.Errors.First();
+            var error2 = target2.Errors.First();
+
+            Assert.True(error1.ErrorMessage.Contains(
+                value: "invalid quantity value",
+                comparisonType: StringComparison.OrdinalIgnoreCase));
+            Assert.True(error2.ErrorMessage.Contains(
+                value: "invalid quantity value",
+                comparisonType: StringComparison.OrdinalIgnoreCase));
+
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
     }
 }
