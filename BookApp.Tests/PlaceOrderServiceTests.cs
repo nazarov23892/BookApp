@@ -22,7 +22,7 @@ namespace BookApp.Tests
 
             PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
             PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
-            
+
             // Act
             var orderId1 = target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
             {
@@ -54,7 +54,7 @@ namespace BookApp.Tests
             var error2 = target2.Errors.First();
 
             Assert.True(error1.ErrorMessage.Contains(
-                value: "No items in your order.", 
+                value: "No items in your order.",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
             Assert.True(error2.ErrorMessage.Contains(
                 value: "No items in your order.",
@@ -63,6 +63,40 @@ namespace BookApp.Tests
             mock.Verify(x => x.SaveChanges(),
                 Times.Never);
             mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Firstname_Empty()
+        {
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            // Act
+            var orderId1 = target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
+            {
+                Firstname = string.Empty,
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = new[] 
+                { 
+                    new PlaceOrderLineItemDto { BookId = Guid.Parse("1"), Quantity = 1, Price = 10.1M }, 
+                    new PlaceOrderLineItemDto { BookId = Guid.Parse("2"), Quantity = 1, Price = 10.2M }, 
+                }
+            });
+
+
+            // Assert
+            Assert.True(target1.HasErrors);
+            Assert.Equal(0, orderId1);
+            Assert.Single(target1.Errors);
+            var error1 = target1.Errors.First();
+
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
     }
