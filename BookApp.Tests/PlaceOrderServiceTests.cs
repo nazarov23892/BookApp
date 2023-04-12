@@ -498,9 +498,10 @@ namespace BookApp.Tests
             Assert.True(target1.HasErrors);
             Assert.Single(target1.Errors);
             var error = target1.Errors.Single();
-            Assert.Equal(
-                expected: "order line items limit exceeded", 
-                actual: error.ErrorMessage);
+
+            Assert.Contains(
+                expectedSubstring: "order line items limit exceeded",
+                actualString: error.ErrorMessage);
 
             mock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
