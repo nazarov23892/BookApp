@@ -332,7 +332,6 @@ namespace BookApp.Tests
                 Times.Never);
         }
 
-
         [Fact]
         public void Cannot_PlaceOrder_When_Has_Invalid_Price()
         {
@@ -391,6 +390,71 @@ namespace BookApp.Tests
             Assert.Single(target1.Errors);
             var error = target1.Errors.Single();
             Assert.Equal(expected: "invalid price value", actual: error.ErrorMessage);
+
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Price_Expired()
+        {
+            var dbBook1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 1.1M
+            };
+            var dbBook2 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000002"),
+                Title = "book-2",
+                Price = 2.2M
+            };
+            var lines = new[]
+            {
+                new PlaceOrderLineItemDto
+                {
+                    BookId = dbBook1.BookId,
+                    Title = dbBook1.Title,
+                    Price = dbBook1.Price,
+                    Quantity = 1
+                },
+                new PlaceOrderLineItemDto
+                {
+                    BookId = dbBook2.BookId,
+                    Title = dbBook2.Title,
+                    Price = 1.1M,
+                    Quantity = 1
+                }
+            };
+
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1, dbBook2 }
+                        .ToDictionary(b => b.BookId));
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = lines
+            };
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            // Act
+
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            var error = target1.Errors.Single();
+            Assert.Equal(expected: "items have expired price", actual: error.ErrorMessage);
 
             mock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
