@@ -9,7 +9,7 @@
 }
 
 <h2>Check out</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div class="row">
     <div class="col-md-8">
         <hr />
@@ -18,14 +18,17 @@
             <div class="form-group">
                 <label asp-for="Firstname"></label>
                 <input asp-for="Firstname" class="form-control" />
+                <span asp-validation-for="Firstname" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Lastname"></label>
                 <input asp-for="Lastname" class="form-control" />
+                <span asp-validation-for="Lastname" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PhoneNumber"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
         </form>
     </div>
@@ -39,12 +42,15 @@
                 <th>title</th>
                 <th>price</th>
                 <th>quantity</th>
+                <th>subtotal</th>
             </tr>
             @{ 
                 int i = 0;
+                decimal total = 0.0M;
             }
             @foreach (var line in Model.Lines ?? Enumerable.Empty<PlaceOrderLineItemDto>())
             {
+                decimal subtotal = line.Price * line.Quantity;
                 string lineProperty = $"Lines[{i}]";
                 string bookIdProperty = $"{lineProperty}.BookId";
                 string quantityProperty = $"{lineProperty}.Quantity";
@@ -56,9 +62,17 @@
                     </td>
                     <td>@line.Price</td>
                     <td>@line.Quantity</td>
+                    <td>@subtotal</td>
                 </tr>
+                total += subtotal;
                 i++;
             }
+            <tfoot>
+                <tr>
+                    <th colspan="3">total price</th>
+                    <th>@total</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

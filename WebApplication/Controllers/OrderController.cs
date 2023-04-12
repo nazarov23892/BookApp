@@ -66,6 +66,14 @@ namespace WebApplication.Controllers
                 routeValues: new { id = orderId });
 
         exit_errors:
+            inDto.Lines = cartService.Lines
+                .Select(l => new PlaceOrderLineItemDto
+                {
+                    BookId = l.Book.BookId,
+                    Title = l.Book.Title,
+                    Price = l.Book.Price,
+                    Quantity = l.Quantity
+                });
             return View(
                 viewName: nameof(Checkout),
                 model: inDto);
