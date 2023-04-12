@@ -26,5 +26,27 @@ namespace ServiceLayer.Abstract
                 errorMessage: errorMessage,
                 memberNames: memberNames));
         }
+
+        protected bool PerformValidationObjectProperties(object instance)
+        {
+            var context = new ValidationContext(
+               instance: instance,
+               serviceProvider: null,
+               items: null);
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(
+                instance: instance,
+                validationContext: context,
+                validationResults: results,
+                validateAllProperties: true);
+            if (!isValid)
+            {
+                foreach (var error in results)
+                {
+                    AddError(errorMessage: error.ErrorMessage);
+                }
+            }
+            return isValid;
+        }
     }
 }

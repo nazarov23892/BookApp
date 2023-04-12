@@ -30,22 +30,8 @@ namespace ServiceLayer.OrderServices.Concrete
                 AddError(errorMessage: "No items in your order.");
                 return 0;
             }
-            var context = new ValidationContext(
-                instance: placeOrderDataIn, 
-                serviceProvider: null, 
-                items: null);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(
-                instance: placeOrderDataIn,
-                validationContext: context,
-                validationResults: results,
-                validateAllProperties: true);
-            if (!isValid)
+            if (!PerformValidationObjectProperties(instance: placeOrderDataIn))
             {
-                foreach (var error in results)
-                {
-                    AddError(errorMessage: error.ErrorMessage);
-                }
                 return 0;
             }
             Dictionary<Guid, Book> booksDict = placeOrderDbAccess
