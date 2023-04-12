@@ -9,7 +9,7 @@
 }
 
 <h2>Check out</h2>
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div asp-validation-summary="All" class="text-danger"></div>
 <div class="row">
     <div class="col-md-8">
         <hr />
@@ -53,11 +53,13 @@
                 decimal subtotal = line.Price * line.Quantity;
                 string lineProperty = $"Lines[{i}]";
                 string bookIdProperty = $"{lineProperty}.BookId";
+                string bookPriceProperty = $"{lineProperty}.Price";
                 string quantityProperty = $"{lineProperty}.Quantity";
                 <tr>
                     <td>
                         @line.Title
                         <input form="@formId" name="@bookIdProperty" value="@line.BookId" hidden />
+                        <input form="@formId" name="@bookPriceProperty" value="@line.Price" hidden />
                         <input form="@formId" name="@quantityProperty" value="@line.Quantity" hidden />
                     </td>
                     <td>@line.Price</td>

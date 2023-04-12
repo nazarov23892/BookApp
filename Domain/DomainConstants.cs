@@ -9,5 +9,7 @@ namespace Domain
     public static class DomainConstants
     {
         public const int MaxQuantityToBuy = 10;
+        public const double MinPrice = 0.99;
+        public const double MaxPrice = 9_999.99;
     }
 }

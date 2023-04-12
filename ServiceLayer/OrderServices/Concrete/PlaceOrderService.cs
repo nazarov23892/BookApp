@@ -78,6 +78,7 @@ namespace ServiceLayer.OrderServices.Concrete
                 {
                     Book = baselineBook,
                     BookId = baselineBook.BookId,
+                    BookPrice = baselineBook.Price,
                     Quantity = line.Quantity
                 });
             }

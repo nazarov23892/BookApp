@@ -26,6 +26,11 @@ namespace ServiceLayer.OrderServices
     {
         public Guid BookId { get; set; }
         public string Title { get; set; }
+
+        [Range(
+            minimum: DomainConstants.MinPrice, 
+            maximum: DomainConstants.MaxPrice, 
+            ErrorMessage = "invalid price value")]
         public decimal Price { get; set; }
         
         [Range(minimum: 1, maximum: DomainConstants.MaxQuantityToBuy)]
