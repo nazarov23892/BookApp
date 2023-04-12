@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.DataContexts;
-using DataLayer.Entities;
+using Domain.Entities;
 
 namespace DataLayer.Data
 {

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLaye
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookApp.Tests", "BookApp.Tests\BookApp.Tests.csproj", "{53E7BAE0-933C-413E-81FC-B0AAFF2169D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceDbAccessLayer", "ServiceDbAccessLayer\ServiceDbAccessLayer.csproj", "{3FE99DF7-6010-4860-99F7-4F1C5A573786}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDbAccessLayer", "ServiceDbAccessLayer\ServiceDbAccessLayer.csproj", "{3FE99DF7-6010-4860-99F7-4F1C5A573786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{37AF84D8-6FF9-4EA0-B219-F189B8957A88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3FE99DF7-6010-4860-99F7-4F1C5A573786}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FE99DF7-6010-4860-99F7-4F1C5A573786}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FE99DF7-6010-4860-99F7-4F1C5A573786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

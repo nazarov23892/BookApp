@@ -8,7 +8,7 @@ using Moq;
 using ServiceLayer.OrderServices;
 using ServiceLayer.OrderServices.Concrete;
 using ServiceDbAccessLayer.Orders;
-using DataLayer.Entities;
+using Domain.Entities;
 
 namespace BookApp.Tests
 {

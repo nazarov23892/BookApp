@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
-using DataLayer.Entities;
+using Domain.Entities;
 using ServiceDbAccessLayer.Orders;
 
 namespace ServiceLayer.OrderServices.Concrete

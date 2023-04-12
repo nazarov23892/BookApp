@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.Entities;
+using Domain.Entities;
 
 namespace ServiceLayer.CartServices.QueryObjects
 {

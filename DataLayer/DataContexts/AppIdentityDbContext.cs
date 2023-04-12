@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Entities;
+using Domain.Entities;
 
 namespace DataLayer.DataContexts
 {

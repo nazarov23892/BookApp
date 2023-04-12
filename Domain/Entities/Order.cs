@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataLayer.Entities
+namespace Domain.Entities
 {
     public class Order
     {
@@ -17,7 +17,7 @@ namespace DataLayer.Entities
 
         [Required]
         public string LastName { get; set; }
-        
+
         [Required]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
