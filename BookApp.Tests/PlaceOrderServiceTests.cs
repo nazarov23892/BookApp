@@ -280,18 +280,21 @@ namespace BookApp.Tests
                 {
                     BookId = dbBook1.BookId,
                     Title = dbBook1.Title,
+                    Price = dbBook1.Price,
                     Quantity = 1
                 },
                 new PlaceOrderLineItemDto
                 {
                     BookId = dbBook2.BookId,
                     Title = dbBook2.Title,
+                    Price = dbBook2.Price,
                     Quantity = 1
                 },
                 new PlaceOrderLineItemDto
                 {
                     BookId = missingId,
                     Title = "title",
+                    Price = 1.1M,
                     Quantity = 1
                 }
             };
@@ -328,5 +331,7 @@ namespace BookApp.Tests
             mock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
+
+       
     }
 }
