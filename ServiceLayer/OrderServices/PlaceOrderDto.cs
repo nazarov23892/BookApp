@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Domain;
 
 namespace ServiceLayer.OrderServices
 {
@@ -26,6 +27,8 @@ namespace ServiceLayer.OrderServices
         public Guid BookId { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
+        
+        [Range(minimum: 1, maximum: DomainConstants.MaxQuantityToBuy)]
         public int Quantity { get; set; }
     }
 }

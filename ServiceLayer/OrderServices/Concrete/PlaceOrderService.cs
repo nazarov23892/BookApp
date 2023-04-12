@@ -64,11 +64,9 @@ namespace ServiceLayer.OrderServices.Concrete
             List<OrderLineItem> orderLines = new List<OrderLineItem>();
             foreach (var line in placeOrderLineItems)
             {
-                if (line.Quantity <= 0
-                    || line.Quantity > DomainConstants.MaxQuantityToBuy)
+                if (!PerformValidationObjectProperties(instance: line))
                 {
-                    AddError(errorMessage: "order line: invalid quantity value. ");
-                    return orderLines;
+                    break;
                 }
                 if (!booksBaselineDict.ContainsKey(line.BookId))
                 {

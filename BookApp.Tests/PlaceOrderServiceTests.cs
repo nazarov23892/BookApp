@@ -246,10 +246,10 @@ namespace BookApp.Tests
             var error2 = target2.Errors.First();
 
             Assert.True(error1.ErrorMessage.Contains(
-                value: "invalid quantity value",
+                value: "must be between",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
             Assert.True(error2.ErrorMessage.Contains(
-                value: "invalid quantity value",
+                value: "must be between",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
             mock.Verify(x => x.Add(It.IsAny<Order>()),
