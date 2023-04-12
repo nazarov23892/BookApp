@@ -182,8 +182,19 @@ namespace BookApp.Tests
         [Fact]
         public void Cannot_PlaceOrder_When_Quantity_is_less_or_equal_zero()
         {
+            var dbBook1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000001"),
+                Title = "book-1",
+                Price = 10.1M
+            };
+
             // Arrange
             Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1 }
+                        .ToDictionary(b => b.BookId));
+
             PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
             PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
 
@@ -196,9 +207,10 @@ namespace BookApp.Tests
                 {
                     new PlaceOrderLineItemDto
                     {
-                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Quantity = 0,
-                        Price = 10.1M
+                        BookId = dbBook1.BookId,
+                        Price = dbBook1.Price,
+                        Title = dbBook1.Title,
+                        Quantity = 0
                     }
                 }
             };
@@ -211,9 +223,10 @@ namespace BookApp.Tests
                 {
                     new PlaceOrderLineItemDto
                     {
-                        BookId = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Quantity = -1,
-                        Price = 10.1M
+                        BookId = dbBook1.BookId,
+                        Price = dbBook1.Price,
+                        Title = dbBook1.Title,
+                        Quantity = -1
                     }
                 }
             };
