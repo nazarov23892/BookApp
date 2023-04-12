@@ -461,5 +461,67 @@ namespace BookApp.Tests
             mock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Too_Many_LineItems()
+        {
+            var books = GenerateBooks(num: 11);
+            var lines = books.Select(b => new PlaceOrderLineItemDto
+            {
+                BookId = b.BookId,
+                Title = b.Title,
+                Price = b.Price,
+                Quantity = 1
+            });
+
+            // Arrange
+            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => books
+                        .ToDictionary(b => b.BookId));
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = lines
+            };
+            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+
+            // Act
+
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            var error = target1.Errors.Single();
+            Assert.Equal(
+                expected: "order line items limit exceeded", 
+                actual: error.ErrorMessage);
+
+            mock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            mock.Verify(x => x.SaveChanges(),
+                Times.Never);
+
+            static Book[] GenerateBooks(int num)
+            {
+                List<Book> list = new List<Book>();
+                for (int i = 0; i < num; i++)
+                {
+                    string guidString = String.Format("{0:00000000-0000-0000-0000-000000000000}", 1 + i);
+                    list.Add(new Book
+                    {
+                        BookId = new Guid(guidString),
+                        Title = $"book-{1 + i}",
+                        Price = 10M
+                    }) ;
+                }
+                return list.ToArray();
+            }
+        }
     }
 }
