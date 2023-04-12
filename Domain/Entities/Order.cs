@@ -10,7 +10,7 @@ namespace Domain.Entities
     public class Order
     {
         public int OrderId { get; set; }
-        public DateTime DateOrdered { get; set; }
+        public DateTime DateOrderedUtc { get; set; }
 
         [Required]
         public string Firstname { get; set; }

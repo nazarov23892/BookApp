@@ -46,7 +46,7 @@ namespace ServiceLayer.OrderServices.Concrete
             }
             Order order = new Order
             {
-                DateOrdered = DateTime.Now,
+                DateOrderedUtc = DateTime.UtcNow,
                 Firstname = placeOrderDataIn.Firstname,
                 LastName = placeOrderDataIn.Lastname,
                 PhoneNumber = placeOrderDataIn.PhoneNumber,
