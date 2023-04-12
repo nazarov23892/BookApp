@@ -74,6 +74,11 @@ namespace ServiceLayer.OrderServices.Concrete
                         message: $"A placing of order failed: book id={line.BookId} was missing");
                 }
                 var baselineBook = booksBaselineDict[line.BookId];
+                if (line.Price != baselineBook.Price)
+                {
+                    AddError(errorMessage: "items have expired price");
+                    break;
+                }
                 orderLines.Add(new OrderLineItem
                 {
                     Book = baselineBook,
