@@ -22,7 +22,14 @@ namespace ServiceLayer.OrderServices.Concrete
 
         public int PlaceOrder(PlaceOrderDto placeOrderDataIn)
         {
-            var chosenIds = (placeOrderDataIn.Lines ?? Enumerable.Empty<PlaceOrderLineItemDto>())
+            var inputLines = placeOrderDataIn.Lines ?? Enumerable.Empty<PlaceOrderLineItemDto>();
+            if (inputLines.Count() > DomainConstants.OrderLineItemsLimit)
+            {
+                AddError(
+                    errorMessage: $"order line items limit exceeded ({DomainConstants.OrderLineItemsLimit})");
+                return 0;
+            }
+            var chosenIds = inputLines
                 .Select(l => l.BookId)
                 .ToArray();
             if (!chosenIds.Any())
