@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
 using Domain.Entities;
 using ServiceDbAccessLayer.Orders;
+using Domain;
 
 namespace ServiceLayer.OrderServices.Concrete
 {
@@ -78,7 +79,7 @@ namespace ServiceLayer.OrderServices.Concrete
             foreach (var line in placeOrderLineItems)
             {
                 if (line.Quantity <= 0
-                    || line.Quantity > GlobalConstants.MaxQuantityToBuy)
+                    || line.Quantity > DomainConstants.MaxQuantityToBuy)
                 {
                     AddError(errorMessage: "order line: invalid quantity value. ");
                     return orderLines;

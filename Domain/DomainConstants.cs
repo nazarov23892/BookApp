@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer
+namespace Domain
 {
-    public static class GlobalConstants
+    public static class DomainConstants
     {
         public const int MaxQuantityToBuy = 10;
     }
