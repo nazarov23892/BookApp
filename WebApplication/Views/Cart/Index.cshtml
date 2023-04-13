@@ -3,7 +3,7 @@
 @model IEnumerable<CartLine>
 
 @{
-    Guid editId = ViewBag.EditId ?? default(Guid);
+    Guid? editId = ViewBag.EditId;
 }
 
 <div asp-validation-summary="All" class="text-danger"></div>
@@ -24,7 +24,7 @@
         total += subtotal;
 
         string lineViewName = "LinePartial";
-        if (editId == line.Book.BookId)
+        if (editId.HasValue && editId == line.Book.BookId)
         {
             lineViewName = "LineEditPartial";
         }
@@ -37,15 +37,18 @@
         <th>@total</th>
     </tr>
 </table>
-<div class="text-center">
-    <a asp-action="Checkout" 
-       asp-controller="Order"
-       class="btn btn-primary">
-        check out
-    </a>
-    <a asp-action="Index"
-       asp-controller="Home"
-       class="btn btn-secondary">
-        back to catalog
-    </a>
-</div>
+@if (!editId.HasValue)
+{
+    <div class="text-center">
+        <a asp-action="Checkout"
+           asp-controller="Order"
+           class="btn btn-primary">
+            check out
+        </a>
+        <a asp-action="Index"
+           asp-controller="Home"
+           class="btn btn-secondary">
+            back to catalog
+        </a>
+    </div>
+}
