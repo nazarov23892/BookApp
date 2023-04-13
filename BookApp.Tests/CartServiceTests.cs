@@ -227,56 +227,75 @@ namespace BookApp.Tests
         [Fact]
         public void Cannot_SetQuantity_When_Not_Exist()
         {
-            var book1 = Books[0];
-            var book2 = Books[1];
-            var line1 = new CartLine
-            {
-                Book = book1,
-                Quantity = 2
-            };
+            // Arrange
 
+            BookForCartDto book1 = null, book2 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                book1 = arr[0];
+                book2 = arr[1];
+            }
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
             {
-                return new[] { line1 };
+                return new[] { book1 }
+                    .Select(b => new CartLine { Book = b, Quantity = 1 });
             });
-
             SessionCartService target = new SessionCartService(mock.Object);
+
+            // Act
 
             target.SetQuantity(
                 bookId: book2.BookId,
                 quantity: 4);
 
+            // Assert
+
             Assert.True(target.HasErrors);
             Assert.Single(target.Errors);
             Assert.Equal("item not found", target.Errors.First().ErrorMessage);
+            mock.Verify(m => m.Write(It.IsAny<IEnumerable<CartLine>>()), times: Times.Never);
         }
 
         [Fact]
-        public void Cannot_SetQuantity_When_Invalid_Value()
+        public void Cannot_SetQuantity_When_Value_Equal_Or_Less_Than_Zero()
         {
-            var book1 = Books[0];
-            var line1 = new CartLine
-            {
-                Book = book1,
-                Quantity = 2
-            };
+            // Arrange
 
+            BookForCartDto book1 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                book1 = arr[0];
+            }
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
             {
-                return new[] { line1 };
+                return new[] { new CartLine { Book = book1, Quantity = 1 } };
             });
+            SessionCartService target1 = new SessionCartService(mock.Object);
+            SessionCartService target2 = new SessionCartService(mock.Object);
 
-            SessionCartService target = new SessionCartService(mock.Object);
+            // Act
 
-            target.SetQuantity(
+            target1.SetQuantity(
                 bookId: book1.BookId,
                 quantity: -1);
+            target2.SetQuantity(
+                bookId: book1.BookId,
+                quantity: 0);
 
-            Assert.True(target.HasErrors);
-            Assert.Single(target.Errors);
-            Assert.Equal("cannot be less or equal zero", target.Errors.First().ErrorMessage);
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.True(target2.HasErrors);
+
+            Assert.Single(target1.Errors);
+            Assert.Single(target2.Errors);
+
+            Assert.Equal("cannot be less or equal zero", target1.Errors.First().ErrorMessage);
+            Assert.Equal("cannot be less or equal zero", target2.Errors.First().ErrorMessage);
+
+            mock.Verify(m => m.Write(It.IsAny<IEnumerable<CartLine>>()), times: Times.Never);
         }
 
         [Fact]
