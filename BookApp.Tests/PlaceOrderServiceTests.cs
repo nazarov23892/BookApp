@@ -258,6 +258,8 @@ namespace BookApp.Tests
                 Times.Never);
         }
 
+        // todo: add exceeded quantity value test
+
         [Fact]
         public void Cannot_PlaceOrder_When_Chosen_Id_is_missing_in_Db()
         {

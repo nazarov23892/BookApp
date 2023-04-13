@@ -74,6 +74,13 @@ namespace ServiceLayer.CartServices.Concrete
                     memberNames: nameof(quantity));
                 return;
             }
+            if (quantity > DomainConstants.MaxQuantityToBuy)
+            {
+                AddError(
+                    errorMessage: $"quantity value cannot be more than ({DomainConstants.MaxQuantityToBuy})",
+                    memberNames: nameof(quantity));
+                return;
+            }
             var line = lines
                 .SingleOrDefault(l => l.Book.BookId == bookId);
             if (line == null)
