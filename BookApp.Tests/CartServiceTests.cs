@@ -12,7 +12,7 @@ namespace BookApp.Tests
     public class CartServiceTests
     {
         [Fact]
-        public void Test_Add()
+        public void Can_Add()
         {
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
@@ -46,7 +46,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_AddWhenExist()
+        public void Cannot_Add_When_Exist()
         {
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
@@ -78,7 +78,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_SetQuantity()
+        public void Can_SetQuantity()
         {
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
@@ -110,7 +110,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_SetQuantityWhenNotExist()
+        public void Cannot_SetQuantity_When_Not_Exist()
         {
             var book1 = Books[0];
             var book2 = Books[1];
@@ -138,7 +138,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_SetQuantityWhenInvalidQuantity()
+        public void Cannot_SetQuantity_When_Invalid_Value()
         {
             var book1 = Books[0];
             var line1 = new CartLine
@@ -165,7 +165,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_RestoreState()
+        public void Can_Restore_State()
         {
             var book1 = Books[0];
             var book2 = Books[1];
@@ -200,7 +200,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_Remove()
+        public void Can_Remove()
         {
             var book1 = Books[0];
             var book2 = Books[1];
@@ -247,7 +247,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_RemoveWhenNotExist()
+        public void Cannot_Remove_When_Not_Exist()
         {
             var book1 = Books[0];
             var book2 = Books[1];
@@ -281,7 +281,7 @@ namespace BookApp.Tests
         }
 
         [Fact]
-        public void Test_Clear()
+        public void Can_Clear()
         {
             var line1 = new CartLine
             {
