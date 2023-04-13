@@ -22,7 +22,7 @@ namespace BookApp.Tests
                 book1 = arr[0];
                 book2 = arr[1];
             }
-           
+
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             CartLine[] savedLines = null;
             mock.Setup(m => m.Read()).Returns(() =>
@@ -76,21 +76,39 @@ namespace BookApp.Tests
         [Fact]
         public void Cannot_Add_When_Exist()
         {
+            // Arrange
+
+            BookForCartDto book1 = null, book2 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                book1 = arr[0];
+                book2 = arr[1];
+            }
+
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
             mock.Setup(m => m.Read()).Returns(() =>
             {
-                return Enumerable.Empty<CartLine>();
+                return new[] { book2, book1 }
+                    .Select(b => new CartLine
+                    {
+                        Book = b,
+                        Quantity = 1
+                    });
             });
-
-            var book1 = Books[0];
-            var book2 = Books[1];
-
             SessionCartService target = new SessionCartService(saver: mock.Object);
 
-            target.Add(book2);
-            target.Add(book1);
-            target.Add(book1);
+            // Act
 
+            target.Add(book2);
+
+            // Assert
+
+            BookForCartDto baselineBook1 = null, baselineBook2 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                baselineBook1 = arr[0];
+                baselineBook2 = arr[1];
+            }
             CartLine[] lines = target.Lines
                 .ToArray();
 
@@ -99,10 +117,12 @@ namespace BookApp.Tests
             Assert.Equal("item has already been added", target.Errors.First().ErrorMessage);
 
             Assert.Equal(2, lines.Length);
-            Assert.Equal(book2.BookId, lines[0].Book.BookId);
-            Assert.Equal(book1.BookId, lines[1].Book.BookId);
-            Assert.Equal(1, lines[0].Quantity);
-            Assert.Equal(1, lines[1].Quantity);
+            Assert.Equal(expected: baselineBook2.BookId, actual: lines[0].Book.BookId);
+            Assert.Equal(expected: baselineBook1.BookId, actual: lines[1].Book.BookId);
+            Assert.Equal(expected: 1, actual: lines[0].Quantity);
+            Assert.Equal(expected: 1, actual: lines[1].Quantity);
+
+            mock.Verify(m => m.Write(It.IsAny<IEnumerable<CartLine>>()), Times.Never);
         }
 
         [Fact]
@@ -123,7 +143,7 @@ namespace BookApp.Tests
                     .Take(10);
             });
             SessionCartService target = new SessionCartService(saver: mock.Object);
-            
+
             // Act
 
             var bookExtra = books[10];
@@ -138,7 +158,7 @@ namespace BookApp.Tests
             Assert.True(target.HasErrors);
             Assert.Single(target.Errors);
             Assert.Equal(
-                expected: "limit of line items reached", 
+                expected: "limit of line items reached",
                 actual: target.Errors.First().ErrorMessage);
 
             mock.Verify(x => x.Write(It.IsAny<IEnumerable<CartLine>>()),
@@ -222,7 +242,7 @@ namespace BookApp.Tests
             });
 
             SessionCartService target = new SessionCartService(mock.Object);
-  
+
             target.SetQuantity(
                 bookId: book1.BookId,
                 quantity: -1);
@@ -387,8 +407,8 @@ namespace BookApp.Tests
                 .Returns(
                 () =>
                 {
-                    return new[] 
-                    {  
+                    return new[]
+                    {
                         new CartLine { Book = book1, Quantity = 5 },
                         new CartLine { Book = book2, Quantity = 10 }
                     };
@@ -402,7 +422,7 @@ namespace BookApp.Tests
             SessionCartService target = new SessionCartService(saver: mock.Object);
 
             // actions
-            
+
             target.SetQuantity(
                 bookId: book2.BookId,
                 quantity: 8);
@@ -516,7 +536,7 @@ namespace BookApp.Tests
             return res;
         }
 
-        public BookForCartDto[] Books 
+        public BookForCartDto[] Books
         {
             get => new[]
             {
