@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceLayer.Abstract;
+using Domain;
 
 namespace ServiceLayer.CartServices.Concrete
 {
@@ -28,8 +29,12 @@ namespace ServiceLayer.CartServices.Concrete
             if (lines
                 .FirstOrDefault(l=>l.Book.BookId == book.BookId) != null)
             {
-                AddError(
-                    errorMessage: "item has already been added");
+                AddError(errorMessage: "item has already been added");
+                return;
+            }
+            if (lines.Count() >= DomainConstants.OrderLineItemsLimit)
+            {
+                AddError(errorMessage: "limit of line items reached");
                 return;
             }
             lines.Add(new CartLine
