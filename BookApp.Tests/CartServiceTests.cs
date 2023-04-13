@@ -78,6 +78,46 @@ namespace BookApp.Tests
         }
 
         [Fact]
+        public void Cannot_Add_When_Lines_Limit_Reached()
+        {
+            // Arrange
+
+            BookForCartDto[] books = GenerateBookDtoArray(11);
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read()).Returns(() =>
+            {
+                return books
+                    .Select(b => new CartLine
+                    {
+                        Book = b,
+                        Quantity = 1
+                    })
+                    .Take(10);
+            });
+            SessionCartService target = new SessionCartService(saver: mock.Object);
+            
+            // Act
+
+            var bookExtra = books[10];
+            target.Add(bookExtra);
+
+            // Assert
+
+            CartLine[] lines = target.Lines
+                .ToArray();
+
+            Assert.Equal(expected: 10, actual: lines.Length);
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Equal(
+                expected: "limit of line items reached", 
+                actual: target.Errors.First().ErrorMessage);
+
+            mock.Verify(x => x.Write(It.IsAny<IEnumerable<CartLine>>()),
+                Times.Never);
+        }
+
+        [Fact]
         public void Can_SetQuantity()
         {
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
@@ -524,6 +564,22 @@ namespace BookApp.Tests
                     Price = 3.3M
                 }
             };
+        }
+
+        private BookForCartDto[] GenerateBookDtoArray(int num)
+        {
+            List<BookForCartDto> list = new List<BookForCartDto>();
+            for (int i = 0; i < num; i++)
+            {
+                string guidString = String.Format("{0:00000000-0000-0000-0000-000000000000}", 1 + i);
+                list.Add(new BookForCartDto
+                {
+                    BookId = new Guid(guidString),
+                    Title = $"book-{1 + i}",
+                    Price = 10M,
+                });
+            }
+            return list.ToArray();
         }
     }
 }
