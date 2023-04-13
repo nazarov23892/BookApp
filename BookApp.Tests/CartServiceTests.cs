@@ -299,6 +299,40 @@ namespace BookApp.Tests
         }
 
         [Fact]
+        public void Cannot_SetQuantity_When_MaxValue_Exceeded()
+        {
+            // Arrange
+
+            BookForCartDto book1 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                book1 = arr[0];
+            }
+            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            mock.Setup(m => m.Read()).Returns(() =>
+            {
+                return new[] { new CartLine { Book = book1, Quantity = 1 } };
+            });
+            SessionCartService target1 = new SessionCartService(mock.Object);
+
+            // Act
+
+            int quantityExceeded = 1 + Domain.DomainConstants.MaxQuantityToBuy;
+            target1.SetQuantity(
+                bookId: book1.BookId,
+                quantity: quantityExceeded);
+
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            Assert.Contains(
+                expectedSubstring: "quantity value cannot be more than",
+                actualString: target1.Errors.First().ErrorMessage);
+            mock.Verify(m => m.Write(It.IsAny<IEnumerable<CartLine>>()), times: Times.Never);
+        }
+
+        [Fact]
         public void Can_Restore_State()
         {
             var book1 = Books[0];
