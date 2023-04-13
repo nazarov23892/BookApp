@@ -14,35 +14,63 @@ namespace BookApp.Tests
         [Fact]
         public void Can_Add()
         {
+            // Arrange
+
+            BookForCartDto book1 = null, book2 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                book1 = arr[0];
+                book2 = arr[1];
+            }
+           
             Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
+            CartLine[] savedLines = null;
             mock.Setup(m => m.Read()).Returns(() =>
                 {
                     return Enumerable.Empty<CartLine>();
                 });
-
-            var book1 = Books[0];
-            var book2 = Books[1];
-            var book3 = Books[2];
-
+            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
+                .Callback<IEnumerable<CartLine>>(x =>
+                {
+                    savedLines = x.ToArray();
+                });
             SessionCartService target = new SessionCartService(saver: mock.Object);
 
+            // Act
+
             target.Add(book2);
+            var state_1 = CopyArray(sourceArr: savedLines);
             target.Add(book1);
-            target.Add(book3);
+            var state_2 = CopyArray(sourceArr: savedLines);
+
+            // Assert
+
+            BookForCartDto baselineBook1 = null, baselineBook2 = null;
+            {
+                var arr = GenerateBookDtoArray(2);
+                baselineBook1 = arr[0];
+                baselineBook2 = arr[1];
+            }
 
             CartLine[] lines = target.Lines
                 .ToArray();
 
             Assert.False(target.HasErrors);
 
-            Assert.Equal(3, lines.Length);
-            Assert.Equal(book2.BookId, lines[0].Book.BookId);
-            Assert.Equal(book1.BookId, lines[1].Book.BookId);
-            Assert.Equal(book3.BookId, lines[2].Book.BookId);
-
+            Assert.Equal(expected: 2, actual: lines.Length);
             Assert.Equal(1, lines[0].Quantity);
             Assert.Equal(1, lines[1].Quantity);
-            Assert.Equal(1, lines[2].Quantity);
+            Assert.Equal(expected: baselineBook2.BookId, actual: lines[0].Book.BookId);
+            Assert.Equal(expected: baselineBook1.BookId, actual: lines[1].Book.BookId);
+
+            Assert.Single(state_1);
+            Assert.Equal(expected: baselineBook2.BookId, actual: state_1[0].Book.BookId);
+
+            Assert.Equal(expected: 2, state_2.Length);
+            Assert.Equal(expected: baselineBook2.BookId, actual: state_2[0].Book.BookId);
+            Assert.Equal(expected: baselineBook1.BookId, actual: state_2[1].Book.BookId);
+
+            mock.Verify(m => m.Write(It.IsAny<IEnumerable<CartLine>>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -345,59 +373,6 @@ namespace BookApp.Tests
 
             Assert.False(target.HasErrors);
             Assert.False(target.Lines.Any());
-        }
-
-        [Fact]
-        public void Test_SaveWhenAdd()
-        {
-            var book1 = Books[0];
-            var book2 = Books[1];
-            var book3 = Books[2];
-
-            var line1 = new CartLine
-            {
-                Book = book1,
-                Quantity = 5
-            };
-
-            CartLine[] tmpLines = null;
-            Mock<ICartLinesSessionSaver> mock = new Mock<ICartLinesSessionSaver>();
-            mock.Setup(m => m.Read())
-                .Returns(
-                () =>
-                {
-                    return new[] { line1 };
-                });
-            mock.Setup(m => m.Write(It.IsAny<IEnumerable<CartLine>>()))
-                .Callback<IEnumerable<CartLine>>(x =>
-                {
-                    tmpLines = x.ToArray();
-                });
-
-            SessionCartService target = new SessionCartService(saver: mock.Object);
-
-            // actions
-
-            target.Add(book3);
-            CartLine[] linesAfterAddBook3 = CopyArray(tmpLines);
-
-            target.Add(book2);
-            CartLine[] linesAfterAddBook2 = CopyArray(tmpLines);
-
-            // asserts
-
-            Assert.Equal(2, linesAfterAddBook3.Length);
-            Assert.Equal(book1.BookId, linesAfterAddBook3[0].Book.BookId);
-            Assert.Equal(book3.BookId, linesAfterAddBook3[1].Book.BookId);
-
-            Assert.Equal(3, linesAfterAddBook2.Length);
-            Assert.Equal(book1.BookId, linesAfterAddBook2[0].Book.BookId);
-            Assert.Equal(book3.BookId, linesAfterAddBook2[1].Book.BookId);
-            Assert.Equal(book2.BookId, linesAfterAddBook2[2].Book.BookId);
-
-            mock.Verify(x => x.Write(
-                It.IsAny<IEnumerable<CartLine>>()), 
-                Times.Exactly(2));
         }
 
         [Fact]
