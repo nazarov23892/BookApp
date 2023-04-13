@@ -12,5 +12,6 @@ namespace Domain
         public const double MinPrice = 0.99;
         public const double MaxPrice = 9_999.99;
         public const int OrderLineItemsLimit = 10;
+        public const string UsersRoleName = "Users";
     }
 }

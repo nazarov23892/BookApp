@@ -43,7 +43,13 @@ namespace WebApplication
             {
                 options.UseSqlServer(connectionString: connectionString);
             });
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>(options=> 
+            {
+                // todo: review this settiongs
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+            })
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
 
             services.AddDistributedMemoryCache();
@@ -71,8 +77,11 @@ namespace WebApplication
                 var serviceProvider = scope.ServiceProvider;
                 AppIdentityDbContext efDbContext = serviceProvider
                     .GetRequiredService<AppIdentityDbContext>();
-
-                SeedData.RunSeed(efDbContext: efDbContext);
+ 
+                SeedData.RunSeed(
+                    efDbContext: serviceProvider.GetRequiredService<AppIdentityDbContext>(),
+                    roleManager: serviceProvider.GetRequiredService<RoleManager<IdentityRole>>(),
+                    userManager: serviceProvider.GetRequiredService<UserManager<AppUser>>());
             }
 
             app.UseStaticFiles();

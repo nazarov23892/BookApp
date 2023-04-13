@@ -3,15 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using DataLayer.DataContexts;
+using DataLayer.Entities;
+using Domain;
 using Domain.Entities;
 
 namespace DataLayer.Data
 {
     public static class SeedData
     {
-        public static void RunSeed(AppIdentityDbContext efDbContext)
+        public static void RunSeed(
+            AppIdentityDbContext efDbContext, 
+            RoleManager<IdentityRole> roleManager,
+            UserManager<AppUser> userManager)
         {
+            EnsureRole(
+                roleManager: roleManager,
+                roleName: DomainConstants.UsersRoleName).Wait();
+
+            string userId = EnsureUser(
+                userManager: userManager,
+                email: "customer@example.com",
+                password: "secret123",
+                roleName: DomainConstants.UsersRoleName).Result;
+
             SeedBooks(
                 efDbContext: efDbContext,
                 books: GetBooks());
@@ -195,5 +211,67 @@ namespace DataLayer.Data
             efDbContext.AddRange(books);
             efDbContext.SaveChanges();
         }
+
+        private static async Task EnsureRole(RoleManager<IdentityRole> roleManager, string roleName)
+        {
+            var role = await roleManager.FindByNameAsync(roleName: roleName);
+            if (role != null)
+            {
+                return;
+            }
+            var result = await roleManager.CreateAsync(new IdentityRole
+            {
+                Name = roleName
+            });
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    message: "seed role process has errors");
+            }
+        }
+
+        private static async Task<string> EnsureUser(
+            UserManager<AppUser> userManager,
+            string email,
+            string password,
+            string roleName)
+        {
+            var user = await userManager.FindByEmailAsync(email: email);
+            if (user == null)
+            {
+                user = new AppUser
+                {
+                    Email = email,
+                    UserName = email
+                };
+                var result = await userManager.CreateAsync(
+                    user: user,
+                    password: password);
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException(
+                        message: "seed users process has errors");
+                }
+            }
+
+            bool isInRole = await userManager.IsInRoleAsync(
+                user: user,
+                role: roleName);
+
+            if (!isInRole)
+            {
+                var result = await userManager.AddToRoleAsync(
+                    user: user,
+                    role: roleName);
+
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException(
+                       message: "seed users process has errors");
+                }
+            }
+            return user.Id;
+        }
+
     }
 }
