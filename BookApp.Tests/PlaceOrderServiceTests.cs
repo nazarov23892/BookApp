@@ -9,6 +9,7 @@ using ServiceLayer.OrderServices;
 using ServiceLayer.OrderServices.Concrete;
 using ServiceDbAccessLayer.Orders;
 using Domain.Entities;
+using ServiceLayer.Abstract;
 
 namespace BookApp.Tests
 {
@@ -18,10 +19,15 @@ namespace BookApp.Tests
         public void Cannot_PlaceOrder_When_Empty_or_Null_Lines()
         {
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
 
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
-            PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
+            PlaceOrderService target2 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
             target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
@@ -57,9 +63,9 @@ namespace BookApp.Tests
                 value: "No items in your order.",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
         }
 
@@ -67,9 +73,12 @@ namespace BookApp.Tests
         public void Cannot_PlaceOrder_When_Firstname_Empty()
         {
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
 
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
             target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
@@ -101,9 +110,9 @@ namespace BookApp.Tests
             var error1 = target1.Errors.First();
             Assert.True(error1.ErrorMessage
                 .Contains(value: "Firstname field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -111,8 +120,12 @@ namespace BookApp.Tests
         public void Cannot_PlaceOrder_When_Lastname_Empty()
         {
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
             target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
@@ -137,9 +150,9 @@ namespace BookApp.Tests
             var error1 = target1.Errors.First();
             Assert.True(error1.ErrorMessage
                 .Contains(value: "Lastname field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -147,8 +160,12 @@ namespace BookApp.Tests
         public void Cannot_PlaceOrder_When_Phonenumber_Empty()
         {
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
             target1.PlaceOrder(placeOrderDataIn: new PlaceOrderDto
@@ -173,9 +190,9 @@ namespace BookApp.Tests
             var error1 = target1.Errors.First();
             Assert.True(error1.ErrorMessage
                 .Contains(value: "Phonenumber field is required", comparisonType: StringComparison.OrdinalIgnoreCase));
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -190,13 +207,19 @@ namespace BookApp.Tests
             };
 
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
                .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1 }
                         .ToDictionary(b => b.BookId));
 
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
-            PlaceOrderService target2 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
+            PlaceOrderService target2 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             var dto1 = new PlaceOrderDto
             {
@@ -252,9 +275,9 @@ namespace BookApp.Tests
                 value: "must be between",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -302,11 +325,13 @@ namespace BookApp.Tests
             };
 
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
                .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1, dbBook2 }
                         .ToDictionary(b=>b.BookId));
-              
+
             var dto1 = new PlaceOrderDto
             {
                 Firstname = "firstname",
@@ -314,7 +339,9 @@ namespace BookApp.Tests
                 PhoneNumber = "111",
                 Lines = lines
             };
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
 
@@ -328,9 +355,9 @@ namespace BookApp.Tests
                 value: "A placing of order failed: book id",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -368,10 +395,13 @@ namespace BookApp.Tests
             };
 
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
                .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1, dbBook2 }
                         .ToDictionary(b => b.BookId));
+
 
             var dto1 = new PlaceOrderDto
             {
@@ -380,7 +410,9 @@ namespace BookApp.Tests
                 PhoneNumber = "111",
                 Lines = lines
             };
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
 
@@ -393,9 +425,9 @@ namespace BookApp.Tests
             var error = target1.Errors.Single();
             Assert.Equal(expected: "invalid price value", actual: error.ErrorMessage);
 
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -433,8 +465,10 @@ namespace BookApp.Tests
             };
 
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
                .Returns<IEnumerable<Guid>>((ids) => new[] { dbBook1, dbBook2 }
                         .ToDictionary(b => b.BookId));
 
@@ -445,7 +479,9 @@ namespace BookApp.Tests
                 PhoneNumber = "111",
                 Lines = lines
             };
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
 
@@ -458,9 +494,9 @@ namespace BookApp.Tests
             var error = target1.Errors.Single();
             Assert.Equal(expected: "items have expired price", actual: error.ErrorMessage);
 
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
         }
 
@@ -477,8 +513,10 @@ namespace BookApp.Tests
             });
 
             // Arrange
-            Mock<IPlaceOrderDbAccess> mock = new Mock<IPlaceOrderDbAccess>();
-            mock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
                .Returns<IEnumerable<Guid>>((ids) => books
                         .ToDictionary(b => b.BookId));
 
@@ -489,7 +527,9 @@ namespace BookApp.Tests
                 PhoneNumber = "111",
                 Lines = lines
             };
-            PlaceOrderService target1 = new PlaceOrderService(placeOrderDbAccess: mock.Object);
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
 
             // Act
 
@@ -505,9 +545,9 @@ namespace BookApp.Tests
                 expectedSubstring: "order line items limit exceeded",
                 actualString: error.ErrorMessage);
 
-            mock.Verify(x => x.Add(It.IsAny<Order>()),
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
-            mock.Verify(x => x.SaveChanges(),
+            dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
 
             static Book[] GenerateBooks(int num)
