@@ -22,5 +22,8 @@ namespace Domain.Entities
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
         public ICollection<OrderLineItem> Lines { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
     }
 }
