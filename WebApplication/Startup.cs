@@ -86,6 +86,7 @@ namespace WebApplication
 
             app.UseStaticFiles();
             app.UseSession();
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
