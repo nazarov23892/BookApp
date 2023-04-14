@@ -64,5 +64,13 @@ namespace WebApplication.Controllers
         error_exit:
             return View(model: loginDto);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            await signInManager.SignOutAsync();
+            return Redirect(url: "/");
+        }
     }
 }
