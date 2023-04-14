@@ -14,10 +14,13 @@ namespace ServiceLayer.OrderServices.Concrete
     public class PlaceOrderService : ServiceErrors, IPlaceOrderService
     {
         private readonly IPlaceOrderDbAccess placeOrderDbAccess;
+        private readonly ISignInContext signInContext;
 
-        public PlaceOrderService(IPlaceOrderDbAccess placeOrderDbAccess)
+        public PlaceOrderService(IPlaceOrderDbAccess placeOrderDbAccess,
+            ISignInContext signInContext)
         {
             this.placeOrderDbAccess = placeOrderDbAccess;
+            this.signInContext = signInContext;
         }
 
         public int PlaceOrder(PlaceOrderDto placeOrderDataIn)
@@ -51,13 +54,17 @@ namespace ServiceLayer.OrderServices.Concrete
             {
                 return 0;
             }
+            string userId = signInContext.IsSignedIn
+                ? signInContext.UserId
+                : null;
             Order order = new Order
             {
                 DateOrderedUtc = DateTime.UtcNow,
                 Firstname = placeOrderDataIn.Firstname,
                 LastName = placeOrderDataIn.Lastname,
                 PhoneNumber = placeOrderDataIn.PhoneNumber,
-                Lines = orderLines
+                Lines = orderLines,
+                UserId = userId
             };
             placeOrderDbAccess.Add(newOrder: order);
             placeOrderDbAccess.SaveChanges();

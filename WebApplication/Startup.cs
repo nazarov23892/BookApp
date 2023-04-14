@@ -20,6 +20,7 @@ using ServiceLayer.CartServices;
 using ServiceLayer.CartServices.Concrete;
 using ServiceLayer.OrderServices;
 using ServiceLayer.OrderServices.Concrete;
+using ServiceLayer.Abstract;
 using ServiceDbAccessLayer.Orders;
 using ServiceDbAccessLayer.Orders.Concrete;
 
@@ -60,6 +61,7 @@ namespace WebApplication
             services.AddTransient<IBookForCartService, BookForCartService>();
             services.AddTransient<IPlaceOrderService, PlaceOrderService>();
             services.AddTransient<IPlaceOrderDbAccess, PlaceOrderDbAccess>();
+            services.AddTransient<ISignInContext, SignInContext>();
 
             services.AddMvc();
         }
