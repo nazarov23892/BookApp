@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
 using DataLayer.Entities;
+using Domain;
 
 namespace WebApplication.Controllers
 {
@@ -71,6 +72,66 @@ namespace WebApplication.Controllers
         {
             await signInManager.SignOutAsync();
             return Redirect(url: "/");
+        }
+
+        [HttpGet]
+        public ViewResult Register(string returnUrl = null)
+        {
+            return View(model: new UserRegisterDto());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(UserRegisterDto userRegisterModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto error_exit;
+            }
+            if (!String.Equals(
+                a: userRegisterModel.Password,
+                b: userRegisterModel.ConfirmPassword))
+            {
+                ModelState.AddModelError(
+                    key: "",
+                    errorMessage: "passwords are not equals");
+                goto error_exit;
+            }
+            AppUser newUser = new AppUser
+            {
+                Email = userRegisterModel.Email,
+                UserName = userRegisterModel.Email
+            };
+            var userResult = await userManager.CreateAsync(
+                user: newUser,
+                password: userRegisterModel.Password);
+            if (!userResult.Succeeded)
+            {
+                AddModelErrors(errors: userResult.Errors);
+                goto error_exit;
+            }
+            var roleResult = await userManager.AddToRoleAsync(
+                user: newUser,
+                role: DomainConstants.UsersRoleName);
+            if (!roleResult.Succeeded)
+            {
+                AddModelErrors(errors: roleResult.Errors);
+                goto error_exit;
+            }
+            return Redirect(url: "/");
+
+        error_exit:
+            return View(model: userRegisterModel);
+        }
+
+        private void AddModelErrors(IEnumerable<IdentityError> errors)
+        {
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError(
+                    key: "",
+                    errorMessage: error.Description);
+            }
         }
     }
 }
