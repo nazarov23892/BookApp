@@ -57,6 +57,11 @@ namespace ServiceLayer.OrderServices.Concrete
             string userId = signInContext.IsSignedIn
                 ? signInContext.UserId
                 : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                AddError(errorMessage: "unauthorized users cannot place an order");
+                return 0;
+            }
             Order order = new Order
             {
                 DateOrderedUtc = DateTime.UtcNow,
