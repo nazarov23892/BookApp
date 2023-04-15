@@ -549,7 +549,7 @@ namespace BookApp.Tests
         [Fact]
         public void Cannot_PlaceOrder_When_Too_Many_LineItems()
         {
-            var books = GenerateBooks(num: 11);
+            var books = GenerateBooks(num: 11); // todo: rewrite
             var lines = books.Select(b => new PlaceOrderLineItemDto
             {
                 BookId = b.BookId,
@@ -590,6 +590,127 @@ namespace BookApp.Tests
             Assert.Contains(
                 expectedSubstring: "order line items limit exceeded",
                 actualString: error.ErrorMessage);
+
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            dbAccessMock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_Not_SignedIn()
+        {
+
+            // Arrange
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => GenerateBooks(num: 1)
+                        .ToDictionary(b => b.BookId));
+
+            signInContextMock.Setup(m => m.IsSignedIn)
+                .Returns(() => false);
+            signInContextMock.Setup(m => m.UserId)
+                .Returns(() => "123456");
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = GenerateBooks(num: 1)
+                    .Select(b => new PlaceOrderLineItemDto
+                    {
+                        BookId = b.BookId,
+                        Price = b.Price,
+                        Quantity = 2
+                    })
+            };
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
+
+            // Act
+
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            Assert.Contains(
+                expectedSubstring: "unauthorized users cannot place an order",
+                actualString: target1.Errors.Single().ErrorMessage);
+
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            dbAccessMock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_PlaceOrder_When_UserId_is_Empty()
+        {
+
+            // Arrange
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextUserIdEmptyMock = new Mock<ISignInContext>();
+            Mock<ISignInContext> signInContextUserIdNullMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => GenerateBooks(num: 1)
+                        .ToDictionary(b => b.BookId));
+
+            signInContextUserIdEmptyMock.Setup(m => m.IsSignedIn)
+                .Returns(() => true);
+            signInContextUserIdEmptyMock.Setup(m => m.UserId)
+                .Returns(() => string.Empty);
+
+            signInContextUserIdNullMock.Setup(m => m.IsSignedIn)
+               .Returns(() => true);
+            signInContextUserIdNullMock.Setup(m => m.UserId)
+                .Returns(() => null);
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = GenerateBooks(num: 1)
+                    .Select(b => new PlaceOrderLineItemDto
+                    {
+                        BookId = b.BookId,
+                        Price = b.Price,
+                        Quantity = 2
+                    })
+            };
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextUserIdEmptyMock.Object);
+            PlaceOrderService target2 = new PlaceOrderService(
+               placeOrderDbAccess: dbAccessMock.Object,
+               signInContext: signInContextUserIdNullMock.Object);
+
+            // Act
+
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+            target2.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+
+            Assert.True(target1.HasErrors);
+            Assert.True(target2.HasErrors);
+
+            Assert.Single(target1.Errors);
+            Assert.Single(target2.Errors);
+
+            Assert.Contains(
+                expectedSubstring: "unauthorized users cannot place an order",
+                actualString: target1.Errors.Single().ErrorMessage);
+            Assert.Contains(
+                expectedSubstring: "unauthorized users cannot place an order",
+                actualString: target2.Errors.Single().ErrorMessage);
 
             dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
                 Times.Never);
