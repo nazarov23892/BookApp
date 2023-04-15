@@ -281,7 +281,53 @@ namespace BookApp.Tests
                 Times.Never);
         }
 
-        // todo: add exceeded quantity value test
+        [Fact]
+        public void Cannot_PlaceOrder_When_Quantity_Exceeded()
+        {
+
+            // Arrange
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => GenerateBooks(2)
+                        .ToDictionary(b => b.BookId));
+
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
+
+            var quantityExceeded = 1 + Domain.DomainConstants.MaxQuantityToBuy;
+            var books = GenerateBooks(2);
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = new[] 
+                {
+                    new PlaceOrderLineItemDto{ BookId = books[0].BookId, 
+                        Price = books[0].Price, Quantity = 1 },
+                    new PlaceOrderLineItemDto{ BookId = books[1].BookId,
+                        Price = books[1].Price, Quantity = quantityExceeded }
+                }
+            };
+
+            // Act
+            target1.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+            Assert.True(target1.HasErrors);
+            Assert.Single(target1.Errors);
+            Assert.Contains(
+                expectedSubstring: "must be between",
+                actualString: target1.Errors.First().ErrorMessage);
+
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Never);
+            dbAccessMock.Verify(x => x.SaveChanges(),
+                Times.Never);
+        }
 
         [Fact]
         public void Cannot_PlaceOrder_When_Chosen_Id_is_missing_in_Db()
@@ -549,22 +595,24 @@ namespace BookApp.Tests
                 Times.Never);
             dbAccessMock.Verify(x => x.SaveChanges(),
                 Times.Never);
+        }
 
-            static Book[] GenerateBooks(int num)
+        private Book[] GenerateBooks(int num)
+        {
+            List<Book> list = new List<Book>();
+            decimal itemPrice = 10.1M;
+            for (int i = 0; i < num; i++)
             {
-                List<Book> list = new List<Book>();
-                for (int i = 0; i < num; i++)
+                string guidString = String.Format("{0:00000000-0000-0000-0000-000000000000}", 1 + i);
+                list.Add(new Book
                 {
-                    string guidString = String.Format("{0:00000000-0000-0000-0000-000000000000}", 1 + i);
-                    list.Add(new Book
-                    {
-                        BookId = new Guid(guidString),
-                        Title = $"book-{1 + i}",
-                        Price = 10M
-                    }) ;
-                }
-                return list.ToArray();
+                    BookId = new Guid(guidString),
+                    Title = $"book-{1 + i}",
+                    Price = itemPrice
+                });
+                itemPrice += 0.1M;
             }
+            return list.ToArray();
         }
     }
 }
