@@ -549,7 +549,8 @@ namespace BookApp.Tests
         [Fact]
         public void Cannot_PlaceOrder_When_Too_Many_LineItems()
         {
-            var books = GenerateBooks(num: 11); // todo: rewrite
+            var numExceeded = 1 + Domain.DomainConstants.OrderLineItemsLimit;
+            var books = GenerateBooks(num: numExceeded);
             var lines = books.Select(b => new PlaceOrderLineItemDto
             {
                 BookId = b.BookId,
