@@ -719,6 +719,109 @@ namespace BookApp.Tests
                 Times.Never);
         }
 
+        [Fact]
+        public void Can_PlaceOrder()
+        {
+            // Arrange
+            Mock<IPlaceOrderDbAccess> dbAccessMock = new Mock<IPlaceOrderDbAccess>();
+            Mock<ISignInContext> signInContextMock = new Mock<ISignInContext>();
+
+            Order addedToDbOrder = null;
+            dbAccessMock.Setup(m => m.Add(It.IsAny<Order>()))
+                .Callback<Order>(o => 
+                {
+                    o.OrderId = 4;
+                    addedToDbOrder = o;
+                });
+            dbAccessMock.Setup(m => m.FindBooksByIds(It.IsAny<IEnumerable<Guid>>()))
+               .Returns<IEnumerable<Guid>>((ids) => GenerateBooks(num: 2)
+                        .ToDictionary(b => b.BookId));
+
+            signInContextMock.Setup(m => m.IsSignedIn)
+                .Returns(() => true);
+            signInContextMock.Setup(m => m.UserId)
+                .Returns(() => "123");
+
+            var dto1 = new PlaceOrderDto
+            {
+                Firstname = "firstname",
+                Lastname = "lastname",
+                PhoneNumber = "111",
+                Lines = GenerateBooks(num: 2)
+                    .Select(b => new PlaceOrderLineItemDto
+                    {
+                        BookId = b.BookId,
+                        Price = b.Price,
+                        Quantity = 2
+                    })
+            };
+            PlaceOrderService target1 = new PlaceOrderService(
+                placeOrderDbAccess: dbAccessMock.Object,
+                signInContext: signInContextMock.Object);
+
+            // Act
+
+            var now = DateTime.UtcNow;
+            int orderId = target1.PlaceOrder(placeOrderDataIn: dto1);
+
+            // Assert
+
+            Assert.False(target1.HasErrors);
+            Assert.Empty(target1.Errors);
+            Assert.Equal(expected: 4, actual: orderId);
+
+            Assert.NotNull(addedToDbOrder);
+            Assert.Equal(
+                expected: "firstname",
+                actual: addedToDbOrder.Firstname);
+            Assert.Equal(
+               expected: "lastname",
+               actual: addedToDbOrder.LastName);
+            Assert.Equal(
+               expected: "111",
+               actual: addedToDbOrder.PhoneNumber);
+            Assert.Equal(
+               expected: "123",
+               actual: addedToDbOrder.UserId);
+            Assert.InRange(
+                actual: addedToDbOrder.DateOrderedUtc,
+                low: now, 
+                high: now.AddSeconds(2));
+            
+            OrderLineItem[] lines = addedToDbOrder.Lines
+                .ToArray();
+            Assert.Equal(
+                expected: 2,
+                actual: lines.Length);
+
+            Book[] srcBooks = GenerateBooks(num: 2);
+            Assert.Equal(
+                expected: srcBooks[0].BookId,
+                actual: lines[0].Book.BookId);
+            Assert.Equal(
+                expected: srcBooks[1].BookId,
+                actual: lines[1].Book.BookId);
+
+            Assert.Equal(
+                expected: srcBooks[0].Price,
+                actual: lines[0].Book.Price);
+            Assert.Equal(
+                expected: srcBooks[1].Price,
+                actual: lines[1].Book.Price);
+
+            Assert.Equal(
+              expected: 2,
+              actual: lines[0].Quantity);
+            Assert.Equal(
+               expected: 2,
+               actual: lines[1].Quantity);
+
+            dbAccessMock.Verify(x => x.Add(It.IsAny<Order>()),
+                Times.Once);
+            dbAccessMock.Verify(x => x.SaveChanges(),
+                Times.Once);
+        }
+
         private Book[] GenerateBooks(int num)
         {
             List<Book> list = new List<Book>();
