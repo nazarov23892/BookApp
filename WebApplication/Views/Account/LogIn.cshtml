@@ -2,6 +2,10 @@
 @using WebApplication.Models;
 @model UserLoginDto
 
+@{ 
+    string returnUrl = ViewBag.ReturnUrl;
+}
+
 <h1>Log in</h1>
 <div class="row">
     <div class="col-md-4">
@@ -38,6 +42,7 @@
                         </a>
                     </p>
                 </div>
+                <input name="returnUrl" value="@returnUrl" hidden />
             </form>
         </section>
     </div>

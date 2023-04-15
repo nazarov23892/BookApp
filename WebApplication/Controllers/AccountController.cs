@@ -24,14 +24,15 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet]
-        public ViewResult LogIn()
+        public ViewResult LogIn(string returnUrl = null)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View(model: new UserLoginDto());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogIn(UserLoginDto loginDto)
+        public async Task<IActionResult> LogIn(UserLoginDto loginDto, string returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -60,18 +61,24 @@ namespace WebApplication.Controllers
                     errorMessage: "incorrect email or password");
                 goto error_exit;
             }
-            return Redirect(url: "/");
+            return Redirect(url: !string.IsNullOrEmpty(returnUrl)
+                ? returnUrl
+                : "/");
 
         error_exit:
+            ViewBag.ReturnUrl = returnUrl;
             return View(model: loginDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> LogOut(string returnUrl = null)
         {
             await signInManager.SignOutAsync();
-            return Redirect(url: "/");
+            return Redirect(
+                url: !string.IsNullOrEmpty(returnUrl)
+                    ? returnUrl
+                    : "/");
         }
 
         [HttpGet]

@@ -4,6 +4,11 @@
     string userName = isAuthN
         ? User.Identity.Name
         : "Guest";
+
+    var request = ViewContext.HttpContext.Request;
+    string currentUrl = request.QueryString.HasValue 
+        ? $"{request.Path}{request.QueryString}"
+        : request.Path.ToString();
 }
 
 @if (isAuthN)
@@ -13,6 +18,7 @@
               asp-action="LogOut"
               asp-controller="Account"
               class="form-inline">
+            <input name="returnUrl" value="@currentUrl" hidden />
             <button type="submit"
                     class="nav-link btn btn-link text-dark">
                 Logout
@@ -28,6 +34,7 @@ else
     <div class="nav-item">
         <a asp-action="Login"
            asp-controller="Account" 
+           asp-route-returnUrl="@currentUrl"
            class="nav-link text-dark">LogIn</a>
     </div>
     <div class="nav-item">
