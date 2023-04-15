@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using ServiceLayer.CartServices;
 using ServiceLayer.OrderServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication.Controllers
 {
+    [Authorize(Roles = DomainConstants.UsersRoleName)]
     public class OrderController : Controller
     {
         private readonly  ICartService cartService;
