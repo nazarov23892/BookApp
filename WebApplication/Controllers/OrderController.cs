@@ -95,5 +95,15 @@ namespace WebApplication.Controllers
             var orders = displayOrderService.GetOrders();
             return View(model: orders);
         }
+
+        public IActionResult Details(int id)
+        {
+            var order = displayOrderService.GetItem(orderId: id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return View(model: order);
+        }
     }
 }

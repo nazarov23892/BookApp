@@ -10,5 +10,6 @@ namespace ServiceLayer.OrderServices
     public interface IDisplayOrderService: IServiceErrors
     {
         IEnumerable<DisplayListOrderItemDto> GetOrders();
+        public DisplayOrderDetailsDto GetItem(int orderId);
     }
 }

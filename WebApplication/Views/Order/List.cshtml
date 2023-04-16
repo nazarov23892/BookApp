@@ -17,6 +17,12 @@
             <td>@order.OrderId</td>
             <td>@order.DateOrderedUtc.ToString(format: "dd.MM.yyyy")</td>
             <td>@order.Price</td>
+            <td>
+                <a asp-action="Details"
+                   asp-controller="Order"
+                   asp-route-id="@order.OrderId"
+                   class="btn btn-sm btn-secondary">Details</a>
+            </td>
         </tr>
     }
 </table>

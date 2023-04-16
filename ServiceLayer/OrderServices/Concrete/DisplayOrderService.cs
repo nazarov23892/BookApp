@@ -23,6 +23,36 @@ namespace ServiceLayer.OrderServices.Concrete
             this.signInContext = signInContext;
         }
 
+        public DisplayOrderDetailsDto GetItem(int orderId)
+        {
+            var userId = signInContext.IsSignedIn
+               ? signInContext.UserId
+               : null;
+            if (string.IsNullOrEmpty(userId))
+            {
+                AddError(errorMessage: "cannot get orders for unauthorized users");
+                return null;
+            }
+            var orderDto = efDbContext.Orders
+                .AsNoTracking()
+                .Where(o => o.UserId.Equals(userId))
+                .Select(o => new DisplayOrderDetailsDto
+                {
+                    OrderId = o.OrderId,
+                    DateOrderedUtc = o.DateOrderedUtc,
+                    Lines = o.Lines
+                        .Select(l => new DisplayOrderDetailsLineItemDto
+                        {
+                            BookId = l.BookId,
+                            BookTItle = l.Book.Title,
+                            BookPrice = l.BookPrice,
+                            Quantity = l.Quantity
+                        })
+                })
+                .SingleOrDefault(o => o.OrderId == orderId);
+            return orderDto;
+        }
+
         public IEnumerable<DisplayListOrderItemDto> GetOrders()
         {
             var userId = signInContext.IsSignedIn
@@ -31,7 +61,7 @@ namespace ServiceLayer.OrderServices.Concrete
             if (string.IsNullOrEmpty(userId))
             {
                 AddError(errorMessage: "cannot get orders for unauthorized users");
-                return Enumerable.Empty< DisplayListOrderItemDto>();
+                return Enumerable.Empty<DisplayListOrderItemDto>();
             }
             var orders = efDbContext.Orders
                 .AsNoTracking()
