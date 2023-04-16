@@ -1,0 +1,27 @@
+﻿
+@using ServiceLayer.OrderServices
+@model IEnumerable<DisplayListOrderItemDto>
+
+<h2>Your Orders History</h2>
+<hr />
+<br />
+<table class="table">
+    <tr>
+        <th>order number</th>
+        <th>date ordered</th>
+        <th>price</th>
+    </tr>
+    @foreach (var order in Model ?? Enumerable.Empty<DisplayListOrderItemDto>())
+    {
+        <tr>
+            <td>@order.OrderId</td>
+            <td>@order.DateOrderedUtc.ToString(format: "dd.MM.yyyy")</td>
+            <td>@order.Price</td>
+        </tr>
+    }
+</table>
+<div class="text-center">
+    <a asp-action="Index"
+       asp-controller="Home"
+       class="btn btn-secondary">back to catalog</a>
+</div>

@@ -62,6 +62,7 @@ namespace WebApplication
             services.AddTransient<IPlaceOrderService, PlaceOrderService>();
             services.AddTransient<IPlaceOrderDbAccess, PlaceOrderDbAccess>();
             services.AddTransient<ISignInContext, SignInContext>();
+            services.AddTransient<IDisplayOrderService, DisplayOrderService>();
 
             services.AddMvc();
         }

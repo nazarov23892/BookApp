@@ -13,15 +13,18 @@ namespace WebApplication.Controllers
     [Authorize(Roles = DomainConstants.UsersRoleName)]
     public class OrderController : Controller
     {
-        private readonly  ICartService cartService;
+        private readonly ICartService cartService;
         private readonly IPlaceOrderService placeOrderService;
+        private readonly IDisplayOrderService displayOrderService;
 
         public OrderController(
             ICartService cartService,
-            IPlaceOrderService placeOrderService)
+            IPlaceOrderService placeOrderService,
+            IDisplayOrderService displayOrderService)
         {
             this.cartService = cartService;
             this.placeOrderService = placeOrderService;
+            this.displayOrderService = displayOrderService;
         }
 
         [HttpGet]
@@ -85,6 +88,12 @@ namespace WebApplication.Controllers
         public ViewResult Success(int id)
         {
             return View();
+        }
+
+        public ViewResult List()
+        {
+            var orders = displayOrderService.GetOrders();
+            return View(model: orders);
         }
     }
 }
