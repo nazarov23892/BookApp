@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace ServiceDbAccessLayer.Orders
+namespace ServiceLayer.Abstract
 {
     public interface IPlaceOrderDbAccess
     {

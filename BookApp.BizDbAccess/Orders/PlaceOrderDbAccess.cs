@@ -1,14 +1,15 @@
-﻿using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.DataContexts;
+using Domain.Entities;
+using ServiceLayer.Abstract;
 
-namespace ServiceDbAccessLayer.Orders.Concrete
+namespace BookApp.BizDbAccess.Orders
 {
-    public class PlaceOrderDbAccess : IPlaceOrderDbAccess
+    public class PlaceOrderDbAccess: IPlaceOrderDbAccess
     {
         private readonly AppIdentityDbContext efDbContext;
 

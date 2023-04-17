@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
-    <ProjectReference Include="..\ServiceDbAccessLayer\ServiceDbAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>

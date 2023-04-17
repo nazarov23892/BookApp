@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
 using Domain.Entities;
-using ServiceDbAccessLayer.Orders;
+//using ServiceDbAccessLayer.Orders;
 using Domain;
 
 namespace ServiceLayer.OrderServices.Concrete
