@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Domain;
 
-namespace ServiceLayer.OrderServices
+namespace BookApp.Shared.DTOs.Orders
 {
-    
     public class PlaceOrderDto
     {
         [Required]
@@ -28,11 +27,11 @@ namespace ServiceLayer.OrderServices
         public string Title { get; set; }
 
         [Range(
-            minimum: DomainConstants.MinPrice, 
-            maximum: DomainConstants.MaxPrice, 
+            minimum: DomainConstants.MinPrice,
+            maximum: DomainConstants.MaxPrice,
             ErrorMessage = "invalid price value")]
         public decimal Price { get; set; }
-        
+
         [Range(minimum: 1, maximum: DomainConstants.MaxQuantityToBuy)]
         public int Quantity { get; set; }
     }

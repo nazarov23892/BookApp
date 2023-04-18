@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
 using Domain.Entities;
-//using ServiceDbAccessLayer.Orders;
+using BookApp.BLL.Interfaces;
+using BookApp.BLL.Orders;
+using BookApp.BLL.Orders.Concrete;
+using BookApp.Shared.DTOs.Orders;
 using Domain;
 
 namespace ServiceLayer.OrderServices.Concrete
@@ -25,90 +28,22 @@ namespace ServiceLayer.OrderServices.Concrete
 
         public int PlaceOrder(PlaceOrderDto placeOrderDataIn)
         {
-            var inputLines = placeOrderDataIn.Lines ?? Enumerable.Empty<PlaceOrderLineItemDto>();
-            if (inputLines.Count() > DomainConstants.OrderLineItemsLimit)
-            {
-                AddError(
-                    errorMessage: $"order line items limit exceeded ({DomainConstants.OrderLineItemsLimit})");
-                return 0;
-            }
-            var chosenIds = inputLines
-                .Select(l => l.BookId)
-                .ToArray();
-            if (!chosenIds.Any())
-            {
-                AddError(errorMessage: "No items in your order.");
-                return 0;
-            }
-            if (!PerformValidationObjectProperties(instance: placeOrderDataIn))
-            {
-                return 0;
-            }
-            Dictionary<Guid, Book> booksDict = placeOrderDbAccess
-                .FindBooksByIds(bookIds: chosenIds);
+            IPlaceOrderAction placeOrderAction = new PlaceOrderAction(
+                placeOrderDbAccess: placeOrderDbAccess,
+                signInContext: signInContext);
 
-            var orderLines = FormOrderLineItems(
-                placeOrderLineItems: placeOrderDataIn.Lines,
-                booksBaselineDict: booksDict);
-            if (HasErrors)
+            var orderId = placeOrderAction.Run(orderDto: placeOrderDataIn);
+            if (placeOrderAction.HasErrors)
             {
+                foreach (var error in placeOrderAction.Errors)
+                {
+                    AddError(errorMessage: error.ErrorMessage);
+                }
                 return 0;
             }
-            string userId = signInContext.IsSignedIn
-                ? signInContext.UserId
-                : null;
-            if (string.IsNullOrEmpty(userId))
-            {
-                AddError(errorMessage: "unauthorized users cannot place an order");
-                return 0;
-            }
-            Order order = new Order
-            {
-                DateOrderedUtc = DateTime.UtcNow,
-                Firstname = placeOrderDataIn.Firstname,
-                LastName = placeOrderDataIn.Lastname,
-                PhoneNumber = placeOrderDataIn.PhoneNumber,
-                Lines = orderLines,
-                UserId = userId
-            };
-            placeOrderDbAccess.Add(newOrder: order);
             placeOrderDbAccess.SaveChanges();
-            return order.OrderId;
+            return orderId;
         }
-
-        private IList<OrderLineItem> FormOrderLineItems(
-            IEnumerable<PlaceOrderLineItemDto> placeOrderLineItems,
-            Dictionary<Guid, Book> booksBaselineDict)
-        {
-            List<OrderLineItem> orderLines = new List<OrderLineItem>();
-            foreach (var line in placeOrderLineItems)
-            {
-                if (!PerformValidationObjectProperties(instance: line))
-                {
-                    break;
-                }
-                if (!booksBaselineDict.ContainsKey(line.BookId))
-                {
-                    throw new InvalidOperationException(
-                        message: $"A placing of order failed: book id={line.BookId} was missing");
-                }
-                var baselineBook = booksBaselineDict[line.BookId];
-                if (line.Price != baselineBook.Price)
-                {
-                    AddError(errorMessage: "items have expired price");
-                    break;
-                }
-                orderLines.Add(new OrderLineItem
-                {
-                    Book = baselineBook,
-                    BookId = baselineBook.BookId,
-                    BookPrice = baselineBook.Price,
-                    Quantity = line.Quantity
-                });
-            }
-            return orderLines;
-        }
-
 
     }
 }

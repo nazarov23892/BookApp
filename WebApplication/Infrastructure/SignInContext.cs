@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using ServiceLayer.Abstract;
 using System.Security.Claims;
+using BookApp.BLL.Interfaces;
 
 namespace WebApplication.Infrastructure
 {
@@ -29,11 +30,6 @@ namespace WebApplication.Infrastructure
         { 
             get => httpContextAccessor?.HttpContext?.User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
-
-        public AppUser User
-        {
-            get => throw new NotImplementedException();
         }
     }
 }
