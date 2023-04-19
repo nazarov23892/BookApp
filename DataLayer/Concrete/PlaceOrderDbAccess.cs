@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookApp.Shared.DTOs.Orders;
 using Domain.Entities;
 using DataLayer.DataContexts;
-using ServiceLayer.OrderServices;
+using BookApp.BLL.Services.Orders;
 
 namespace DataLayer.Concrete
 {

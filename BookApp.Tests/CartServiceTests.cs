@@ -1,11 +1,11 @@
 using System;
 using Xunit;
-using ServiceLayer.CartServices;
-using ServiceLayer.CartServices.Concrete;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using Moq;
+using BookApp.BLL.Services.Cart;
+using BookApp.BLL.Services.Cart.Concrete;
 
 namespace BookApp.Tests
 {

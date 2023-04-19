@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using DataLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
-using ServiceLayer.Abstract;
 using System.Security.Claims;
-using ServiceLayer.Interfaces;
+using BookApp.BLL.Interfaces;
 
 namespace WebApplication.Infrastructure
 {

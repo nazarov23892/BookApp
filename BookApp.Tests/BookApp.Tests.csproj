@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
+    <ProjectReference Include="..\BookApp.BLL\BookApp.BLL.csproj" />
   </ItemGroup>
 
 </Project>

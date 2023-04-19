@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
-using ServiceLayer.CartServices;
-using ServiceLayer.OrderServices;
 using Microsoft.AspNetCore.Authorization;
-using BookApp.Shared.DTOs.Orders;
+using BookApp.BLL.Services.Orders;
+using BookApp.BLL.Services.Cart;
 
 namespace WebApplication.Controllers
 {

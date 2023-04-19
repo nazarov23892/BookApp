@@ -1,5 +1,4 @@
-﻿using ServiceLayer.BookCatalogServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +6,11 @@ using System.Threading.Tasks;
 using DataLayer.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Concrete.QueryObjects;
+using BookApp.BLL.Services.BookCatalog;
 
 namespace DataLayer.Concrete
 {
-    public class BookCatalogDbAccess : IBookCatalogDbAccess
+    public class BookCatalogDbAccess : BookApp.BLL.Services.BookCatalog.IBookCatalogDbAccess
     {
         private readonly AppIdentityDbContext efDbContext;
 

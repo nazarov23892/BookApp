@@ -7,28 +7,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataLayer.DataContexts;
-using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
+using DataLayer.DataContexts;
+using DataLayer.Entities;
 using DataLayer.Data;
 using WebApplication.Infrastructure;
-using ServiceLayer.BookCatalogServices;
-using ServiceLayer.BookCatalogServices.Concrete;
-using ServiceLayer.CartServices;
-using ServiceLayer.CartServices.Concrete;
-using ServiceLayer.OrderServices;
-using ServiceLayer.OrderServices.Concrete;
-using ServiceLayer.Interfaces;
+
+using BookApp.BLL.Interfaces;
+using BookApp.BLL.Services.BookCatalog;
+using BookApp.BLL.Services.BookCatalog.Concrete;
+using BookApp.BLL.Services.Orders;
+using BookApp.BLL.Services.Orders.Concrete;
+using BookApp.BLL.Services.Cart;
+using BookApp.BLL.Services.Cart.Concrete;
+
 using DataLayer.Concrete;
-using ServiceLayer.Abstract;
 
 namespace WebApplication
 {
     public class Startup
     {
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
         {
@@ -57,15 +58,14 @@ namespace WebApplication
             services.AddSession();
             services.AddTransient<ICartLinesSessionSaver, CartLinesSessionSaver>();
             services.AddTransient<ICartService, SessionCartService>();
-            services.AddTransient<IBookCatalogService, BookCatalogService>();
-            services.AddTransient<IBookForCartService, BookForCartService>();
+            services.AddTransient<IBookForCartDbAccess, BookForCartDbAccess>();
             services.AddTransient<IPlaceOrderService, PlaceOrderService>();
             services.AddTransient<ISignInContext, SignInContext>();
             services.AddTransient<IDisplayOrderService, DisplayOrderService>();
             services.AddTransient<IPlaceOrderDbAccess, PlaceOrderDbAccess>();
             services.AddTransient<IDisplayOrderDbAccess, DisplayOrderDbAccess>();
             services.AddTransient<IBookCatalogDbAccess, BookCatalogDbAccess>();
-
+            services.AddTransient<IBookCatalogService, BookCatalogService>();
             services.AddMvc();
         }
 

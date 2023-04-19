@@ -3,20 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ServiceLayer.CartServices;
 using WebApplication.Models;
 using WebApplication.Infrastructure;
+using WebApplication.ViewModels;
 using System.ComponentModel.DataAnnotations;
+
+using BookApp.BLL.Services.Cart;
 
 namespace WebApplication.Controllers
 {
     public class CartController : Controller
     {
         private readonly ICartService cartService;
-        private readonly IBookForCartService bookCartService;
+        private readonly IBookForCartDbAccess bookCartService;
 
-        public CartController(ICartService cartService,
-            IBookForCartService bookCartService)
+        public CartController(
+            ICartService cartService,
+            IBookForCartDbAccess bookCartService)
         {
             this.cartService = cartService;
             this.bookCartService = bookCartService;
@@ -82,7 +85,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Change(CartLineChangeQuantityDto changesDto)
+        public IActionResult Change(CartLineChangeQuantityViewModel changesDto)
         {
             if (!ModelState.IsValid)
             {
