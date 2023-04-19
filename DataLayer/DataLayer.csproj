@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookApp.BLL\BookApp.BLL.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
   </ItemGroup>
 
 </Project>

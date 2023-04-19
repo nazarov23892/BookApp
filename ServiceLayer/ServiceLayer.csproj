@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookApp.BLL\BookApp.BLL.csproj" />
-    <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
   </ItemGroup>
 
 </Project>

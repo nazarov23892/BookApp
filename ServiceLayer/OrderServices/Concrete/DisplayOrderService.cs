@@ -4,23 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceLayer.Abstract;
-using DataLayer.DataContexts;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using BookApp.BLL.Interfaces;
 
 namespace ServiceLayer.OrderServices.Concrete
 {
     public class DisplayOrderService : ServiceErrors, IDisplayOrderService
     {
-        private readonly AppIdentityDbContext efDbContext;
+        //private readonly AppIdentityDbContext efDbContext;
         private readonly ISignInContext signInContext;
+        private readonly IDisplayOrderDbAccess displayOrderDbAccess;
 
         public DisplayOrderService(
-            AppIdentityDbContext efDbContext,
+            IDisplayOrderDbAccess displayOrderDbAccess,
+            //AppIdentityDbContext efDbContext,
             ISignInContext signInContext)
         {
-            this.efDbContext = efDbContext;
+            this.displayOrderDbAccess = displayOrderDbAccess;
+            //this.efDbContext = efDbContext;
             this.signInContext = signInContext;
         }
 
@@ -34,23 +35,9 @@ namespace ServiceLayer.OrderServices.Concrete
                 AddError(errorMessage: "cannot get orders for unauthorized users");
                 return null;
             }
-            var orderDto = efDbContext.Orders
-                .AsNoTracking()
-                .Where(o => o.UserId.Equals(userId))
-                .Select(o => new DisplayOrderDetailsDto
-                {
-                    OrderId = o.OrderId,
-                    DateOrderedUtc = o.DateOrderedUtc,
-                    Lines = o.Lines
-                        .Select(l => new DisplayOrderDetailsLineItemDto
-                        {
-                            BookId = l.BookId,
-                            BookTItle = l.Book.Title,
-                            BookPrice = l.BookPrice,
-                            Quantity = l.Quantity
-                        })
-                })
-                .SingleOrDefault(o => o.OrderId == orderId);
+            var orderDto = displayOrderDbAccess.GetItem(
+                orderId: orderId,
+                userId: userId);
             return orderDto;
         }
 
@@ -64,17 +51,7 @@ namespace ServiceLayer.OrderServices.Concrete
                 AddError(errorMessage: "cannot get orders for unauthorized users");
                 return Enumerable.Empty<DisplayListOrderItemDto>();
             }
-            var orders = efDbContext.Orders
-                .AsNoTracking()
-                .Where(o => o.UserId == userId)
-                .Select(o => new DisplayListOrderItemDto
-                {
-                    OrderId = o.OrderId,
-                    DateOrderedUtc = o.DateOrderedUtc,
-                    Price = o.Lines
-                        .Select(l => l.BookPrice * l.Quantity)
-                        .Sum()
-                });
+            IEnumerable<DisplayListOrderItemDto> orders = displayOrderDbAccess.GetItems(userId);
             return orders;
         }
     }

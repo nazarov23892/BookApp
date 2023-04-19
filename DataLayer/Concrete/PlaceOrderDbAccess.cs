@@ -7,24 +7,34 @@ using System.Threading.Tasks;
 using BookApp.BLL.Orders;
 using BookApp.Shared.DTOs.Orders;
 using Domain.Entities;
+using DataLayer.DataContexts;
 
 namespace DataLayer.Concrete
 {
     public class PlaceOrderDbAccess : IPlaceOrderDbAccess
     {
+        private readonly AppIdentityDbContext efDbContext;
+
+        public PlaceOrderDbAccess(AppIdentityDbContext efDbContext)
+        {
+            this.efDbContext = efDbContext;
+        }
+
         public void Add(Order newOrder)
         {
-            throw new NotImplementedException();
+            efDbContext.Orders.Add(newOrder);
         }
 
         public Dictionary<Guid, Book> FindBooksByIds(IEnumerable<Guid> bookIds)
         {
-            throw new NotImplementedException();
+            return efDbContext.Books
+                .Where(b => bookIds.Contains(b.BookId))
+                .ToDictionary(b => b.BookId);
         }
 
         public void SaveChanges()
         {
-            throw new NotImplementedException();
+            efDbContext.SaveChanges();
         }
     }
 }
