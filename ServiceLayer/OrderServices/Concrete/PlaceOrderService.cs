@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ServiceLayer.Abstract;
 using Domain.Entities;
-using BookApp.BLL.Interfaces;
-using BookApp.BLL.Orders;
-using BookApp.BLL.Orders.Concrete;
 using BookApp.Shared.DTOs.Orders;
+using ServiceLayer.Interfaces;
 using Domain;
 
 namespace ServiceLayer.OrderServices.Concrete

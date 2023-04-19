@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookApp.BLL.Generic;
-using BookApp.BLL.Interfaces;
+using BookApp.Shared.DTOs.Orders;
+using ServiceLayer.Abstract;
+using BookApp.Shared;
+using ServiceLayer.Interfaces;
 using Domain;
 using Domain.Entities;
-using BookApp.Shared.DTOs.Orders;
 
-namespace BookApp.BLL.Orders.Concrete
+namespace ServiceLayer.OrderServices.Concrete
 {
-    public class PlaceOrderAction : BizErrors, IPlaceOrderAction
+    public class PlaceOrderAction : ServiceErrors, IPlaceOrderAction
     {
         private readonly IPlaceOrderDbAccess placeOrderDbAccess;
         private readonly ISignInContext signInContext;

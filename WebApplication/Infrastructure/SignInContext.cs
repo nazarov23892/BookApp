@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using ServiceLayer.Abstract;
 using System.Security.Claims;
-using BookApp.BLL.Interfaces;
+using ServiceLayer.Interfaces;
 
 namespace WebApplication.Infrastructure
 {

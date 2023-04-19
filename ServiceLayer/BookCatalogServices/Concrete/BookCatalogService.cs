@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ServiceLayer.BookCatalogServices.QueryObjects;
 
 namespace ServiceLayer.BookCatalogServices.Concrete
 {

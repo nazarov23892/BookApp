@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace BookApp.BLL.Orders
+namespace ServiceLayer.OrderServices
 {
     public interface IPlaceOrderDbAccess
     {

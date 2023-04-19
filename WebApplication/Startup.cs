@@ -20,8 +20,7 @@ using ServiceLayer.CartServices;
 using ServiceLayer.CartServices.Concrete;
 using ServiceLayer.OrderServices;
 using ServiceLayer.OrderServices.Concrete;
-using BookApp.BLL.Interfaces;
-using BookApp.BLL.Orders;
+using ServiceLayer.Interfaces;
 using DataLayer.Concrete;
 using ServiceLayer.Abstract;
 
@@ -65,6 +64,7 @@ namespace WebApplication
             services.AddTransient<IDisplayOrderService, DisplayOrderService>();
             services.AddTransient<IPlaceOrderDbAccess, PlaceOrderDbAccess>();
             services.AddTransient<IDisplayOrderDbAccess, DisplayOrderDbAccess>();
+            services.AddTransient<IBookCatalogDbAccess, BookCatalogDbAccess>();
 
             services.AddMvc();
         }
