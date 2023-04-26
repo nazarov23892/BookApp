@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using DataLayer.DataContexts;
-using DataLayer.Entities;
+using BookApp.DAL.Identity;
+using BookApp.DAL.DataContexts;
 using Domain;
 using Domain.Entities;
 
-namespace DataLayer.Data
+namespace BookApp.DAL.SeedData
 {
     public static class SeedData
     {
         public static void RunSeed(
-            AppIdentityDbContext efDbContext, 
+            AppIdentityDbContext efDbContext,
             RoleManager<IdentityRole> roleManager,
             UserManager<AppUser> userManager)
         {
@@ -66,7 +67,7 @@ namespace DataLayer.Data
             books.Add(CreateBook(
                 title: "ASP.NET Core in Action, Second Edition",
                 price: 51.99M,
-                authors: new[] { 
+                authors: new[] {
                     new Author
                     {
                         Firstname = "Andrew",
@@ -92,7 +93,7 @@ namespace DataLayer.Data
                authors: new[] {
                     new Author
                     {
-                        Firstname = "Valerio", 
+                        Firstname = "Valerio",
                         Lastname = "De Sanctis"
                     }
                }));

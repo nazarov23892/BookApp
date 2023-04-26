@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
-using DataLayer.Entities;
+using BookApp.DAL.Identity;
 using Domain;
 
 namespace WebApplication.Controllers

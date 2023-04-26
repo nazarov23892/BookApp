@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayer.DataContexts;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.Concrete.QueryObjects;
 using BookApp.BLL.Services.BookCatalog;
+using BookApp.DAL.DataContexts;
+using BookApp.DAL.Concrete.QueryObjects;
 
-namespace DataLayer.Concrete
+namespace BookApp.DAL.Concrete
 {
-    public class BookCatalogDbAccess : BookApp.BLL.Services.BookCatalog.IBookCatalogDbAccess
+    public class BookCatalogDbAccess : IBookCatalogDbAccess
     {
         private readonly AppIdentityDbContext efDbContext;
 

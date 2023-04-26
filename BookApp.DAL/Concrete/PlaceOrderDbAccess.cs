@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
-using DataLayer.DataContexts;
 using BookApp.BLL.Services.Orders;
+using BookApp.DAL.DataContexts;
 
-namespace DataLayer.Concrete
+namespace BookApp.DAL.Concrete
 {
     public class PlaceOrderDbAccess : IPlaceOrderDbAccess
     {

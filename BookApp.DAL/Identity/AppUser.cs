@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace DataLayer.Entities
+namespace BookApp.DAL.Identity
 {
-    public class AppUser: IdentityUser
+    public class AppUser : IdentityUser
     {
     }
 }

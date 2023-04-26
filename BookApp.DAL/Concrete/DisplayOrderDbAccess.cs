@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayer.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using BookApp.BLL.Services.Orders;
+using BookApp.DAL.DataContexts;
 
-namespace DataLayer.Concrete
+namespace BookApp.DAL.Concrete
 {
-
     public class DisplayOrderDbAccess : IDisplayOrderDbAccess
     {
         private readonly AppIdentityDbContext efDbContext;

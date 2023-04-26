@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using BookApp.BLL.Services.BookCatalog;
 
-namespace DataLayer.Concrete.QueryObjects
+namespace BookApp.DAL.Concrete.QueryObjects
 {
-    public static class BookCatalogDtoSelect
+    public static class BookDetailsDtoSelect
     {
-        public static IQueryable<BookCatalogDto> MapToBookCatalogDto(this IQueryable<Book> query)
+        public static IQueryable<BookDetailsDto> MapToBookDetailsDto(this IQueryable<Book> query)
         {
-            return query.Select(b => new BookCatalogDto
+            return query.Select(b => new BookDetailsDto
             {
                 BookId = b.BookId,
                 Title = b.Title,

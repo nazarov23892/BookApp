@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Entities;
 using BookApp.BLL.Services.BookCatalog;
+using Domain.Entities;
 
-namespace DataLayer.Concrete.QueryObjects
+namespace BookApp.DAL.Concrete.QueryObjects
 {
-    public static class BookDetailsDtoSelect
+    public static class BookCatalogDtoSelect
     {
-        public static IQueryable<BookDetailsDto> MapToBookDetailsDto(this IQueryable<Book> query)
+        public static IQueryable<BookCatalogDto> MapToBookCatalogDto(this IQueryable<Book> query)
         {
-            return query.Select(b => new BookDetailsDto
+            return query.Select(b => new BookCatalogDto
             {
                 BookId = b.BookId,
                 Title = b.Title,

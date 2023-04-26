@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookApp.BLL.Services.Cart;
-using DataLayer.DataContexts;
-using DataLayer.Concrete.QueryObjects;
+using BookApp.DAL.DataContexts;
+using BookApp.DAL.Concrete.QueryObjects;
 
-namespace DataLayer.Concrete
+namespace BookApp.DAL.Concrete
 {
     public class BookForCartDbAccess : IBookForCartDbAccess
     {

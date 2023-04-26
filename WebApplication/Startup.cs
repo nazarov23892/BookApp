@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
-using DataLayer.DataContexts;
-using DataLayer.Entities;
-using DataLayer.Data;
-using WebApplication.Infrastructure;
-
+using BookApp.DAL.DataContexts;
+using BookApp.DAL.Identity;
+using BookApp.DAL.SeedData;
+using BookApp.DAL.Concrete;
 using BookApp.BLL.Interfaces;
 using BookApp.BLL.Services.BookCatalog;
 using BookApp.BLL.Services.BookCatalog.Concrete;
@@ -22,8 +21,7 @@ using BookApp.BLL.Services.Orders;
 using BookApp.BLL.Services.Orders.Concrete;
 using BookApp.BLL.Services.Cart;
 using BookApp.BLL.Services.Cart.Concrete;
-
-using DataLayer.Concrete;
+using WebApplication.Infrastructure;
 
 namespace WebApplication
 {

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Entities;
 using BookApp.BLL.Services.BookCatalog;
 
-namespace DataLayer.Concrete.QueryObjects
+namespace BookApp.DAL.Concrete.QueryObjects
 {
     public static class BookListPaging
     {
