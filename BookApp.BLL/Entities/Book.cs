@@ -12,5 +12,6 @@ namespace BookApp.BLL.Entities
         public string Title { get; set; }
         public decimal Price { get; set; }
         public ICollection<BookAuthor> AuthorsLink { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }
