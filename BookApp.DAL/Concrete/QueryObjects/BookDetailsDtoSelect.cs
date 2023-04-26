@@ -23,7 +23,8 @@ namespace BookApp.DAL.Concrete.QueryObjects
                     {
                         FirstName = al.Author.Firstname,
                         LastName = al.Author.Lastname
-                    })
+                    }),
+                Tags = b.Tags.Select(t => t.Text)
             });
         }
     }

@@ -64,6 +64,12 @@ namespace BookApp.DAL.SeedData
                 Firstname = "Adam"
             };
 
+            var dotnetTag = new Tag { Text = ".NET" };
+            var aspdotnetcoreTag = new Tag { Text = "ASP.NET Core" };            
+            var angularTag = new Tag { Text = "Angular" };
+            var architectureTag = new Tag { Text = "Architecture" };
+            var refactoringTag = new Tag { Text = "Refactoring" };
+
             books.Add(CreateBook(
                 title: "ASP.NET Core in Action, Second Edition",
                 price: 51.99M,
@@ -77,15 +83,17 @@ namespace BookApp.DAL.SeedData
                     {
                         Firstname = "Julie",
                         Lastname = "Brierley"
-                    }
-                }));
+                    },
+                }, 
+                tags: new[] { aspdotnetcoreTag }
+                ));
 
             books.Add(CreateBook(
                 title: "Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed.",
                 price: 43.49M,
-                authors: new[] {
-                    freeman_a
-                }));
+                authors: new[] { freeman_a },
+                tags: new[] { aspdotnetcoreTag }
+                ));
 
             books.Add(CreateBook(
                title: "ASP.NET Core 6 and Angular: Full-stack web development with ASP.NET 6 and Angular 13, 5th Edition",
@@ -96,7 +104,9 @@ namespace BookApp.DAL.SeedData
                         Firstname = "Valerio",
                         Lastname = "De Sanctis"
                     }
-               }));
+               },
+               tags: new[] { aspdotnetcoreTag, angularTag }
+               ));
             books.Add(CreateBook(
                title: "Apps and Services with .NET 7: Build practical projects with Blazor, .NET MAUI, gRPC, GraphQL, and other enterprise technologies",
                price: 48.99M,
@@ -106,7 +116,9 @@ namespace BookApp.DAL.SeedData
                         Firstname = "Mark",
                         Lastname = "Price"
                     }
-               }));
+               },
+               tags: new[] { dotnetTag }
+               ));
             books.Add(CreateBook(
                title: "Pro C# 10 with .NET 6: Foundational Principles and Practices in Programming 11st ed. Edition",
                price: 36.49M,
@@ -117,7 +129,9 @@ namespace BookApp.DAL.SeedData
                         Firstname = "Phil",
                         Lastname = "Japikse"
                     }
-               }));
+               },
+               tags: new[] { dotnetTag }
+               ));
 
             books.Add(CreateBook(
                title: "An Atypical ASP.NET Core 6 Design Patterns Guide: A SOLID adventure into architectural principles and design patterns using .NET 6 and C# 10, 2nd Edition 2nd",
@@ -133,7 +147,9 @@ namespace BookApp.DAL.SeedData
                         Firstname = "Abdelhamid",
                         Lastname = "Zebdi"
                     }
-               }));
+               },
+               tags: new[] { aspdotnetcoreTag }
+               ));
             books.Add(CreateBook(
                title: "ASP.NET Core Razor Pages in Action",
                price: 44.99M,
@@ -143,50 +159,52 @@ namespace BookApp.DAL.SeedData
                         Firstname = "Mike",
                         Lastname = "Brind"
                     }
-               }));
+               },
+               tags: new[] { aspdotnetcoreTag }
+               ));
 
             books.Add(CreateBook(
                title: "Patterns of Enterprise Application Architecture 1st Edition",
                price: 52.39M,
-               authors: new[] {
-                    fowler_m
-               }));
+               authors: new[] { fowler_m },
+               tags: new[] { architectureTag }
+               ));
 
             books.Add(CreateBook(
                title: "Refactoring: Improving the Design of Existing Code 2nd Edition",
                price: 45.99M,
-               authors: new[] {
-                    fowler_m
-               }));
+               authors: new[] { fowler_m },
+               tags: new[] { architectureTag, refactoringTag }
+               ));
 
             books.Add(CreateBook(
               title: "Clean Code: A Handbook of Agile Software Craftsmanship 1st Edition",
               price: 42.29M,
-              authors: new[] {
-                    martin_r
-              }));
+              authors: new[] { martin_r },
+              tags: new[] { architectureTag }
+              ));
 
             books.Add(CreateBook(
               title: "Clean Architecture: A Craftsman's Guide to Software Structure and Design 1st Edition",
               price: 64.99M,
-              authors: new[] {
-                    martin_r
-              }));
+              authors: new[] { martin_r },
+              tags: new[] { architectureTag }
+              ));
 
             books.Add(CreateBook(
               title: "Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition",
               price: 62.49M,
-              authors: new[] {
-                    evans_e
-              }));
-
+              authors: new[] { evans_e },
+              tags: new[] { architectureTag }
+              ));
             return books;
         }
 
         private static Book CreateBook(
             string title,
             decimal price,
-            IEnumerable<Author> authors)
+            IEnumerable<Author> authors,
+            IEnumerable<Tag> tags)
         {
             return new Book
             {
@@ -197,7 +215,8 @@ namespace BookApp.DAL.SeedData
                     Order = index,
                     Author = a
                 })
-                .ToList()
+                .ToList(),
+                Tags = tags.ToList()
             };
         }
 
