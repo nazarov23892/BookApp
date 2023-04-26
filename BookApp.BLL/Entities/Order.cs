@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities
+namespace BookApp.BLL.Entities
 {
     public class Order
     {

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using BookApp.DAL.Identity;
-using Domain.Entities;
+using BookApp.BLL.Entities;
 
 namespace BookApp.DAL.DataContexts
 {

@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL.Interfaces;
 using BookApp.BLL.Generic;
-using Domain.Entities;
-using Domain;
+using BookApp.BLL.Entities;
 
 namespace BookApp.BLL.Services.Orders.Concrete
 {

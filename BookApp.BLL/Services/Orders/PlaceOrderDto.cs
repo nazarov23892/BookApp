@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookApp.BLL.Services.Orders

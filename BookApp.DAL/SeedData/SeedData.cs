@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BookApp.DAL.Identity;
 using BookApp.DAL.DataContexts;
-using Domain;
-using Domain.Entities;
+using BookApp.BLL;
+using BookApp.BLL.Entities;
 
 namespace BookApp.DAL.SeedData
 {

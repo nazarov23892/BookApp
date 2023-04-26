@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using Moq;
+using BookApp.BLL;
 using BookApp.BLL.Services.Cart;
 using BookApp.BLL.Services.Cart.Concrete;
 
@@ -317,7 +318,7 @@ namespace BookApp.Tests
 
             // Act
 
-            int quantityExceeded = 1 + Domain.DomainConstants.MaxQuantityToBuy;
+            int quantityExceeded = 1 + DomainConstants.MaxQuantityToBuy;
             target1.SetQuantity(
                 bookId: book1.BookId,
                 quantity: quantityExceeded);

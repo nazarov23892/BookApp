@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL.Generic;
-using Domain;
 
 namespace BookApp.BLL.Services.Cart.Concrete
 {

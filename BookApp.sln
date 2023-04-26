@@ -7,13 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookApp.Tests", "BookApp.Tests\BookApp.Tests.csproj", "{53E7BAE0-933C-413E-81FC-B0AAFF2169D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{37AF84D8-6FF9-4EA0-B219-F189B8957A88}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookApp.Shared", "BookApp.Shared\BookApp.Shared.csproj", "{5C56F3FA-7463-4643-9947-AAAD3CB998D6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookApp.BLL", "BookApp.BLL\BookApp.BLL.csproj", "{C57AC70D-071D-46F9-9D23-CBD25888F9EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookApp.DAL", "BookApp.DAL\BookApp.DAL.csproj", "{A0168BA8-D3CB-4BE2-8F65-7417FF7E3AB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookApp.DAL", "BookApp.DAL\BookApp.DAL.csproj", "{A0168BA8-D3CB-4BE2-8F65-7417FF7E3AB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{53E7BAE0-933C-413E-81FC-B0AAFF2169D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53E7BAE0-933C-413E-81FC-B0AAFF2169D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53E7BAE0-933C-413E-81FC-B0AAFF2169D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37AF84D8-6FF9-4EA0-B219-F189B8957A88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C56F3FA-7463-4643-9947-AAAD3CB998D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C56F3FA-7463-4643-9947-AAAD3CB998D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C56F3FA-7463-4643-9947-AAAD3CB998D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
