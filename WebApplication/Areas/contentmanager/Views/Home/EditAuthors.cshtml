@@ -1,0 +1,41 @@
+﻿
+@model BookEditAuthorsCombinedDto
+<h2>Edit Authors</h2>
+<br />
+<h4>@Model.Book.BookTitle</h4>
+<br />
+<form method="post">
+    <input name="id" value="@Model.Book.BookId" hidden />
+    <table class="table">
+        <tr>
+            <th>author</th>
+            <th>select</th>
+        </tr>
+        @foreach (var author in Model?.Authors ?? Enumerable.Empty<BookEditAuthorsItemAuthorDto>())
+        {
+            string authorName = String.Join(separator: " ", author.Lastname, author.Firstname);
+            bool isChecked = Model.Book.ChosenAuthorsIds.Contains(author.AuthorId);
+            <tr>
+                <td>@authorName</td>
+                <td>
+                    <input type="checkbox"
+                           name="authorIds"
+                           value="@author.AuthorId"
+                           checked="@isChecked" />
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="text-center">
+        <button type="submit"
+                class="btn btn-primary">
+            save
+        </button>
+        <a asp-action="Details"
+           asp-controller="Home"
+           asp-area="contentmanager"
+           asp-route-id="@Model.Book.BookId"
+           class="btn btn-secondary"
+           >cancel</a>
+    </div>
+</form>

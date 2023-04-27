@@ -65,6 +65,7 @@ namespace WebApplication
             services.AddTransient<IBookCatalogDbAccess, BookCatalogDbAccess>();
             services.AddTransient<IBookCatalogService, BookCatalogService>();
             services.AddTransient<IBookEditService, BookEditService>();
+            services.AddTransient<IBookEditDbAccess, BookEditDbAccess>();
             services.AddMvc();
         }
 

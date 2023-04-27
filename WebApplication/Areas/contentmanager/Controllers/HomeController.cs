@@ -67,5 +67,16 @@ namespace WebApplication.Areas.contentmanager.Controllers
         error_exit:
             return View(model: newBook);
         }
+
+        [HttpGet]
+        public IActionResult EditAuthors(Guid id)
+        {
+            BookEditAuthorsCombinedDto editDto = bookEditService.GetBookForEditAuthors(bookId: id);
+            if (editDto == null)
+            {
+                return NotFound();
+            }
+            return View(model: editDto);
+        }
     }
 }

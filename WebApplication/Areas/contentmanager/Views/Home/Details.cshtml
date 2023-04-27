@@ -23,6 +23,13 @@
         </dt>
         <dd>
             @authors
+            <text> | </text>
+            <a asp-action="EditAuthors"
+               asp-controller="Home"
+               asp-area="contentmanager"
+               asp-route-id="@Model.BookId">
+                edit
+            </a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Tags)

@@ -10,5 +10,6 @@ namespace BookApp.BLL.Services.BookCatalog
     public interface IBookEditService : IServiceErrors
     {
         Guid CreateBook(BookCreateDto newBook);
+        BookEditAuthorsCombinedDto GetBookForEditAuthors(Guid bookId);
     }
 }
