@@ -21,6 +21,12 @@
         </tr>
     }
 </table>
+<div class="text-center">
+    <a asp-action="Create"
+       asp-controller="Home"
+       asp-area="contentmanager"
+       class="btn btn-primary">create</a>
+</div>
 <div>
     @for (int i = 1; i <= Model.PageOptionsOut.PageCount; i++)
     {

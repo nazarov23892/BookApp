@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BookApp.BLL.Entities;
 using BookApp.BLL.Services.BookCatalog;
 using BookApp.DAL.DataContexts;
 using BookApp.DAL.Concrete.QueryObjects;
@@ -17,6 +18,19 @@ namespace BookApp.DAL.Concrete
         public BookCatalogDbAccess(AppIdentityDbContext efDbContext)
         {
             this.efDbContext = efDbContext;
+        }
+
+        public Guid Create(BookCreateDto newBook)
+        {
+            var book = new Book
+            {
+                BookId = Guid.NewGuid(),
+                Title = newBook.Title,
+                Price = newBook.Price
+            };
+            efDbContext.Books.Add(book);
+            efDbContext.SaveChanges();
+            return book.BookId;
         }
 
         public int GetCount()
