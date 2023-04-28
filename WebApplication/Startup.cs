@@ -21,6 +21,8 @@ using BookApp.BLL.Services.Orders;
 using BookApp.BLL.Services.Orders.Concrete;
 using BookApp.BLL.Services.Cart;
 using BookApp.BLL.Services.Cart.Concrete;
+using BookApp.BLL.Services.Authors;
+using BookApp.BLL.Services.Authors.Concrete;
 using WebApplication.Infrastructure;
 
 namespace WebApplication
@@ -66,6 +68,8 @@ namespace WebApplication
             services.AddTransient<IBookCatalogService, BookCatalogService>();
             services.AddTransient<IBookEditService, BookEditService>();
             services.AddTransient<IBookEditDbAccess, BookEditDbAccess>();
+            services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IAuthorDbAccess, AuthorDbAccess>();
             services.AddMvc();
         }
 
