@@ -22,5 +22,35 @@ namespace WebApplication.Areas.contentmanager.Controllers
             IEnumerable<AuthorListItemDto> authors = authorService.GetAuthors();
             return View(model: authors);
         }
+
+        [HttpGet]
+        public ViewResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(AuthorCreateDto author)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto error_exit;
+            }
+            authorService.CreateAuthor(newAuthor: author);
+            if (authorService.HasErrors)
+            {
+                foreach (var error in authorService.Errors)
+                {
+                    ModelState.AddModelError(key: "", errorMessage: error.ErrorMessage);
+                }
+                goto error_exit;
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Index),
+                controllerName: "Author");
+
+        error_exit:
+            return View(model: author);
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookApp.DAL.DataContexts;
 using BookApp.BLL.Services.Authors;
+using BookApp.BLL.Entities;
 
 namespace BookApp.DAL.Concrete
 {
@@ -30,6 +31,12 @@ namespace BookApp.DAL.Concrete
                 })
                 .ToArray();
             return authors;
+        }
+
+        public void StoreAuthor(Author newAuthor)
+        {
+            efDbContext.Authors.Add(newAuthor);
+            efDbContext.SaveChanges();
         }
     }
 }
