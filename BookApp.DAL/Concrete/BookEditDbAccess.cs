@@ -19,6 +19,13 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
+        public Dictionary<Guid, Author> GetAuthorsByIds(IEnumerable<Guid> authorIds)
+        {
+            return efDbContext.Authors
+                .Where(a => authorIds.Contains(a.AuthorId))
+                .ToDictionary(a => a.AuthorId); 
+        }
+
         public IEnumerable<BookEditAuthorsItemAuthorDto> GetAuthors()
         {
             IEnumerable<BookEditAuthorsItemAuthorDto> authors = efDbContext.Authors
@@ -42,11 +49,32 @@ namespace BookApp.DAL.Concrete
                     BookId = b.BookId,
                     BookTitle = b.Title,
                     ChosenAuthorsIds = b.AuthorsLink
-                        .Select(al => al.AuthorId)
+                        .OrderBy(al => al.Order)
+                        .Select(al => new BookEditAuthorsItemAuthorDto
+                        {
+                            AuthorId = al.AuthorId,
+                            Firstname = al.Author.Firstname,
+                            Lastname = al.Author.Lastname,
+                            OrderNo = al.Order
+                        })
                         .ToArray()
                 })
                 .SingleOrDefault(b => b.BookId == bookId);
             return book;
+        }
+
+        public Book GetBookWithAuthorLinks(Guid bookId)
+        {
+            return efDbContext.Books
+                .Include(b => b.AuthorsLink)
+                .ThenInclude(al => al.Author)
+                .SingleOrDefault(b => b.BookId == bookId);
+        }
+
+        public void SaveBook(Book book)
+        {
+            efDbContext.Books.Update(book);
+            efDbContext.SaveChanges();
         }
     }
 }

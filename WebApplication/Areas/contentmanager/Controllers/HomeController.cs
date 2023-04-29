@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookApp.BLL.Services.BookCatalog;
 
-
 namespace WebApplication.Areas.contentmanager.Controllers
 {
     [Area(areaName: "contentmanager")]
@@ -13,13 +12,16 @@ namespace WebApplication.Areas.contentmanager.Controllers
     {
         private readonly IBookCatalogService bookCatalogService;
         private readonly IBookEditService bookEditService;
+        private readonly IBookEditDbAccess bookEditDbAccess;
 
         public HomeController(
             IBookCatalogService bookCatalogService,
-            IBookEditService bookEditService)
+            IBookEditService bookEditService,
+            IBookEditDbAccess bookEditDbAccess)
         {
             this.bookCatalogService = bookCatalogService;
             this.bookEditService = bookEditService;
+            this.bookEditDbAccess = bookEditDbAccess;
         }
 
         public IActionResult Index(PageOptionsIn pageOptions)
@@ -69,14 +71,52 @@ namespace WebApplication.Areas.contentmanager.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditAuthors(Guid id)
+        public IActionResult EditAuthors(Guid id, bool? editMode = null)
         {
-            BookEditAuthorsCombinedDto editDto = bookEditService.GetBookForEditAuthors(bookId: id);
-            if (editDto == null)
+            BookEditAuthorsDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: id);
+            if (bookDto == null)
             {
                 return NotFound();
             }
-            return View(model: editDto);
+            ViewBag.editMode = editMode;
+            return View(model: bookDto);
+        }
+
+        [HttpPost]
+        public IActionResult EditAuthors(BookAuthorLinksOrderEditedDto authorLinksDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto error_exit;
+            }
+            bookEditService.ChangeAuthorLinksOrder(authorLinksDto);
+            if (bookEditService.HasErrors)
+            {
+                foreach (var error in bookEditService.Errors)
+                {
+                    ModelState.AddModelError(key: "", errorMessage: error.ErrorMessage);
+                }
+                goto error_exit;
+            }
+
+            return RedirectToAction(
+                actionName: nameof(this.EditAuthors),
+                controllerName: "Home",
+                routeValues: new
+                {
+                    id = authorLinksDto.BookId,
+                    area = "contentmanager",
+                    editMode = false
+                });
+
+        error_exit:
+            BookEditAuthorsDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: authorLinksDto.BookId);
+            if (bookDto == null)
+            {
+                return NotFound();
+            }
+            ViewBag.editMode = true;
+            return View(viewName: "EditAuthors", model: bookDto);
         }
     }
 }

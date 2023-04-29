@@ -11,5 +11,8 @@ namespace BookApp.BLL.Services.BookCatalog
     {
         BookEditAuthorsDto GetBookForEditAuthors(Guid bookId);
         IEnumerable<BookEditAuthorsItemAuthorDto> GetAuthors();
+        Dictionary<Guid, Author> GetAuthorsByIds(IEnumerable<Guid> authorIds);
+        Book GetBookWithAuthorLinks(Guid bookId);
+        void SaveBook(Book book);
     }
 }

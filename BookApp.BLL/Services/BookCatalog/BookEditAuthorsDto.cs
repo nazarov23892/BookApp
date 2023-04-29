@@ -10,7 +10,7 @@ namespace BookApp.BLL.Services.BookCatalog
     {
         public Guid BookId { get; set; }
         public string BookTitle { get; set; }
-        public IEnumerable<Guid> ChosenAuthorsIds { get; set; }
+        public IEnumerable<BookEditAuthorsItemAuthorDto> ChosenAuthorsIds { get; set; }
     }
 
     public class BookEditAuthorsItemAuthorDto
@@ -18,6 +18,7 @@ namespace BookApp.BLL.Services.BookCatalog
         public Guid AuthorId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public int OrderNo { get; set; }
     }
 
 }

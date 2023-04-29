@@ -1,41 +1,87 @@
 ﻿
-@model BookEditAuthorsCombinedDto
+@model BookEditAuthorsDto
+
+@{
+    bool editMode = ViewBag.editMode ?? false;
+}
+
 <h2>Edit Authors</h2>
 <br />
-<h4>@Model.Book.BookTitle</h4>
+<h4>@Model.BookTitle</h4>
 <br />
-<form method="post">
-    <input name="id" value="@Model.Book.BookId" hidden />
-    <table class="table">
+
+@if (editMode)
+{
+    <form id="edit-form"
+          method="post"
+          asp-action="EditAuthors"
+          asp-controller="Home"
+          asp-area="contentmanager">
+        <input name="BookId" value="@Model.BookId" hidden />
+    </form>
+}
+<div asp-validation-summary="All" class="text-danger"></div>
+<table class="table">
+    <tr>
+        <th class="col-md-1">order</th>
+        <th class="col-md-6">author</th>
+        <th class="col-md-1"></th>
+    </tr>
+    @{
+        int i = 0;
+    }
+    @foreach (var author in Model?.ChosenAuthorsIds ?? Enumerable.Empty<BookEditAuthorsItemAuthorDto>())
+    {
+        string authorName = String.Join(separator: " ", author.Lastname, author.Firstname);
         <tr>
-            <th>author</th>
-            <th>select</th>
+            <td>
+                @if (editMode)
+                {
+                    string authorIdProperty = $"AuthorLinks[{i}].AuthorId";
+                    string orderProperty = $"AuthorLinks[{i}].Order";
+                    <input form="edit-form" name="@authorIdProperty" value="@author.AuthorId" hidden />
+                    <input form="edit-form" name="@orderProperty" value="@author.OrderNo" class="w-100" />
+                }
+                else
+                {
+                    @author.OrderNo
+                }
+            </td>
+            <td>@authorName</td>
+            <td></td>
         </tr>
-        @foreach (var author in Model?.Authors ?? Enumerable.Empty<BookEditAuthorsItemAuthorDto>())
-        {
-            string authorName = String.Join(separator: " ", author.Lastname, author.Firstname);
-            bool isChecked = Model.Book.ChosenAuthorsIds.Contains(author.AuthorId);
-            <tr>
-                <td>@authorName</td>
-                <td>
-                    <input type="checkbox"
-                           name="authorIds"
-                           value="@author.AuthorId"
-                           checked="@isChecked" />
-                </td>
-            </tr>
-        }
-    </table>
-    <div class="text-center">
-        <button type="submit"
+        i++;
+    }
+</table>
+<hr />
+<br />
+<div class="text-center">
+
+    @if (editMode)
+    {
+        <button form="edit-form"
+                type="submit"
                 class="btn btn-primary">
-            save
+            submit
         </button>
+        <a asp-action="EditAuthors"
+           asp-controller="Home"
+           asp-area="contentmanager"
+           asp-route-id="@Model.BookId"
+           class="btn btn-secondary">cancel</a>
+    }
+    else
+    {
+        <a asp-action="EditAuthors"
+           asp-controller="Home"
+           asp-area="contentmanager"
+           asp-route-id="@Model.BookId"
+           asp-route-editMode="true"
+           class="btn btn-primary">edit</a>
         <a asp-action="Details"
            asp-controller="Home"
            asp-area="contentmanager"
-           asp-route-id="@Model.Book.BookId"
-           class="btn btn-secondary"
-           >cancel</a>
-    </div>
-</form>
+           asp-route-id="@Model.BookId"
+           class="btn btn-secondary">cancel</a>
+    }
+</div>
