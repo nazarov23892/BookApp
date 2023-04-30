@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.BLL.Services.BookCatalog;
+using WebApplication.Models;
+using System.Text;
 
 namespace WebApplication.Areas.contentmanager.Controllers
 {
@@ -73,7 +75,7 @@ namespace WebApplication.Areas.contentmanager.Controllers
         [HttpGet]
         public IActionResult EditAuthors(Guid id, bool? editMode = null)
         {
-            BookEditAuthorsDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: id);
+            BookAuthorsLinkOrderDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: id);
             if (bookDto == null)
             {
                 return NotFound();
@@ -110,13 +112,56 @@ namespace WebApplication.Areas.contentmanager.Controllers
                 });
 
         error_exit:
-            BookEditAuthorsDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: authorLinksDto.BookId);
+            BookAuthorsLinkOrderDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: authorLinksDto.BookId);
             if (bookDto == null)
             {
                 return NotFound();
             }
             ViewBag.editMode = true;
             return View(viewName: "EditAuthors", model: bookDto);
+        }
+
+        [HttpGet]
+        public IActionResult AddAuthors(Guid id)
+        {
+            BookAuthorsToAddDto dto = bookEditDbAccess.GetAuthorsForAdd(bookId: id);
+            if (dto == null)
+            {
+                return NotFound();
+            }
+            return View(model: dto);
+        }
+
+        [HttpPost]
+        public IActionResult AddAuthor(BookAddAuthorDto addAuthorDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto exit_point;
+            }
+            bookEditService.AddAuthor(addAuthorDto);
+            if (bookEditService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in bookEditService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(), 
+                    messageType: ViewAlertMessageType.Danger);
+                goto exit_point;
+            }
+
+        exit_point:
+            return RedirectToAction(
+                actionName: "AddAuthors",
+                controllerName: "Home",
+                routeValues: new
+                {
+                    id = addAuthorDto.BookId,
+                    area = "contentmanager"
+                });
         }
     }
 }

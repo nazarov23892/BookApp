@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookApp.BLL.Services.BookCatalog
 {
-    public class BookEditAuthorsCombinedDto
+    public class BookAddAuthorDto
     {
-        public BookEditAuthorsDto Book { get; set; }
-        public IEnumerable<BookEditAuthorsItemAuthorDto> Authors { get; set; }
+        public Guid BookId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

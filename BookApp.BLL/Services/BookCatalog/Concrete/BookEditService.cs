@@ -21,6 +21,47 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
             this.bookEditDbAccess = bookEditDbAccess;
         }
 
+        public void AddAuthor(BookAddAuthorDto addAuthorDto)
+        {
+            // take book with authors
+            // check book exist in db
+            var book = bookEditDbAccess.GetBookWithAuthorLinks(bookId: addAuthorDto.BookId);
+            if (book == null)
+            {
+                AddError(errorMessage: $"book id={addAuthorDto.BookId} not found");
+                return;
+            }
+            BookAuthor[] bookAuthorsArray = book.AuthorsLink
+                .ToArray();
+
+            // check author exist in db
+            var author = bookEditDbAccess.GetAuthor(authorId: addAuthorDto.AuthorId);
+            if (author == null)
+            {
+                AddError(errorMessage: $"author id={addAuthorDto.AuthorId} not found");
+                return;
+            }
+
+            // check author exist in book
+            bool isAlreadyExist = bookAuthorsArray
+                .Where(al => al.AuthorId == author.AuthorId)
+                .Any();
+            if (isAlreadyExist)
+            {
+                AddError(errorMessage: "book already contains given author");
+                return;
+            }
+            int orderValue = bookAuthorsArray.Any()
+                ? 1 + bookAuthorsArray.Max(al => al.Order)
+                : 0;
+            book.AuthorsLink.Add(new BookAuthor
+            {
+                Author = author,
+                Order = orderValue
+            });
+            bookEditDbAccess.SaveBook(book);
+        }
+
         public void ChangeAuthorLinksOrder(BookAuthorLinksOrderEditedDto authorLinksDto)
         {
             if (authorLinksDto.AuthorLinks == null
@@ -67,18 +108,6 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
         {
             return bookCatalogDbAccess.Create(newBook);
         }
-
-        public BookEditAuthorsCombinedDto GetBookForEditAuthors(Guid bookId)
-        {
-            IEnumerable<BookEditAuthorsItemAuthorDto> authors = bookEditDbAccess.GetAuthors();
-            BookEditAuthorsDto book = bookEditDbAccess.GetBookForEditAuthors(bookId);
-            return new BookEditAuthorsCombinedDto
-            {
-                Book = book,
-                Authors = authors
-            };
-        }
-
 
     }
 }

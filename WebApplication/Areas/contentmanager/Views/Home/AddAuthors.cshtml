@@ -1,0 +1,37 @@
+﻿
+@model BookAuthorsToAddDto
+
+<h2>Add Authors</h2>
+<br />
+<h4>@Model.BookTitle</h4>
+<br />
+<table class="table">
+    <tr>
+        <th>author</th>
+        <th></th>
+    </tr>
+    @foreach (var author in Model.Authors ?? Enumerable.Empty<BookAuthorsToAddItemDto>())
+    {
+        string authorName = string.Join(separator: " ", author.Lastname, author.Firstname);
+        <tr>
+            <td>@authorName</td>
+            <td>
+                <form method="post" asp-action="AddAuthor" asp-controller="Home" asp-area="contentmanager">
+                    <input name="BookId" value="@Model.BookId" hidden />
+                    <input name="AuthorId" value="@author.AuthorId" hidden />
+                    <button type="submit"
+                            class="btn btn-sm btn-primary">add</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<hr />
+<br />
+<div class="text-center">
+    <a asp-action="EditAuthors"
+       asp-controller="Home"
+       asp-route-id="@Model.BookId"
+       asp-area="contentmanager"
+       class="btn btn-secondary">cancel</a>
+</div>

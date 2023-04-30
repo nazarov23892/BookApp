@@ -9,10 +9,12 @@ namespace BookApp.BLL.Services.BookCatalog
 {
     public interface IBookEditDbAccess
     {
-        BookEditAuthorsDto GetBookForEditAuthors(Guid bookId);
-        IEnumerable<BookEditAuthorsItemAuthorDto> GetAuthors();
+        BookAuthorsLinkOrderDto GetBookForEditAuthors(Guid bookId);
+        IEnumerable<BookAuthorsLinkOrderItemDto> GetAuthors();
         Dictionary<Guid, Author> GetAuthorsByIds(IEnumerable<Guid> authorIds);
         Book GetBookWithAuthorLinks(Guid bookId);
+        BookAuthorsToAddDto GetAuthorsForAdd(Guid bookId);
+        Author GetAuthor(Guid authorId);
         void SaveBook(Book book);
     }
 }

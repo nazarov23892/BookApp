@@ -1,5 +1,5 @@
 ﻿
-@model BookEditAuthorsDto
+@model BookAuthorsLinkOrderDto
 
 @{
     bool editMode = ViewBag.editMode ?? false;
@@ -30,7 +30,7 @@
     @{
         int i = 0;
     }
-    @foreach (var author in Model?.ChosenAuthorsIds ?? Enumerable.Empty<BookEditAuthorsItemAuthorDto>())
+    @foreach (var author in Model?.ChosenAuthorsIds ?? Enumerable.Empty<BookAuthorsLinkOrderItemDto>())
     {
         string authorName = String.Join(separator: " ", author.Lastname, author.Firstname);
         <tr>
@@ -72,6 +72,11 @@
     }
     else
     {
+        <a asp-action="AddAuthors"
+           asp-controller="Home"
+           asp-area="contentmanager"
+           asp-route-id="@Model.BookId"
+           class="btn btn-primary">add</a>
         <a asp-action="EditAuthors"
            asp-controller="Home"
            asp-area="contentmanager"
