@@ -8,7 +8,6 @@ namespace BookApp.BLL.Services.BookCatalog
 {
     public interface IBookCatalogDbAccess
     {
-        Guid Create(BookCreateDto newBook);
         BookDetailsDto GetItem(Guid bookId);
         IEnumerable<BookCatalogDto> GetList(PageOptionsIn pageOptionsIn);
         int GetCount();

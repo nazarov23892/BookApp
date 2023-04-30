@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookApp.BLL.Services.BookCatalog
+namespace BookApp.BLL.Services.BookManage
 {
     public class BookAuthorsLinkOrderDto
     {
@@ -20,5 +20,4 @@ namespace BookApp.BLL.Services.BookCatalog
         public string Lastname { get; set; }
         public int OrderNo { get; set; }
     }
-
 }

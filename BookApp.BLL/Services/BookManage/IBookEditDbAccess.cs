@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL.Entities;
 
-namespace BookApp.BLL.Services.BookCatalog
+namespace BookApp.BLL.Services.BookManage
 {
     public interface IBookEditDbAccess
     {

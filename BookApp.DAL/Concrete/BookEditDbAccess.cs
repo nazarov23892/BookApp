@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using BookApp.BLL.Services.BookCatalog;
+using BookApp.BLL.Services.BookManage;
 using BookApp.DAL.DataContexts;
 using BookApp.BLL.Entities;
 

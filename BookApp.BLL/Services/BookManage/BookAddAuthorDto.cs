@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookApp.BLL.Services.BookCatalog
+namespace BookApp.BLL.Services.BookManage
 {
-    public class BookRemoveAuthorDto
+    public class BookAddAuthorDto
     {
         public Guid BookId { get; set; }
         public Guid AuthorId { get; set; }

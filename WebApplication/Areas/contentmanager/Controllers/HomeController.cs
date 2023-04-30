@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.BLL.Services.BookCatalog;
+using BookApp.BLL.Services.BookManage;
 using WebApplication.Models;
 using System.Text;
 

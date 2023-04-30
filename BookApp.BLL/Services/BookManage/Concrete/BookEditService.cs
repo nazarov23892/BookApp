@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL.Generic;
 using BookApp.BLL.Entities;
+using BookApp.BLL.Services.BookCatalog;
 
-namespace BookApp.BLL.Services.BookCatalog.Concrete
+namespace BookApp.BLL.Services.BookManage.Concrete
 {
     public class BookEditService : ServiceErrors, IBookEditService
     {
@@ -106,7 +107,9 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
 
         public Guid CreateBook(BookCreateDto newBook)
         {
-            return bookCatalogDbAccess.Create(newBook);
+            // todo: to change
+            //return bookCatalogDbAccess.Create(newBook);
+            throw new NotImplementedException();
         }
 
         public void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto)

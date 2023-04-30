@@ -23,6 +23,8 @@ using BookApp.BLL.Services.Cart;
 using BookApp.BLL.Services.Cart.Concrete;
 using BookApp.BLL.Services.Authors;
 using BookApp.BLL.Services.Authors.Concrete;
+using BookApp.BLL.Services.BookManage;
+using BookApp.BLL.Services.BookManage.Concrete;
 using WebApplication.Infrastructure;
 
 namespace WebApplication

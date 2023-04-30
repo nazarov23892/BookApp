@@ -20,19 +20,6 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
-        public Guid Create(BookCreateDto newBook)
-        {
-            var book = new Book
-            {
-                BookId = Guid.NewGuid(),
-                Title = newBook.Title,
-                Price = newBook.Price
-            };
-            efDbContext.Books.Add(book);
-            efDbContext.SaveChanges();
-            return book.BookId;
-        }
-
         public int GetCount()
         {
             return efDbContext.Books.Count();

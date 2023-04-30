@@ -1,12 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookApp.BLL.Services.BookCatalog
+namespace BookApp.BLL.Services.BookManage
 {
     public class BookCreateDto
     {

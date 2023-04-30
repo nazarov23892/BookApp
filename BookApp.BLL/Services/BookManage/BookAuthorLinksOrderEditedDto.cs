@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookApp.BLL.Services.BookCatalog
+namespace BookApp.BLL.Services.BookManage
 {
     public class BookAuthorLinksOrderEditedDto
     {
