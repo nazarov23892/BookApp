@@ -25,6 +25,7 @@ using BookApp.BLL.Services.Authors;
 using BookApp.BLL.Services.Authors.Concrete;
 using BookApp.BLL.Services.BookManage;
 using BookApp.BLL.Services.BookManage.Concrete;
+using BookApp.BLL.Services.Tags;
 using WebApplication.Infrastructure;
 
 namespace WebApplication
@@ -72,6 +73,7 @@ namespace WebApplication
             services.AddTransient<IBookEditDbAccess, BookEditDbAccess>();
             services.AddTransient<IAuthorService, AuthorService>();
             services.AddTransient<IAuthorDbAccess, AuthorDbAccess>();
+            services.AddTransient<ITagDbAccess, TagDbAccess>();
             services.AddMvc();
         }
 

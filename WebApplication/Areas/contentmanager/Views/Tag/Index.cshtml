@@ -1,0 +1,20 @@
+﻿
+@using BookApp.BLL.Services.Tags
+@model IEnumerable<TagListItemDto>
+@{
+    ViewBag.Title = "Tags";
+}
+
+<h2>Tags</h2>
+<br />
+<table class="table">
+    <tr>
+        <th>tag</th>
+    </tr>
+    @foreach (var tag in Model)
+    {
+        <tr>
+            <td>@tag.Text</td>
+        </tr>
+    }
+</table>
