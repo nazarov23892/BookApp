@@ -48,7 +48,20 @@
                 }
             </td>
             <td>@authorName</td>
-            <td></td>
+            <td>
+                @if (!editMode)
+                {
+                    <form method="post"
+                          asp-action="RemoveAuthor"
+                          asp-controller="Home"
+                          asp-area="contentmanager">
+                        <input name="BookId" value="@Model.BookId" hidden />
+                        <input name="AuthorId" value="@author.AuthorId" hidden />
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">delete</button>
+                    </form>
+                }
+            </td>
         </tr>
         i++;
     }

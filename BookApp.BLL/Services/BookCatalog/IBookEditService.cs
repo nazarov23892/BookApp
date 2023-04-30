@@ -12,5 +12,6 @@ namespace BookApp.BLL.Services.BookCatalog
         Guid CreateBook(BookCreateDto newBook);
         void ChangeAuthorLinksOrder(BookAuthorLinksOrderEditedDto authorLinksDto);
         void AddAuthor(BookAddAuthorDto addAuthorDto);
+        void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto);
     }
 }

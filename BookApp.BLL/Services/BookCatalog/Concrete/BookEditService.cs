@@ -109,5 +109,30 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
             return bookCatalogDbAccess.Create(newBook);
         }
 
+        public void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto)
+        {
+            Book book = bookEditDbAccess.GetBookWithAuthorLinks(bookId: removeAuthorDto.BookId);
+            if (book == null)
+            {
+                AddError(errorMessage: $"book id={removeAuthorDto.BookId} not found");
+                return;
+            }
+            bool hasAuthor = false;
+            foreach (var authorLink in book.AuthorsLink)
+            {
+                if (authorLink.AuthorId == removeAuthorDto.AuthorId)
+                {
+                    book.AuthorsLink.Remove(authorLink);
+                    hasAuthor = true;
+                    break;
+                }
+            }
+            if (!hasAuthor)
+            {
+                AddError(errorMessage: $"author id={removeAuthorDto.AuthorId} not found");
+                return;
+            }
+            bookEditDbAccess.SaveBook(book);
+        }
     }
 }

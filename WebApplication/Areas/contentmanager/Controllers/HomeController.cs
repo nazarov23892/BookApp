@@ -148,7 +148,7 @@ namespace WebApplication.Areas.contentmanager.Controllers
                     stringBuilder.AppendLine(error.ErrorMessage);
                 }
                 TempData.WriteAlertMessage(
-                    messageText: stringBuilder.ToString(), 
+                    messageText: stringBuilder.ToString(),
                     messageType: ViewAlertMessageType.Danger);
                 goto exit_point;
             }
@@ -161,6 +161,31 @@ namespace WebApplication.Areas.contentmanager.Controllers
                 {
                     id = addAuthorDto.BookId,
                     area = "contentmanager"
+                });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveAuthor(BookRemoveAuthorDto bookAuthorDto)
+        {
+            bookEditService.RemoveAuthor(bookAuthorDto);
+            if (bookEditService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in bookEditService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(),
+                    messageType: ViewAlertMessageType.Danger);
+            }
+            return RedirectToAction(
+                actionName: nameof(this.EditAuthors),
+                controllerName: "Home",
+                routeValues: new 
+                {
+                    id = bookAuthorDto.BookId,
+                    area = "contentmanager" 
                 });
         }
     }
