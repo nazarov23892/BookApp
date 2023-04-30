@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookApp.BLL.Entities;
+using BookApp.BLL.Generic;
 
 namespace BookApp.BLL.Services.Tags
 {
-    public interface ITagDbAccess
+    public interface ITagService: IServiceErrors
     {
-        IEnumerable<TagListItemDto> GetTags();
-        int StoreTag(Tag newTag);
+        int CreateTag(TagCreateDto newTag);
     }
 }

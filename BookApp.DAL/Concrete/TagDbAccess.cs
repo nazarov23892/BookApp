@@ -23,12 +23,21 @@ namespace BookApp.DAL.Concrete
         {
             return efDbContext.Set<Tag>()
                 .AsNoTracking()
+                .OrderBy(t => t.Text)
                 .Select(t => new TagListItemDto
                 {
                     TagId = t.TagId,
                     Text = t.Text
                 })
                 .ToArray();
+        }
+
+        public int StoreTag(Tag newTag)
+        {
+            efDbContext.Set<Tag>()
+                .Add(newTag);
+            efDbContext.SaveChanges();
+            return newTag.TagId;
         }
     }
 }

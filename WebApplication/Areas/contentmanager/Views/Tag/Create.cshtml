@@ -1,0 +1,34 @@
+﻿
+@using BookApp.BLL.Services.Tags
+@model TagCreateDto
+
+<h2>Create</h2>
+<br />
+<h4>Tag</h4>
+<br />
+<form method="post"
+      asp-action="Create"
+      asp-controller="Tag"
+      asp-area="contentmanager">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Text"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="text-center">
+        <button type="submit"
+                class="btn btn-primary">
+            create
+        </button>
+        <a asp-action="Index"
+           asp-controller="Tag"
+           asp-area="contentmanager"
+           class="btn btn-secondary">cancel</a>
+    </div>
+</form>
