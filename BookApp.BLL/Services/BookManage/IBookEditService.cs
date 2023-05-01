@@ -14,5 +14,6 @@ namespace BookApp.BLL.Services.BookManage
         void AddAuthor(BookAddAuthorDto addAuthorDto);
         void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto);
         void AddTag(BookAddTagDto addTagDto);
+        void RemoveTag(BookRemoveTagDto removeTagDto);
     }
 }

@@ -12,11 +12,19 @@
 <table class="table">
     <tr>
         <th>tag</th>
+        <th></th>
     </tr>
     @foreach (var tag in Model.Tags ?? Enumerable.Empty<BookWithTagsItemDto>())
     {
         <tr>
             <td>@tag.Text</td>
+            <td>
+                <form method="post" asp-action="RemoveTag" asp-controller="Home" asp-area="contentmanager">
+                    <input name="BookId" value="@Model.BookId" hidden />
+                    <input name="TagId" value="@tag.TagId" hidden />
+                    <button type="submit" class="btn btn-sm btn-danger">remove</button>
+                </form>
+            </td>
         </tr>
     }
 </table>

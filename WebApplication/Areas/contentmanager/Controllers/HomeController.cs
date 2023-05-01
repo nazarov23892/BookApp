@@ -239,5 +239,30 @@ namespace WebApplication.Areas.contentmanager.Controllers
                 controllerName: "Home",
                 routeValues: new { area = "contentmanager", id = bookTagDto.BookId });
         }
+
+        [HttpPost]
+        public IActionResult RemoveTag(BookRemoveTagDto bookTagDto)
+        {
+            bookEditService.RemoveTag(bookTagDto);
+            if (bookEditService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in bookEditService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(),
+                    messageType: ViewAlertMessageType.Danger);
+            }
+            return RedirectToAction(
+                actionName: nameof(this.EditTags),
+                controllerName: "Home",
+                routeValues: new
+                {
+                    id = bookTagDto.BookId,
+                    area = "contentmanager"
+                });
+        }
     }
 }

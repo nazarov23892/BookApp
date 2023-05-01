@@ -171,5 +171,25 @@ namespace BookApp.BLL.Services.BookManage.Concrete
             }
             bookEditDbAccess.SaveBook(book);
         }
+
+        public void RemoveTag(BookRemoveTagDto removeTagDto)
+        {
+            Book book = bookEditDbAccess.GetBookWithTags(bookId: removeTagDto.BookId);
+            if (book == null)
+            {
+                AddError(errorMessage: $"book id={removeTagDto.BookId} not found");
+                return;
+            }
+            var tag = book.Tags
+                .SingleOrDefault(t=>t.TagId == removeTagDto.TagId);
+            if (tag == null)
+            {
+                AddError(errorMessage: $"tag id={removeTagDto.TagId} not found");
+                return;
+            }
+            book.Tags.Remove(tag);
+            bookEditDbAccess.SaveBook(book);
+            return;
+        }
     }
 }
