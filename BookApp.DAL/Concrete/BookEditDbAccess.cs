@@ -110,7 +110,7 @@ namespace BookApp.DAL.Concrete
                 .SingleOrDefault(a => a.AuthorId == authorId);
         }
 
-        public BookWithTagsDto GetBookWithTags(Guid bookId)
+        public BookWithTagsDto GetBookForEditTags(Guid bookId)
         {
             return efDbContext.Books
                 .AsNoTracking()
@@ -126,6 +126,44 @@ namespace BookApp.DAL.Concrete
                         })
                 })
                 .SingleOrDefault(b => b.BookId == bookId);
+        }
+
+        public BookTagsForAddDto GetTagsForAdd(Guid bookId)
+        {
+            BookTagsForAddDto book = efDbContext.Books
+                .Select(b=>new BookTagsForAddDto
+                {
+                    BookId = b.BookId,
+                    BookTitle = b.Title
+                })
+                .SingleOrDefault(b => b.BookId == bookId);
+            if (book == null)
+            {
+                return null;
+            }
+            var tags = efDbContext.Set<Tag>()
+                .AsNoTracking()
+                .Where(b => !b.Books.Where(b => b.BookId == bookId).Any())
+                .Select(t => new BookTagsForAddItemDto
+                {
+                    TagId = t.TagId,
+                    Text = t.Text
+                });
+            book.Tags = tags;
+            return book;
+        }
+
+        public Book GetBookWithTags(Guid bookId)
+        {
+            return efDbContext.Books
+                .Include(b => b.Tags)
+                .SingleOrDefault(b => b.BookId == bookId);
+        }
+
+        public Tag GetTag(int tagId)
+        {
+            return efDbContext.Set<Tag>()
+                .SingleOrDefault(t => t.TagId == tagId);
         }
     }
 }

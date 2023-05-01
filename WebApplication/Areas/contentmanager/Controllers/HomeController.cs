@@ -125,12 +125,12 @@ namespace WebApplication.Areas.contentmanager.Controllers
         [HttpGet]
         public IActionResult EditTags(Guid id)
         {
-            var book = bookEditDbAccess.GetBookWithTags(bookId: id);
-            if (book == null)
+            BookWithTagsDto dto = bookEditDbAccess.GetBookForEditTags(bookId: id);
+            if (dto == null)
             {
                 return NotFound();
             }
-            return View(model: book);
+            return View(model: dto);
         }
 
         [HttpGet]
@@ -194,11 +194,50 @@ namespace WebApplication.Areas.contentmanager.Controllers
             return RedirectToAction(
                 actionName: nameof(this.EditAuthors),
                 controllerName: "Home",
-                routeValues: new 
+                routeValues: new
                 {
                     id = bookAuthorDto.BookId,
-                    area = "contentmanager" 
+                    area = "contentmanager"
                 });
+        }
+
+        [HttpGet]
+        public IActionResult AddTag(Guid id)
+        {
+            var bookDto = bookEditDbAccess.GetTagsForAdd(bookId: id);
+            if (bookDto == null)
+            {
+                return NotFound();
+            }
+            return View(model: bookDto);
+        }
+
+        [HttpPost]
+        public IActionResult AddTag(BookAddTagDto bookTagDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto exit_point;
+            }
+            bookEditService.AddTag(bookTagDto);
+            if (bookEditService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in bookEditService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(),
+                    messageType: ViewAlertMessageType.Danger);
+                goto exit_point;
+            }
+
+        exit_point:
+            return RedirectToAction(
+                actionName: nameof(this.EditTags),
+                controllerName: "Home",
+                routeValues: new { area = "contentmanager", id = bookTagDto.BookId });
         }
     }
 }

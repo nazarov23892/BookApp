@@ -63,6 +63,40 @@ namespace BookApp.BLL.Services.BookManage.Concrete
             bookEditDbAccess.SaveBook(book);
         }
 
+        public void AddTag(BookAddTagDto addTagDto)
+        {
+            var book = bookEditDbAccess.GetBookWithTags(bookId: addTagDto.BookId);
+
+            // check book exist in db
+            if (book == null)
+            {
+                AddError(errorMessage: $"book id={addTagDto.BookId} not found");
+                return;
+            }
+
+            var tag = bookEditDbAccess.GetTag(tagId: addTagDto.TagId);
+
+            // check tags exist in db
+            if (tag == null)
+            {
+                AddError(errorMessage: $"tag id={addTagDto.TagId} not found");
+                return;
+            }
+
+            // check tag already exist in book
+            bool alreadyExist = book.Tags.
+                Where(t => t.TagId == tag.TagId)
+                .Any();
+            if (alreadyExist)
+            {
+                AddError(errorMessage: "book already contains given tag");
+                return;
+            }
+            book.Tags.Add(tag);
+            bookEditDbAccess.SaveBook(book);
+            return;
+        }
+
         public void ChangeAuthorLinksOrder(BookAuthorLinksOrderEditedDto authorLinksDto)
         {
             if (authorLinksDto.AuthorLinks == null

@@ -13,5 +13,6 @@ namespace BookApp.BLL.Services.BookManage
         void ChangeAuthorLinksOrder(BookAuthorLinksOrderEditedDto authorLinksDto);
         void AddAuthor(BookAddAuthorDto addAuthorDto);
         void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto);
+        void AddTag(BookAddTagDto addTagDto);
     }
 }

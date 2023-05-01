@@ -1,0 +1,39 @@
+﻿
+@using BookApp.BLL.Services.BookManage
+@model BookTagsForAddDto
+@{ 
+    ViewBag.Title = "Add Tag";
+}
+
+<h2>Add Tags</h2>
+<br />
+<h4>@Model.BookTitle</h4>
+<br />
+<table class="table">
+    <tr>
+        <th>tag</th>
+        <th></th>
+    </tr>
+    @foreach (var tag in Model.Tags ?? Enumerable.Empty<BookTagsForAddItemDto>())
+    {
+        <tr>
+            <td>@tag.Text</td>
+            <td>
+                <form method="post" asp-action="AddTag" asp-controller="Home" asp-area="contentmanager">
+                    <input name="BookId" value="@Model.BookId" hidden />
+                    <input name="TagId" value="@tag.TagId" hidden />
+                    <button type="submit" class="btn btn-sm btn-primary">add</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<hr />
+<br />
+<div class="text-center">
+    <a asp-action="EditTags"
+       asp-controller="Home"
+       asp-area="contentmanager"
+       asp-route-id="@Model.BookId"
+       class="btn btn-secondary">cancel</a>
+</div>
