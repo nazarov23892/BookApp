@@ -16,5 +16,6 @@ namespace BookApp.BLL.Services.BookManage
         BookAuthorsToAddDto GetAuthorsForAdd(Guid bookId);
         Author GetAuthor(Guid authorId);
         void SaveBook(Book book);
+        BookWithTagsDto GetBookWithTags(Guid bookId);
     }
 }

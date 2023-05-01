@@ -1,0 +1,30 @@
+﻿
+@using BookApp.BLL.Services.BookManage
+@model BookWithTagsDto
+
+@{ 
+    ViewBag.Title = "Edit Tags";
+}
+<h2>Edit Tags</h2>
+<br />
+<h4>@Model.BookTitle</h4>
+<br />
+<table class="table">
+    <tr>
+        <th>tag</th>
+    </tr>
+    @foreach (var tag in Model.Tags ?? Enumerable.Empty<BookWithTagsItemDto>())
+    {
+        <tr>
+            <td>@tag.Text</td>
+        </tr>
+    }
+</table>
+<hr />
+<div class="text-center">
+    <a asp-action="Details"
+       asp-controller="Home"
+       asp-area="contentmanager"
+       asp-route-id="@Model.BookId"
+       class="btn btn-secondary">cancel</a>
+</div>

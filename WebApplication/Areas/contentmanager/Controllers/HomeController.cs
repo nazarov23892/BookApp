@@ -123,6 +123,17 @@ namespace WebApplication.Areas.contentmanager.Controllers
         }
 
         [HttpGet]
+        public IActionResult EditTags(Guid id)
+        {
+            var book = bookEditDbAccess.GetBookWithTags(bookId: id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return View(model: book);
+        }
+
+        [HttpGet]
         public IActionResult AddAuthors(Guid id)
         {
             BookAuthorsToAddDto dto = bookEditDbAccess.GetAuthorsForAdd(bookId: id);

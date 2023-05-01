@@ -109,5 +109,23 @@ namespace BookApp.DAL.Concrete
             return efDbContext.Authors
                 .SingleOrDefault(a => a.AuthorId == authorId);
         }
+
+        public BookWithTagsDto GetBookWithTags(Guid bookId)
+        {
+            return efDbContext.Books
+                .AsNoTracking()
+                .Select(b => new BookWithTagsDto
+                {
+                    BookId = b.BookId,
+                    BookTitle = b.Title,
+                    Tags = b.Tags
+                        .Select(t => new BookWithTagsItemDto
+                        {
+                            TagId = t.TagId,
+                            Text = t.Text
+                        })
+                })
+                .SingleOrDefault(b => b.BookId == bookId);
+        }
     }
 }

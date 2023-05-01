@@ -36,6 +36,13 @@
         </dt>
         <dd>
             @tags
+            <text> | </text>
+            <a asp-action="EditTags"
+               asp-controller="Home"
+               asp-area="contentmanager"
+               asp-route-id="@Model.BookId">
+                edit
+            </a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Price)
