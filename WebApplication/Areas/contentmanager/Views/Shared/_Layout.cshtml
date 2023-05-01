@@ -1,10 +1,15 @@
 ﻿
+@using WebApplication.Models
+@{
+    ViewAlertMessage message = TempData.ReadAlertMessage();
+}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 </head>
 <body>
@@ -52,6 +57,11 @@
             </div>
         </div>
     </nav>
+    @if (message != null)
+    {
+        string alertClass = GetAllertClassnameByMessageType(message.MessageType);
+        <div class="alert @alertClass">@message.Text</div>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -59,3 +69,26 @@
     </div>
 </body>
 </html>
+
+@functions{
+    public string GetAllertClassnameByMessageType(ViewAlertMessageType messageType)
+    {
+        string className = "alert-secondary";
+        switch (messageType)
+        {
+            case ViewAlertMessageType.Info:
+                className = "alert-info";
+                break;
+            case ViewAlertMessageType.Success:
+                className = "alert-success";
+                break;
+            case ViewAlertMessageType.Danger:
+                className = "alert-danger";
+                break;
+            default:
+                // empty
+                break;
+        }
+        return className;
+    }
+}
