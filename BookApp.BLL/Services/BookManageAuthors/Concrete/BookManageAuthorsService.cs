@@ -24,7 +24,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             var book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(bookId: addAuthorDto.BookId);
             if (book == null)
             {
-                AddError(errorMessage: $"book id={addAuthorDto.BookId} not found");
+                AddError(errorMessage: $"book not found id={addAuthorDto.BookId}");
                 return;
             }
             BookAuthor[] bookAuthorsArray = book.AuthorsLink
@@ -34,7 +34,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             var author = bookManageAuthorDbAccess.GetAuthor(authorId: addAuthorDto.AuthorId);
             if (author == null)
             {
-                AddError(errorMessage: $"author id={addAuthorDto.AuthorId} not found");
+                AddError(errorMessage: $"author not found id={addAuthorDto.AuthorId}");
                 return;
             }
 
