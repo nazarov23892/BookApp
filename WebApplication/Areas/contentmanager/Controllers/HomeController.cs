@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookApp.BLL.Services.BookCatalog;
 using BookApp.BLL.Services.BookManage;
+using BookApp.BLL.Services.BookManageAuthors;
 using WebApplication.Models;
 using System.Text;
 
@@ -15,16 +16,22 @@ namespace WebApplication.Areas.contentmanager.Controllers
     {
         private readonly IBookCatalogService bookCatalogService;
         private readonly IBookEditService bookEditService;
+        private readonly IBookManageAuthorsService bookManageAuthorsService;
         private readonly IBookEditDbAccess bookEditDbAccess;
+        private readonly IBookManageAuthorsDbAccess bookManageAuthorsDbAccess;
 
         public HomeController(
             IBookCatalogService bookCatalogService,
             IBookEditService bookEditService,
-            IBookEditDbAccess bookEditDbAccess)
+            IBookManageAuthorsService bookManageAuthorsService,
+            IBookEditDbAccess bookEditDbAccess,
+            IBookManageAuthorsDbAccess bookManageAuthorsDbAccess)
         {
             this.bookCatalogService = bookCatalogService;
             this.bookEditService = bookEditService;
+            this.bookManageAuthorsService = bookManageAuthorsService;
             this.bookEditDbAccess = bookEditDbAccess;
+            this.bookManageAuthorsDbAccess = bookManageAuthorsDbAccess;
         }
 
         public IActionResult Index(PageOptionsIn pageOptions)
@@ -76,7 +83,7 @@ namespace WebApplication.Areas.contentmanager.Controllers
         [HttpGet]
         public IActionResult EditAuthors(Guid id, bool? editMode = null)
         {
-            BookAuthorsLinkOrderDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: id);
+            BookAuthorsLinkOrderDto bookDto = bookManageAuthorsDbAccess.GetBookForEditAuthors(bookId: id);
             if (bookDto == null)
             {
                 return NotFound();
@@ -92,10 +99,10 @@ namespace WebApplication.Areas.contentmanager.Controllers
             {
                 goto error_exit;
             }
-            bookEditService.ChangeAuthorLinksOrder(authorLinksDto);
-            if (bookEditService.HasErrors)
+            bookManageAuthorsService.ChangeAuthorLinksOrder(authorLinksDto);
+            if (bookManageAuthorsService.HasErrors)
             {
-                foreach (var error in bookEditService.Errors)
+                foreach (var error in bookManageAuthorsService.Errors)
                 {
                     ModelState.AddModelError(key: "", errorMessage: error.ErrorMessage);
                 }
@@ -113,7 +120,7 @@ namespace WebApplication.Areas.contentmanager.Controllers
                 });
 
         error_exit:
-            BookAuthorsLinkOrderDto bookDto = bookEditDbAccess.GetBookForEditAuthors(bookId: authorLinksDto.BookId);
+            BookAuthorsLinkOrderDto bookDto = bookManageAuthorsDbAccess.GetBookForEditAuthors(bookId: authorLinksDto.BookId);
             if (bookDto == null)
             {
                 return NotFound();
@@ -136,7 +143,7 @@ namespace WebApplication.Areas.contentmanager.Controllers
         [HttpGet]
         public IActionResult AddAuthors(Guid id)
         {
-            BookAuthorsToAddDto dto = bookEditDbAccess.GetAuthorsForAdd(bookId: id);
+            BookAuthorsToAddDto dto = bookManageAuthorsDbAccess.GetAuthorsForAdd(bookId: id);
             if (dto == null)
             {
                 return NotFound();
@@ -151,11 +158,11 @@ namespace WebApplication.Areas.contentmanager.Controllers
             {
                 goto exit_point;
             }
-            bookEditService.AddAuthor(addAuthorDto);
-            if (bookEditService.HasErrors)
+            bookManageAuthorsService.AddAuthor(addAuthorDto);
+            if (bookManageAuthorsService.HasErrors)
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                foreach (var error in bookEditService.Errors)
+                foreach (var error in bookManageAuthorsService.Errors)
                 {
                     stringBuilder.AppendLine(error.ErrorMessage);
                 }
@@ -179,11 +186,11 @@ namespace WebApplication.Areas.contentmanager.Controllers
         [HttpPost]
         public IActionResult RemoveAuthor(BookRemoveAuthorDto bookAuthorDto)
         {
-            bookEditService.RemoveAuthor(bookAuthorDto);
-            if (bookEditService.HasErrors)
+            bookManageAuthorsService.RemoveAuthor(bookAuthorDto);
+            if (bookManageAuthorsService.HasErrors)
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                foreach (var error in bookEditService.Errors)
+                foreach (var error in bookManageAuthorsService.Errors)
                 {
                     stringBuilder.AppendLine(error.ErrorMessage);
                 }

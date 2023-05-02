@@ -10,9 +10,6 @@ namespace BookApp.BLL.Services.BookManage
     public interface IBookEditService : IServiceErrors
     {
         Guid CreateBook(BookCreateDto newBook);
-        void ChangeAuthorLinksOrder(BookAuthorLinksOrderEditedDto authorLinksDto);
-        void AddAuthor(BookAddAuthorDto addAuthorDto);
-        void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto);
         void AddTag(BookAddTagDto addTagDto);
         void RemoveTag(BookRemoveTagDto removeTagDto);
     }

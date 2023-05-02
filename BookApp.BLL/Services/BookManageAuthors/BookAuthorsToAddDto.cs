@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookApp.BLL.Services.BookManage
+namespace BookApp.BLL.Services.BookManageAuthors
 {
     public class BookAuthorsToAddDto
     {

@@ -10,12 +10,6 @@ namespace BookApp.BLL.Services.BookManage
     public interface IBookEditDbAccess
     {
         Guid Create(BookCreateDto newBook);
-        BookAuthorsLinkOrderDto GetBookForEditAuthors(Guid bookId);
-        IEnumerable<BookAuthorsLinkOrderItemDto> GetAuthors();
-        Dictionary<Guid, Author> GetAuthorsByIds(IEnumerable<Guid> authorIds);
-        Book GetBookWithAuthorLinks(Guid bookId);
-        BookAuthorsToAddDto GetAuthorsForAdd(Guid bookId);
-        Author GetAuthor(Guid authorId);
         void SaveBook(Book book);
         BookWithTagsDto GetBookForEditTags(Guid bookId);
         BookTagsForAddDto GetTagsForAdd(Guid bookId);
