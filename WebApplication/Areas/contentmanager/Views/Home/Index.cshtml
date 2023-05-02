@@ -1,6 +1,11 @@
 ﻿
 @model BookListCombinedDto
+@{ 
+    ViewBag.Title = "Books";
+}
 
+<h2>Books</h2>
+<br />
 <table class="table">
     <tr>
         <th>title</th>
@@ -13,19 +18,19 @@
             <td>@book.Price</td>
             <td>
                 <a asp-action="Details"
-                   asp-controller="Home"
-                   asp-route-id="@book.BookId"
-                   asp-area="contentmanager"
-                   class="btn btn-sm btn-secondary">details</a>
+                    asp-controller="Home"
+                    asp-route-id="@book.BookId"
+                    asp-area="contentmanager"
+                    class="btn btn-sm btn-secondary">details</a>
             </td>
         </tr>
     }
 </table>
 <div class="text-center">
     <a asp-action="Create"
-       asp-controller="Home"
-       asp-area="contentmanager"
-       class="btn btn-primary">create</a>
+        asp-controller="Home"
+        asp-area="contentmanager"
+        class="btn btn-primary">create</a>
 </div>
 <div>
     @for (int i = 1; i <= Model.PageOptionsOut.PageCount; i++)
@@ -35,10 +40,10 @@
             <text>|</text>
         }
         <a asp-action="Index"
-           asp-controller="Home"
-           asp-area="contentmanager"
-           asp-route-page="@i"
-           asp-route-pageSize="@Model.PageOptionsOut.PageSize">
+            asp-controller="Home"
+            asp-area="contentmanager"
+            asp-route-page="@i"
+            asp-route-pageSize="@Model.PageOptionsOut.PageSize">
             @i
         </a>
     }
