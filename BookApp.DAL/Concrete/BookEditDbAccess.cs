@@ -165,5 +165,18 @@ namespace BookApp.DAL.Concrete
             return efDbContext.Set<Tag>()
                 .SingleOrDefault(t => t.TagId == tagId);
         }
+
+        public Guid Create(BookCreateDto newBook)
+        {
+            var book = new Book
+            {
+                BookId = Guid.NewGuid(),
+                Title = newBook.Title,
+                Price = newBook.Price
+            };
+            efDbContext.Books.Add(book);
+            efDbContext.SaveChanges();
+            return book.BookId;
+        }
     }
 }

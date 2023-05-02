@@ -141,9 +141,7 @@ namespace BookApp.BLL.Services.BookManage.Concrete
 
         public Guid CreateBook(BookCreateDto newBook)
         {
-            // todo: to change
-            //return bookCatalogDbAccess.Create(newBook);
-            throw new NotImplementedException();
+            return bookEditDbAccess.Create(newBook);
         }
 
         public void RemoveAuthor(BookRemoveAuthorDto removeAuthorDto)
