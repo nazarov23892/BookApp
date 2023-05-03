@@ -71,12 +71,12 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
                 AddError(errorMessage: "order values contain negative value");
                 return;
             }
-            bool hasDuplicates = authorLinksDto.AuthorLinks.Select(a => a.AuthorId)
+            bool authorsHasDuplicates = authorLinksDto.AuthorLinks.Select(a => a.AuthorId)
                 .Distinct()
                 .Count() != authorLinksDto.AuthorLinks.Count();
-            if (hasDuplicates)
+            if (authorsHasDuplicates)
             {
-                AddError(errorMessage: "order values are duplicated");
+                AddError(errorMessage: "authors are duplicated");
                 return;
             }
             var book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(authorLinksDto.BookId);
