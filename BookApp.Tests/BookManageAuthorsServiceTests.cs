@@ -52,7 +52,7 @@ namespace BookApp.Tests
                     BookId = new Guid("00000000-0000-0000-0000-000000000052")
                 });
 
-            // Arrange
+            // Assert
             Assert.True(target.HasErrors);
             Assert.Single(collection: target.Errors);
             Assert.Contains(
@@ -101,7 +101,7 @@ namespace BookApp.Tests
                     BookId = new Guid("00000000-0000-0000-0000-000000000051")
                 });
 
-            // Arrange
+            // Assert
             Assert.True(target.HasErrors);
             Assert.Single(collection: target.Errors);
             Assert.Contains(
@@ -138,7 +138,7 @@ namespace BookApp.Tests
                         {
                             new BookAuthor
                             {
-                                AuthorId = new Guid("00000000-0000-0000-0000-000000000001") 
+                                AuthorId = new Guid("00000000-0000-0000-0000-000000000001")
                             }
                         }.ToList()
                     };
@@ -156,7 +156,7 @@ namespace BookApp.Tests
                     BookId = new Guid("00000000-0000-0000-0000-000000000051")
                 });
 
-            // Arrange
+            // Assert
             Assert.True(target.HasErrors);
             Assert.Single(collection: target.Errors);
             Assert.Contains(
@@ -165,6 +165,55 @@ namespace BookApp.Tests
             mock.Verify(
                 expression: m => m.SaveBook(It.IsAny<Book>()),
                 times: Times.Never);
+        }
+
+        [Fact]
+        public void Can_Add_Author()
+        {
+            // Arrange
+            Book bookInDb = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000051"),
+                AuthorsLink = Array.Empty<BookAuthor>().ToList()
+            };
+            Author authorInDb = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000001") };
+
+            Mock<IBookManageAuthorsDbAccess> mock = new Mock<IBookManageAuthorsDbAccess>();
+            mock.Setup(m => m.GetAuthor(It.IsAny<Guid>()))
+                .Returns<Guid>(authorId =>
+                {
+                    return authorId == authorInDb.AuthorId
+                        ? authorInDb
+                        : null;
+                });
+            mock.Setup(m => m.GetBookWithAuthorLinks(It.IsAny<Guid>()))
+                .Returns<Guid>(bookId =>
+                {
+                    return bookId == bookInDb.BookId
+                        ? bookInDb
+                        : null;
+                });
+            BookManageAuthorsService target = new BookManageAuthorsService(mock.Object);
+
+            // Act
+            target.AddAuthor(
+                addAuthorDto: new BookAddAuthorDto
+                {
+                    AuthorId = new Guid("00000000-0000-0000-0000-000000000001"),
+                    BookId = new Guid("00000000-0000-0000-0000-000000000051")
+                });
+
+            // Assert
+            Assert.False(target.HasErrors);
+            mock.Verify(
+                expression: m => m.SaveBook(It.IsAny<Book>()),
+                times: Times.Once);
+            mock.Verify(m => m.SaveBook(It.Is<Book>(b =>
+                b == bookInDb
+                && b.AuthorsLink != null
+                && b.AuthorsLink.Count == 1
+                && b.AuthorsLink.Single().Author == authorInDb
+                )));
         }
     }
 }
