@@ -79,6 +79,15 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
                 AddError(errorMessage: "authors are duplicated");
                 return;
             }
+            bool orderNumsHasDuplicates = authorLinksDto.AuthorLinks
+                .Select(al => al.Order)
+                .Distinct()
+                .Count() != authorLinksDto.AuthorLinks.Count();
+            if (orderNumsHasDuplicates)
+            {
+                AddError(errorMessage: "order values are duplicated");
+                return;
+            }
             var book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(authorLinksDto.BookId);
             if (book == null)
             {
