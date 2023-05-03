@@ -91,7 +91,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             {
                 if (!authorsLinkDict.ContainsKey(authorLink.AuthorId))
                 {
-                    AddError(errorMessage: $"author id='{authorLink.AuthorId}' not found");
+                    AddError(errorMessage: $"book not contains author id='{authorLink.AuthorId}'");
                     return;
                 }
                 authorsLinkDict[authorLink.AuthorId].Order = authorLink.Order;

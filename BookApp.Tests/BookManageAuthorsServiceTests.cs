@@ -531,7 +531,7 @@ namespace BookApp.Tests
             Assert.True(target.HasErrors);
             Assert.Single(collection: target.Errors);
             Assert.Contains(
-                expectedSubstring: "author not found",
+                expectedSubstring: "book not contains author",
                 actualString: target.Errors.Single().ErrorMessage);
             mock.Verify(
                 expression: m => m.SaveBook(It.IsAny<Book>()),
