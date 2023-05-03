@@ -71,6 +71,13 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
                 AddError(errorMessage: "order values contain negative value");
                 return;
             }
+            bool hasZeroOrderNum = authorLinksDto.AuthorLinks
+                .FirstOrDefault(o => o.Order == 0) != null;
+            if (!hasZeroOrderNum)
+            {
+                AddError(errorMessage: "order number sequence must be zero started");
+                return;
+            }
             bool authorsHasDuplicates = authorLinksDto.AuthorLinks.Select(a => a.AuthorId)
                 .Distinct()
                 .Count() != authorLinksDto.AuthorLinks.Count();
@@ -86,6 +93,15 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             if (orderNumsHasDuplicates)
             {
                 AddError(errorMessage: "order values are duplicated");
+                return;
+            }
+            var isSequentialNumbers = Enumerable
+                .Range(start: 0, count: authorLinksDto.AuthorLinks.Count())
+                .Intersect(authorLinksDto.AuthorLinks.Select(al => al.Order))
+                .Count() == authorLinksDto.AuthorLinks.Count();
+            if (!isSequentialNumbers)
+            {
+                AddError(errorMessage: "order numbers are not sequence");
                 return;
             }
             var book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(authorLinksDto.BookId);
