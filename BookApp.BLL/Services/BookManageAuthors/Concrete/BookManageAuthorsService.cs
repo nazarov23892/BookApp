@@ -82,7 +82,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             var book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(authorLinksDto.BookId);
             if (book == null)
             {
-                AddError(errorMessage: $"book id='{authorLinksDto.BookId}' not found");
+                AddError(errorMessage: $"book not found id='{authorLinksDto.BookId}'");
                 return;
             }
             var authorsLinkDict = book.AuthorsLink
