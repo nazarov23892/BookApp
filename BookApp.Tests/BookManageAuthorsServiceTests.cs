@@ -538,5 +538,108 @@ namespace BookApp.Tests
                 times: Times.Never);
         }
 
+        [Fact]
+        public void Cannot_Reorder_Authors_When_OrderNums_Are_Not_Zero_Started_Sequence()
+        {
+            // Arrange
+
+            Author author1 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Author author2 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000002") };
+
+            Book book1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000051"),
+                AuthorsLink = new[]
+                {
+                    new BookAuthor { AuthorId = author1.AuthorId, Author = author1, Order = 0},
+                    new BookAuthor { AuthorId = author2.AuthorId, Author = author2, Order = 1}
+                }.ToList()
+            };
+
+            Mock<IBookManageAuthorsDbAccess> mock = new Mock<IBookManageAuthorsDbAccess>();
+            mock.Setup(m => m.GetBookWithAuthorLinks(It.IsAny<Guid>()))
+                .Returns<Guid>(bookId =>
+                {
+                    return bookId == book1.BookId
+                        ? book1
+                        : null;
+                });
+
+            BookAuthorLinksOrderEditedDto authorLinsOrderedDto = new BookAuthorLinksOrderEditedDto
+            {
+                BookId = book1.BookId,
+                AuthorLinks = new[]
+                {
+                    new BookAuthorLinksOrderEditedItemDto { Order = 1, AuthorId = author1.AuthorId },
+                    new BookAuthorLinksOrderEditedItemDto { Order = 2, AuthorId = author2.AuthorId }
+                }
+            };
+            BookManageAuthorsService target = new BookManageAuthorsService(mock.Object);
+
+            // Act
+            target.ChangeAuthorLinksOrder(authorLinsOrderedDto);
+
+            // Assert
+            Assert.True(target.HasErrors);
+            Assert.Single(collection: target.Errors);
+            Assert.Contains(
+                expectedSubstring: "order number sequence must be zero started",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveBook(It.IsAny<Book>()),
+                times: Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_Reorder_Authors_When_OrderNums_Are_Not_Sequence()
+        {
+            // Arrange
+
+            Author author1 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Author author2 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000002") };
+
+            Book book1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000051"),
+                AuthorsLink = new[]
+                {
+                    new BookAuthor { AuthorId = author1.AuthorId, Author = author1, Order = 0},
+                    new BookAuthor { AuthorId = author2.AuthorId, Author = author2, Order = 1}
+                }.ToList()
+            };
+
+            Mock<IBookManageAuthorsDbAccess> mock = new Mock<IBookManageAuthorsDbAccess>();
+            mock.Setup(m => m.GetBookWithAuthorLinks(It.IsAny<Guid>()))
+                .Returns<Guid>(bookId =>
+                {
+                    return bookId == book1.BookId
+                        ? book1
+                        : null;
+                });
+
+            BookAuthorLinksOrderEditedDto authorLinsOrderedDto = new BookAuthorLinksOrderEditedDto
+            {
+                BookId = book1.BookId,
+                AuthorLinks = new[]
+                {
+                    new BookAuthorLinksOrderEditedItemDto { Order = 0, AuthorId = author1.AuthorId },
+                    new BookAuthorLinksOrderEditedItemDto { Order = 2, AuthorId = author2.AuthorId }
+                }
+            };
+            BookManageAuthorsService target = new BookManageAuthorsService(mock.Object);
+
+            // Act
+            target.ChangeAuthorLinksOrder(authorLinsOrderedDto);
+
+            // Assert
+            Assert.True(target.HasErrors);
+            Assert.Single(collection: target.Errors);
+            Assert.Contains(
+                expectedSubstring: "order numbers are not sequence",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveBook(It.IsAny<Book>()),
+                times: Times.Never);
+        }
     }
 }
