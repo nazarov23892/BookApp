@@ -703,5 +703,101 @@ namespace BookApp.Tests
                     )),
                 times: Times.Once);
         }
+
+        [Fact]
+        public void Cannot_Remove_Author_When_Book_Is_Not_Exist()
+        {
+            // Arrange
+
+            Author author1 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Author author2 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000002") };
+
+            Book book1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000051"),
+                AuthorsLink = new[]
+                {
+                    new BookAuthor { AuthorId = author1.AuthorId, Author = author1, Order = 0},
+                    new BookAuthor { AuthorId = author2.AuthorId, Author = author2, Order = 1}
+                }.ToList()
+            };
+
+            Mock<IBookManageAuthorsDbAccess> mock = new Mock<IBookManageAuthorsDbAccess>();
+            mock.Setup(m => m.GetBookWithAuthorLinks(It.IsAny<Guid>()))
+                .Returns<Guid>(bookId =>
+                {
+                    return bookId == book1.BookId
+                        ? book1
+                        : null;
+                });
+
+            BookRemoveAuthorDto authorLinsOrderedDto = new BookRemoveAuthorDto
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000052"),
+                AuthorId = author1.AuthorId
+            };
+            BookManageAuthorsService target = new BookManageAuthorsService(mock.Object);
+
+            // Act
+            target.RemoveAuthor(authorLinsOrderedDto);
+
+            // Assert
+            Assert.True(target.HasErrors);
+            Assert.Single(collection: target.Errors);
+            Assert.Contains(
+                expectedSubstring: "book not found",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveBook(It.IsAny<Book>()),
+                times: Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_Remove_Author_When_Book_Not_Contains_Author()
+        {
+            // Arrange
+
+            Author author1 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Author author2 = new Author { AuthorId = new Guid("00000000-0000-0000-0000-000000000002") };
+
+            Book book1 = new Book
+            {
+                BookId = new Guid("00000000-0000-0000-0000-000000000051"),
+                AuthorsLink = new[]
+                {
+                    new BookAuthor { AuthorId = author1.AuthorId, Author = author1, Order = 0},
+                    new BookAuthor { AuthorId = author2.AuthorId, Author = author2, Order = 1}
+                }.ToList()
+            };
+
+            Mock<IBookManageAuthorsDbAccess> mock = new Mock<IBookManageAuthorsDbAccess>();
+            mock.Setup(m => m.GetBookWithAuthorLinks(It.IsAny<Guid>()))
+                .Returns<Guid>(bookId =>
+                {
+                    return bookId == book1.BookId
+                        ? book1
+                        : null;
+                });
+
+            BookRemoveAuthorDto authorLinsOrderedDto = new BookRemoveAuthorDto
+            {
+                BookId = book1.BookId,
+                AuthorId = new Guid("00000000-0000-0000-0000-000000000003")
+            };
+            BookManageAuthorsService target = new BookManageAuthorsService(mock.Object);
+
+            // Act
+            target.RemoveAuthor(authorLinsOrderedDto);
+
+            // Assert
+            Assert.True(target.HasErrors);
+            Assert.Single(collection: target.Errors);
+            Assert.Contains(
+                expectedSubstring: "book not contains author",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveBook(It.IsAny<Book>()),
+                times: Times.Never);
+        }
     }
 }
