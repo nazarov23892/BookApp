@@ -130,7 +130,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             Book book = bookManageAuthorDbAccess.GetBookWithAuthorLinks(bookId: removeAuthorDto.BookId);
             if (book == null)
             {
-                AddError(errorMessage: $"book id={removeAuthorDto.BookId} not found");
+                AddError(errorMessage: $"book not found id='{removeAuthorDto.BookId}'");
                 return;
             }
             bool hasAuthor = false;
@@ -145,7 +145,7 @@ namespace BookApp.BLL.Services.BookManageAuthors.Concrete
             }
             if (!hasAuthor)
             {
-                AddError(errorMessage: $"author id={removeAuthorDto.AuthorId} not found");
+                AddError(errorMessage: $"book not contains author id='{removeAuthorDto.AuthorId}'");
                 return;
             }
             bookManageAuthorDbAccess.SaveBook(book);
