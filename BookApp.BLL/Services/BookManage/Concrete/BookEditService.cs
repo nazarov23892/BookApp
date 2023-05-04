@@ -80,5 +80,22 @@ namespace BookApp.BLL.Services.BookManage.Concrete
             bookEditDbAccess.SaveBook(book);
             return;
         }
+
+        public void SetDescription(BookDescriptionEditedDto bookDescriptionDto)
+        {
+            PerformValidationObjectProperties(bookDescriptionDto.Description);
+            if (HasErrors)
+            {
+                return;
+            }
+            Book book = bookEditDbAccess.GetBook(bookId: bookDescriptionDto.BookId);
+            if (book == null)
+            {
+                AddError(errorMessage: $"book not found id='{bookDescriptionDto.BookId}'");
+                return;
+            }
+            book.Description = bookDescriptionDto.Description;
+            bookEditDbAccess.SaveBook(book);
+        }
     }
 }

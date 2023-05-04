@@ -12,5 +12,6 @@ namespace BookApp.BLL.Services.BookManage
         Guid CreateBook(BookCreateDto newBook);
         void AddTag(BookAddTagDto addTagDto);
         void RemoveTag(BookRemoveTagDto removeTagDto);
+        void SetDescription(BookDescriptionEditedDto bookDescriptionDto);
     }
 }

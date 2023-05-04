@@ -15,5 +15,7 @@ namespace BookApp.BLL.Services.BookManage
         BookTagsForAddDto GetTagsForAdd(Guid bookId);
         Book GetBookWithTags(Guid bookId);
         Tag GetTag(int tagId);
+        BookDescriptionForEditDto GetBookForEditDescription(Guid bookId);
+        Book GetBook(Guid bookId);
     }
 }

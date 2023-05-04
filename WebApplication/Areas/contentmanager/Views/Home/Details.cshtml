@@ -50,6 +50,19 @@
         <dd>
             @Html.DisplayFor(model => model.Price)
         </dd>
+        <dt>
+            Description
+        </dt>
+        <dd>
+            
+            <text> | </text>
+            <a asp-action="EditDescription"
+               asp-controller="Home"
+               asp-area="contentmanager"
+               asp-route-id="@Model.BookId">
+                edit
+            </a>
+        </dd>
     </dl>
     <br />
     <div class="text-center">

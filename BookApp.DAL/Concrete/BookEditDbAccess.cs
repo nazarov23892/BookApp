@@ -46,7 +46,7 @@ namespace BookApp.DAL.Concrete
         public BookTagsForAddDto GetTagsForAdd(Guid bookId)
         {
             BookTagsForAddDto book = efDbContext.Books
-                .Select(b=>new BookTagsForAddDto
+                .Select(b => new BookTagsForAddDto
                 {
                     BookId = b.BookId,
                     BookTitle = b.Title
@@ -92,6 +92,25 @@ namespace BookApp.DAL.Concrete
             efDbContext.Books.Add(book);
             efDbContext.SaveChanges();
             return book.BookId;
+        }
+
+        public BookDescriptionForEditDto GetBookForEditDescription(Guid bookId)
+        {
+            return efDbContext.Books
+                .AsNoTracking()
+                .Select(b => new BookDescriptionForEditDto
+                {
+                    BookId = b.BookId,
+                    BookTitle = b.Title,
+                    Description = b.Description
+                })
+                .SingleOrDefault(b => b.BookId == bookId);
+        }
+
+        public Book GetBook(Guid bookId)
+        {
+            return efDbContext.Books
+                .SingleOrDefault(b => b.BookId == bookId);
         }
     }
 }

@@ -141,6 +141,52 @@ namespace WebApplication.Areas.contentmanager.Controllers
         }
 
         [HttpGet]
+        public IActionResult EditDescription(Guid id)
+        {
+            BookDescriptionForEditDto bookDescriptionDto = bookEditDbAccess.GetBookForEditDescription(bookId: id);
+            if (bookDescriptionDto == null)
+            {
+                return NotFound();
+            }
+            return View(model: bookDescriptionDto);
+        }
+
+        [HttpPost]
+        public IActionResult EditDescription(BookDescriptionEditedDto bookDescriptionDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto error_exit;
+            }
+            bookEditService.SetDescription(bookDescriptionDto);
+            if (bookEditService.HasErrors)
+            {
+                foreach (var error in bookEditService.Errors)
+                {
+                    ModelState.AddModelError(key: "", errorMessage: error.ErrorMessage);
+                }
+                goto error_exit;
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Details),
+                controllerName: "Home",
+                routeValues: new
+                {
+                    area = "contentmanager",
+                    id = bookDescriptionDto.BookId
+                });
+
+        error_exit:
+            var bookForEditDto = bookEditDbAccess.GetBookForEditDescription(bookId: bookDescriptionDto.BookId);
+            if (bookForEditDto == null)
+            {
+                return NotFound();
+            }
+            bookForEditDto.Description = bookDescriptionDto.Description;
+            return View(model: bookForEditDto);
+        }
+
+        [HttpGet]
         public IActionResult AddAuthors(Guid id)
         {
             BookAuthorsToAddDto dto = bookManageAuthorsDbAccess.GetAuthorsForAdd(bookId: id);

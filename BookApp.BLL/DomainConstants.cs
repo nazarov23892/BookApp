@@ -13,5 +13,7 @@ namespace BookApp.BLL
         public const double MaxPrice = 9_999.99;
         public const int OrderLineItemsLimit = 10;
         public const string UsersRoleName = "Users";
+        public const int BookDescriptionMinLenght = 10;
+        public const int BookDescriptionMaxLenght = 2048;
     }
 }
