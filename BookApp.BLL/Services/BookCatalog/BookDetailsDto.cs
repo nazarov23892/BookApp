@@ -12,6 +12,7 @@ namespace BookApp.BLL.Services.BookCatalog
         public string Title { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+        public string ImageUrl { get; set; }
         public IEnumerable<AuthorNameDto> Authors { get; set; }
         public IEnumerable<string> Tags { get; set; }
     }

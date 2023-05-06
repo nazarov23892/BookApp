@@ -18,6 +18,7 @@ namespace BookApp.DAL.Concrete.QueryObjects
                 Title = b.Title,
                 Price = b.Price,
                 Description = b.Description,
+                ImageUrl = b.ImageUrl,
                 Authors = b.AuthorsLink
                     .OrderBy(al => al.Order)
                     .Select(al => new AuthorNameDto

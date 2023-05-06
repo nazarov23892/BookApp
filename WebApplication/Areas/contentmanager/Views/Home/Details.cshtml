@@ -12,12 +12,18 @@
     string tags = string.Join(
         separator: ", ",
         values: Model.Tags);
+
+    string imagesPath = @"/uploads/images";
 }
 
 <div>
     <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
+    <br />
     <dl class="dl-horizontal">
+        <dd>
+            <img class="img-fluid" src="@($"{imagesPath}/{Model.ImageUrl}")">
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Authors)
         </dt>
@@ -51,10 +57,10 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model=>model.Description)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model=>model.Description)
+            @Html.DisplayFor(model => model.Description)
             <text> | </text>
             <a asp-action="EditDescription"
                asp-controller="Home"
