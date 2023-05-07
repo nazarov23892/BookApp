@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using BookApp.BLL.Services.BookCatalog;
 using BookApp.BLL.Services.BookManage;
 using BookApp.BLL.Services.BookManageAuthors;
@@ -21,6 +24,8 @@ namespace WebApplication.Areas.contentmanager.Controllers
         private readonly IBookEditDbAccess bookEditDbAccess;
         private readonly IBookManageAuthorsDbAccess bookManageAuthorsDbAccess;
         private readonly IBookManageImagesDbAccess bookManageImagesDbAccess;
+        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IBookManageImagesService bookManageImagesService;
 
         public HomeController(
             IBookCatalogService bookCatalogService,
@@ -28,7 +33,9 @@ namespace WebApplication.Areas.contentmanager.Controllers
             IBookManageAuthorsService bookManageAuthorsService,
             IBookEditDbAccess bookEditDbAccess,
             IBookManageAuthorsDbAccess bookManageAuthorsDbAccess,
-            IBookManageImagesDbAccess bookManageImagesDbAccess)
+            IBookManageImagesDbAccess bookManageImagesDbAccess,
+            IWebHostEnvironment hostingEnvironment,
+            IBookManageImagesService bookManageImagesService)
         {
             this.bookCatalogService = bookCatalogService;
             this.bookEditService = bookEditService;
@@ -36,6 +43,8 @@ namespace WebApplication.Areas.contentmanager.Controllers
             this.bookEditDbAccess = bookEditDbAccess;
             this.bookManageAuthorsDbAccess = bookManageAuthorsDbAccess;
             this.bookManageImagesDbAccess = bookManageImagesDbAccess;
+            this.hostingEnvironment = hostingEnvironment;
+            this.bookManageImagesService = bookManageImagesService;
         }
 
         public IActionResult Index(PageOptionsIn pageOptions)
@@ -331,6 +340,47 @@ namespace WebApplication.Areas.contentmanager.Controllers
                 return NotFound();
             }
             return View(model: bookDto);
+        }
+
+        [HttpPost]
+        public IActionResult EditImage(Guid id, IFormFile imageFile)
+        {
+            if (!ModelState.IsValid)
+            {
+                goto error_exit;
+            }
+            if (imageFile != null)
+            {
+                string destPath = Path.Combine(hostingEnvironment.WebRootPath, @"uploads\images", imageFile.FileName);
+                using (var stream = new FileStream(path: destPath, mode: FileMode.Create))
+                {
+                    imageFile.CopyTo(stream);
+                }
+            }
+            bookManageImagesService.SetBookImage(bookId: id, imageFilename: imageFile.FileName);
+            if (bookManageImagesService.HasErrors)
+            {
+                foreach (var error in bookManageImagesService.Errors)
+                {
+                    ModelState.AddModelError(key: "", errorMessage: error.ErrorMessage);
+                }
+                goto error_exit;
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Details),
+                controllerName: "Home",
+                routeValues: new
+                {
+                    id = id,
+                    area = "contentmanager"
+                });
+        error_exit:
+            var bookDto1 = bookManageImagesDbAccess.GetBookToEditImage(bookId: id);
+            if (bookDto1 == null)
+            {
+                return NotFound();
+            }
+            return View(model: bookDto1);
         }
     }
 }

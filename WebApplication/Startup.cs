@@ -30,6 +30,7 @@ using BookApp.BLL.Services.BookManageAuthors.Concrete;
 using BookApp.BLL.Services.Tags;
 using BookApp.BLL.Services.Tags.Concrete;
 using BookApp.BLL.Services.BookManageImage;
+using BookApp.BLL.Services.BookManageImage.Concrete;
 using WebApplication.Infrastructure;
 
 namespace WebApplication
@@ -82,6 +83,7 @@ namespace WebApplication
             services.AddTransient<IBookManageAuthorsService, BookManageAuthorsService>();
             services.AddTransient<IBookManageAuthorsDbAccess, BookManageAuthorsDbAccess>();
             services.AddTransient<IBookManageImagesDbAccess, BookManageImagesDbAccess>();
+            services.AddTransient<IBookManageImagesService, BookManageImagesService>();
             services.AddMvc();
         }
 

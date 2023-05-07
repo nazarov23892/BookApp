@@ -9,6 +9,8 @@ namespace BookApp.BLL.Services.BookManageImage
 {
     public interface IBookManageImagesDbAccess
     {
+        Book GetBook(Guid bookId);
         BookImageToEditDto GetBookToEditImage(Guid bookId);
+        void SaveBook(Book book);
     }
 }

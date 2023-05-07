@@ -12,6 +12,7 @@
     <Folder Include="Areas\contentmanager\Data\" />
     <Folder Include="Areas\contentmanager\Models\" />
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\uploads\images\" />
   </ItemGroup>
 
   <ItemGroup>

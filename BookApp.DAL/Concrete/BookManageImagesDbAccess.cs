@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookApp.DAL.DataContexts;
 using BookApp.BLL.Services.BookManageImage;
+using BookApp.BLL.Entities;
 
 namespace BookApp.DAL.Concrete
 {
@@ -16,6 +17,12 @@ namespace BookApp.DAL.Concrete
         public BookManageImagesDbAccess(AppIdentityDbContext efDbContext)
         {
             this.efDbContext = efDbContext;
+        }
+
+        public Book GetBook(Guid bookId)
+        {
+            return efDbContext.Books
+                .SingleOrDefault(b => b.BookId == bookId);
         }
 
         public BookImageToEditDto GetBookToEditImage(Guid bookId)
@@ -29,6 +36,12 @@ namespace BookApp.DAL.Concrete
                     ImageUrl = b.ImageUrl
                 })
                 .SingleOrDefault(b => b.BookId == bookId);
+        }
+
+        public void SaveBook(Book book)
+        {
+            efDbContext.Books.Update(book);
+            efDbContext.SaveChanges();
         }
     }
 }
