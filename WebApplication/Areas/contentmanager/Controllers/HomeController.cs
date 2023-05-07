@@ -11,6 +11,7 @@ using BookApp.BLL.Services.BookManage;
 using BookApp.BLL.Services.BookManageAuthors;
 using BookApp.BLL.Services.BookManageImage;
 using WebApplication.Models;
+using WebApplication.Infrastructure;
 using System.Text;
 
 namespace WebApplication.Areas.contentmanager.Controllers
@@ -349,15 +350,9 @@ namespace WebApplication.Areas.contentmanager.Controllers
             {
                 goto error_exit;
             }
-            if (imageFile != null)
-            {
-                string destPath = Path.Combine(hostingEnvironment.WebRootPath, @"uploads\images", imageFile.FileName);
-                using (var stream = new FileStream(path: destPath, mode: FileMode.Create))
-                {
-                    imageFile.CopyTo(stream);
-                }
-            }
-            bookManageImagesService.SetBookImage(bookId: id, imageFilename: imageFile.FileName);
+            bookManageImagesService.SetBookImage(
+                bookId: id, 
+                file: new FormFileConcrete(imageFile));
             if (bookManageImagesService.HasErrors)
             {
                 foreach (var error in bookManageImagesService.Errors)
