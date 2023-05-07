@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookApp.BLL.Services.BookCatalog;
 using BookApp.BLL.Services.BookManage;
 using BookApp.BLL.Services.BookManageAuthors;
+using BookApp.BLL.Services.BookManageImage;
 using WebApplication.Models;
 using System.Text;
 
@@ -19,19 +20,22 @@ namespace WebApplication.Areas.contentmanager.Controllers
         private readonly IBookManageAuthorsService bookManageAuthorsService;
         private readonly IBookEditDbAccess bookEditDbAccess;
         private readonly IBookManageAuthorsDbAccess bookManageAuthorsDbAccess;
+        private readonly IBookManageImagesDbAccess bookManageImagesDbAccess;
 
         public HomeController(
             IBookCatalogService bookCatalogService,
             IBookEditService bookEditService,
             IBookManageAuthorsService bookManageAuthorsService,
             IBookEditDbAccess bookEditDbAccess,
-            IBookManageAuthorsDbAccess bookManageAuthorsDbAccess)
+            IBookManageAuthorsDbAccess bookManageAuthorsDbAccess,
+            IBookManageImagesDbAccess bookManageImagesDbAccess)
         {
             this.bookCatalogService = bookCatalogService;
             this.bookEditService = bookEditService;
             this.bookManageAuthorsService = bookManageAuthorsService;
             this.bookEditDbAccess = bookEditDbAccess;
             this.bookManageAuthorsDbAccess = bookManageAuthorsDbAccess;
+            this.bookManageImagesDbAccess = bookManageImagesDbAccess;
         }
 
         public IActionResult Index(PageOptionsIn pageOptions)
@@ -316,6 +320,17 @@ namespace WebApplication.Areas.contentmanager.Controllers
                     id = bookTagDto.BookId,
                     area = "contentmanager"
                 });
+        }
+
+        [HttpGet]
+        public IActionResult EditImage(Guid id)
+        {
+            var bookDto = bookManageImagesDbAccess.GetBookToEditImage(bookId: id);
+            if (bookDto == null)
+            {
+                return NotFound();
+            }
+            return View(model: bookDto);
         }
     }
 }
