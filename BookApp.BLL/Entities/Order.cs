@@ -25,5 +25,17 @@ namespace BookApp.BLL.Entities
 
         [Required]
         public string UserId { get; set; }
+
+        [Required]
+        public OrderStatus Status { get; set; } = OrderStatus.New;
+    }
+
+    public enum OrderStatus
+    {
+        New = 0, 
+        Assembling, 
+        Ready, 
+        Completed, 
+        Cancelled
     }
 }
