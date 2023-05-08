@@ -20,11 +20,26 @@ namespace WebApplication.Infrastructure
 
         public Stream CreateImage(string filename)
         {
-            string rootPath = webHostEnvironment.WebRootPath;
-            string imageFolder = DomainConstants.BookImageFolder;
-            string fullPath = Path.Combine(rootPath, imageFolder, filename);
+            string fullPath;
+            fullPath = GetFullPath(filename);
             var stream = new FileStream(path: fullPath, mode: FileMode.Create);
             return stream;
+        }
+
+        public void RemoveImage(string filename)
+        {
+            string fullPath = GetFullPath(filename);
+            if (File.Exists(path: fullPath))
+            {
+                File.Delete(path: fullPath);
+            }
+        }
+
+        private string GetFullPath(string filename)
+        {
+            string rootPath = webHostEnvironment.WebRootPath;
+            string imageFolder = DomainConstants.BookImageFolder;
+            return Path.Combine(rootPath, imageFolder, filename);
         }
     }
 }

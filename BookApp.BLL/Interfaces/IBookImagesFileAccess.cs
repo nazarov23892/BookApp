@@ -10,5 +10,6 @@ namespace BookApp.BLL.Interfaces
     public interface IBookImagesFileAccess
     {
         public Stream CreateImage(string filename);
+        public void RemoveImage(string filename);
     }
 }

@@ -42,6 +42,10 @@ namespace BookApp.BLL.Services.BookManageImage.Concrete
                 AddError(errorMessage: $"unsupported file type");
                 return;
             }
+            if (!string.IsNullOrEmpty(book.ImageUrl))
+            {
+                bookImagesFileAccess.RemoveImage(book.ImageUrl);
+            }
             string fileName = $"{Guid.NewGuid()}{extension}";
             using (var stream = bookImagesFileAccess.CreateImage(filename: fileName))
             {
