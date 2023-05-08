@@ -25,7 +25,6 @@ namespace WebApplication.Areas.contentmanager.Controllers
         private readonly IBookEditDbAccess bookEditDbAccess;
         private readonly IBookManageAuthorsDbAccess bookManageAuthorsDbAccess;
         private readonly IBookManageImagesDbAccess bookManageImagesDbAccess;
-        private readonly IWebHostEnvironment hostingEnvironment;
         private readonly IBookManageImagesService bookManageImagesService;
 
         public HomeController(
@@ -44,7 +43,6 @@ namespace WebApplication.Areas.contentmanager.Controllers
             this.bookEditDbAccess = bookEditDbAccess;
             this.bookManageAuthorsDbAccess = bookManageAuthorsDbAccess;
             this.bookManageImagesDbAccess = bookManageImagesDbAccess;
-            this.hostingEnvironment = hostingEnvironment;
             this.bookManageImagesService = bookManageImagesService;
         }
 

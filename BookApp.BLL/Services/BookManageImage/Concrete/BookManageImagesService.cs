@@ -42,6 +42,7 @@ namespace BookApp.BLL.Services.BookManageImage.Concrete
                 AddError(errorMessage: $"unsupported file type");
                 return;
             }
+            // todo: add checking image size
             if (!string.IsNullOrEmpty(book.ImageUrl))
             {
                 bookImagesFileAccess.RemoveImage(book.ImageUrl);

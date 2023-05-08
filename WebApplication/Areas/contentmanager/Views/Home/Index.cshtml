@@ -2,20 +2,37 @@
 @model BookListCombinedDto
 @{ 
     ViewBag.Title = "Books";
+    const string imageDir = @"/uploads/images";
 }
 
 <h2>Books</h2>
 <br />
 <table class="table">
     <tr>
-        <th>title</th>
+        <th class="col-1"></th>
+        <th class="col-md-9">title</th>
         <th>price</th>
+        <th></th>
     </tr>
-    @foreach (var book in Model.Books)
+    @foreach (var book in Model.Books ?? Enumerable.Empty<BookCatalogDto>())
     {
+        string authors = string.Join(
+            separator: ", ",
+            values: book.Authors.Select(a => $"{a.LastName} {a.FirstName.ElementAt(0)}."));
+        string tags = string.Join(
+            separator: ", ",
+            values: book.Tags);
+        var imageSrc = $"{imageDir}/{book.ImageUrl}";
         <tr>
-            <td>@book.Title</td>
-            <td>@book.Price</td>
+            <td>
+                <img class="img-fluid" src="@imageSrc" alt="">
+            </td>
+            <td>
+                <div>@book.Title</div>
+                <div>authors:&nbsp;@authors</div>
+                <div>tags:&nbsp;@tags</div>
+            </td>
+            <td>@($"${book.Price:F}")</td>
             <td>
                 <a asp-action="Details"
                     asp-controller="Home"
