@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace BookApp.BLL.Interfaces
 {
-    public interface IEnvironment
+    public interface IBookImagesFileAccess
     {
-        public string RootPath { get; }
+        public Stream CreateImage(string filename);
     }
 }

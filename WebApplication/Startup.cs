@@ -84,7 +84,7 @@ namespace WebApplication
             services.AddTransient<IBookManageAuthorsDbAccess, BookManageAuthorsDbAccess>();
             services.AddTransient<IBookManageImagesDbAccess, BookManageImagesDbAccess>();
             services.AddTransient<IBookManageImagesService, BookManageImagesService>();
-            services.AddTransient<IEnvironment, EnvironmentConcrete>();
+            services.AddTransient<IBookImagesFileAccess, BookImagesFileAccess>();
             services.AddMvc();
         }
 

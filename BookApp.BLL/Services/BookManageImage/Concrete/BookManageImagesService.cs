@@ -13,14 +13,14 @@ namespace BookApp.BLL.Services.BookManageImage.Concrete
     public class BookManageImagesService : ServiceErrors, IBookManageImagesService
     {
         private readonly IBookManageImagesDbAccess bookManageImagesDbAccess;
-        private readonly IEnvironment environment;
+        private readonly IBookImagesFileAccess bookImagesFileAccess;
 
         public BookManageImagesService(
             IBookManageImagesDbAccess bookManageImagesDbAccess,
-            IEnvironment environment)
+            IBookImagesFileAccess bookImagesFileAccess)
         {
             this.bookManageImagesDbAccess = bookManageImagesDbAccess;
-            this.environment = environment;
+            this.bookImagesFileAccess = bookImagesFileAccess;
         }
 
         public void SetBookImage(Guid bookId, IFormFileForService file)
@@ -42,10 +42,8 @@ namespace BookApp.BLL.Services.BookManageImage.Concrete
                 AddError(errorMessage: $"unsupported file type");
                 return;
             }
-            string mediaPath = environment.RootPath;
             string fileName = $"{Guid.NewGuid()}{extension}";
-            string fullPath = Path.Combine(mediaPath, @"uploads\images", fileName);
-            using (var stream = new FileStream(path: fullPath, mode: FileMode.Create))
+            using (var stream = bookImagesFileAccess.CreateImage(filename: fileName))
             {
                 file.CopyTo(stream);
             }
