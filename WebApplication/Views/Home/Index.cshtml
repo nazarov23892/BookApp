@@ -1,37 +1,51 @@
 ﻿
 @model BookListCombinedDto
 
-<h2>Catalog</h2>
+@{
+    const string path = @"/uploads/images";
+}
 
-<table class="table">
-    <tr>
-        <th>Ttitle</th>
-        <th>Authors</th>
-        <th>Price</th>
-    </tr>
+<h2>Catalog</h2>
+<hr />
+<table>
     @foreach (var book in Model.Books ?? Enumerable.Empty<BookCatalogDto>())
     {
         string authors = string.Join(
             separator: ", ",
             values: book.Authors.Select(a => $"{a.LastName} {a.FirstName.ElementAt(0)}."));
+        string tags = string.Join(", ", book.Tags);
+        string imageSrc = !string.IsNullOrEmpty(book.ImageUrl)
+            ? $"{path}/{book.ImageUrl}"
+            : "";
         <tr>
-            <td>
+            <td class="col-md-1 align-top pt-3 pb-3">
+                <img class="img-fluid"
+                     src="@imageSrc" alt="">
+            </td>
+            <td class="col-md-7 pt-3 pb-3">
                 <a asp-action="Details"
                    asp-controller="Home"
                    asp-route-id="@book.BookId"
                    class="text-dark">
-                    @book.Title
+                    <h5>@Html.DisplayFor(modelItem => book.Title)</h5>
                 </a>
+                <div>
+                    <small>by</small>&nbsp;@authors
+                </div>
+                <div>
+                    Tags:&nbsp;<i>@tags</i>
+                </div>
+                <div>
+                    Price:&nbsp;<span class="h5">@( $"${book.Price:F}")</span>
+                </div>
             </td>
-            <td>@authors</td>
-            <td>@book.Price</td>
-            <td>
+            <td class="col-md-1 vert-align align-top pt-3 pb-3">
                 <form method="post"
                       asp-action="AddToCart"
                       asp-controller="Cart">
                     <input name="id" value="@book.BookId" hidden />
                     <button type="submit"
-                            class="btn btn-sm btn-primary">
+                            class="btn btn-outline-primary">
                         buy
                     </button>
                 </form>
@@ -39,6 +53,7 @@
         </tr>
     }
 </table>
+
 <div>
     @for (int i = 1; i <= Model.PageOptionsOut.PageCount; i++)
     {
@@ -47,9 +62,9 @@
             <text>|</text>
         }
         <a asp-action="Index"
-            asp-controller="Home"
-            asp-route-page="@i"
-            asp-route-pageSize="@Model.PageOptionsOut.PageSize">
+           asp-controller="Home"
+           asp-route-page="@i"
+           asp-route-pageSize="@Model.PageOptionsOut.PageSize">
             @i
         </a>
     }

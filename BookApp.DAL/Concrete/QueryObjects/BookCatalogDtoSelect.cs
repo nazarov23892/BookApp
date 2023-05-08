@@ -17,13 +17,15 @@ namespace BookApp.DAL.Concrete.QueryObjects
                 BookId = b.BookId,
                 Title = b.Title,
                 Price = b.Price,
+                ImageUrl = b.ImageUrl,
                 Authors = b.AuthorsLink
                     .OrderBy(al => al.Order)
                     .Select(al => new AuthorNameDto
                     {
                         FirstName = al.Author.Firstname,
                         LastName = al.Author.Lastname
-                    })
+                    }),
+                Tags = b.Tags.Select(t => t.Text)
             });
         }
     }
