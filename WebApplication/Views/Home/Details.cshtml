@@ -3,29 +3,39 @@
 
 @{ 
     ViewData["Title"] = "Details";
-    
+
     string authors = String.Join(
         separator: ", ",
         values: Model.Authors
             .Select(a => $"{a.LastName} {a.FirstName}"));
-    
+
     string tags = string.Join(
         separator: ", ",
         values: Model.Tags);
+
+    string imagesPath = @"/uploads/images";
 }
 
 <div>
     <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dd>
+            <img class="img-fluid" src="@($"{imagesPath}/{Model.ImageUrl}")">
+            <br />
+            <a asp-action="EditImage"
+               asp-controller="Home"
+               asp-route-id="@Model.BookId"
+               asp-area="contentmanager">edit</a>
+        </dd>
         <dt>
-            @Html.DisplayNameFor(model=>model.Authors)
+            @Html.DisplayNameFor(model => model.Authors)
         </dt>
         <dd>
             @authors
         </dd>
         <dt>
-            @Html.DisplayNameFor(model=>model.Tags)
+            @Html.DisplayNameFor(model => model.Tags)
         </dt>
         <dd>
             @tags
@@ -37,10 +47,10 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model=>model.Description)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model=>model.Description)
+            @Html.DisplayFor(model => model.Description)
         </dd>
     </dl>
     <div>
