@@ -1,0 +1,24 @@
+﻿
+@model IEnumerable<OrderItemDto>
+
+@{
+    ViewBag.Title = "Orders";
+}
+
+<h2>Orders</h2>
+<br />
+<table class="table">
+    <tr>
+        <th>order-number</th>
+        <th>date</th>
+        <th>status</th>
+    </tr>
+    @foreach (var order in Model ?? Enumerable.Empty<OrderItemDto>())
+    {
+        <tr>
+            <td>@order.OrderId</td>
+            <td>@order.DateOrderedUtc</td>
+            <td>@order.Status</td>
+        </tr>
+    }
+</table>

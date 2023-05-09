@@ -31,6 +31,7 @@ using BookApp.BLL.Services.Tags;
 using BookApp.BLL.Services.Tags.Concrete;
 using BookApp.BLL.Services.BookManageImage;
 using BookApp.BLL.Services.BookManageImage.Concrete;
+using BookApp.BLL.Services.OrderProcessing;
 using WebApplication.Infrastructure;
 
 namespace WebApplication
@@ -85,6 +86,7 @@ namespace WebApplication
             services.AddTransient<IBookManageImagesDbAccess, BookManageImagesDbAccess>();
             services.AddTransient<IBookManageImagesService, BookManageImagesService>();
             services.AddTransient<IBookImagesFileAccess, BookImagesFileAccess>();
+            services.AddTransient<IOrderProcessingDbAccess, OrderProcessingDbAccess>();
             services.AddMvc();
         }
 

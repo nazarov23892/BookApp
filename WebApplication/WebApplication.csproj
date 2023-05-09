@@ -11,6 +11,8 @@
     <Folder Include="Areas\admin\Views\" />
     <Folder Include="Areas\contentmanager\Data\" />
     <Folder Include="Areas\contentmanager\Models\" />
+    <Folder Include="Areas\storeemployee\Data\" />
+    <Folder Include="Areas\storeemployee\Models\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\uploads\images\" />
   </ItemGroup>
