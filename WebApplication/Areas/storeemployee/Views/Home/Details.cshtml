@@ -1,0 +1,53 @@
+﻿
+@model OrderDetailsDto
+
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<div>
+    <h4>Order Details</h4>
+    <hr />
+    <br />
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.OrderId)</dt>
+        <dd>@Html.DisplayFor(model => model.OrderId)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Firstname)</dt>
+        <dd>@Html.DisplayFor(model => model.Firstname)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
+        <dd>@Html.DisplayFor(model => model.LastName)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+        <dd>@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+        <dd>@Html.DisplayFor(model => model.Status)</dd>
+
+        <dt>Lines</dt>
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>book</th>
+                    <th>price</th>
+                    <th>quantity</th>
+                </tr>
+                @foreach (var line in Model.Lines ?? Enumerable.Empty<OrderDetailsLineDto>())
+                {
+                    <tr>
+                        <td>@line.BookTitle</td>
+                        <td>@line.BookPrice</td>
+                        <td>@line.Quantity</td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+    <div class="text-center">
+        <a asp-action="Index"
+           asp-controller="Home"
+           asp-area="storeemployee"
+           class="btn btn-secondary">cancel</a>
+    </div>
+</div>

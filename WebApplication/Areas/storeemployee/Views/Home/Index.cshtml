@@ -19,6 +19,13 @@
             <td>@order.OrderId</td>
             <td>@order.DateOrderedUtc</td>
             <td>@order.Status</td>
+            <td>
+                <a asp-action="Details"
+                   asp-controller="Home"
+                   asp-route-id="@order.OrderId"
+                   asp-area="storeemployee"
+                   class="btn btn-sm btn-primary">open</a>
+            </td>
         </tr>
     }
 </table>

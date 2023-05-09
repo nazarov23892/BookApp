@@ -9,5 +9,6 @@ namespace BookApp.BLL.Services.OrderProcessing
     public interface IOrderProcessingDbAccess
     {
         IEnumerable<OrderItemDto> GetOrders();
+        OrderDetailsDto GetOrder(int orderId);
     }
 }

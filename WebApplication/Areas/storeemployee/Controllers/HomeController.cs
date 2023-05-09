@@ -22,5 +22,15 @@ namespace WebApplication.Areas.storeemployee.Controllers
             var newOrders = orderProcessingDbAccess.GetOrders();
             return View(model: newOrders);
         }
+
+        public IActionResult Details(int id)
+        {
+            var orderDto = orderProcessingDbAccess.GetOrder(orderId: id);
+            if (orderDto == null)
+            {
+                return NotFound();
+            }
+            return View(model: orderDto);
+        }
     }
 }

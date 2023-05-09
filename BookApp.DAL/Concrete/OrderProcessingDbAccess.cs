@@ -19,7 +19,6 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
-
         public IEnumerable<OrderItemDto> GetOrders()
         {
             return efDbContext.Orders
@@ -32,6 +31,33 @@ namespace BookApp.DAL.Concrete
                      Status = o.Status
                 })
                 .ToList();
+        }
+
+        public OrderDetailsDto GetOrder(int orderId)
+        {
+            return efDbContext.Orders
+                 .AsNoTracking()
+                 .Select(o => new OrderDetailsDto
+                 {
+                     OrderId = o.OrderId,
+                     DateOrderedUtc = o.DateOrderedUtc,
+                     Firstname = o.Firstname,
+                     LastName = o.LastName,
+                     PhoneNumber = o.PhoneNumber,
+                     Status = o.Status,
+                     Lines = o.Lines
+                        .Select(l => new OrderDetailsLineDto
+                        {
+                            BookId = l.BookId,
+                            BookTitle = l.Book.Title,
+                            BookPrice = l.BookPrice,
+                            ImageUrl = l.Book.ImageUrl,
+                            Quantity = l.Quantity,
+                            Authors = null
+                        })
+                        .ToList()
+                 })
+                 .SingleOrDefault(o => o.OrderId == orderId);
         }
     }
 }
