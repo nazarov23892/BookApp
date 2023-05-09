@@ -16,5 +16,7 @@ namespace BookApp.BLL
         public const int BookDescriptionMinLenght = 10;
         public const int BookDescriptionMaxLenght = 2048;
         public const string BookImageFolder = @"uploads\images";
+        public const int BookImageMaxSizeMb = 1;
+        public const long BookImageMaxSizeBytes = BookImageMaxSizeMb * 1024 * 1024;
     }
 }

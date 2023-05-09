@@ -9,6 +9,9 @@ namespace BookApp.BLL.Interfaces
 {
     public interface IFormFileForService
     {
+        /// <summary>
+        /// gets the length in bytes
+        /// </summary>
         public long Length { get; }
         public string Filename { get; }
         public void CopyTo(Stream target);
