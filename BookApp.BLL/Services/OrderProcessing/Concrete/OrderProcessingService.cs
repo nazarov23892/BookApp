@@ -25,6 +25,7 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
                 return null;
             }
             orderDto.IsAssemblingStatusAble = orderDto.Status == OrderStatus.New;
+            orderDto.IsFinishedStatusAble = orderDto.Status == OrderStatus.Ready;
             return orderDto;
         }
 
@@ -56,6 +57,23 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
                 return;
             }
             order.Status = OrderStatus.Assembling;
+            orderProcessingDbAccess.SaveOrder(order);
+        }
+
+        public void SetOrderStatusToCompleted(int orderId)
+        {
+            Order order = orderProcessingDbAccess.GetOrderOrigin(orderId);
+            if (order == null)
+            {
+                AddError("order not found");
+                return;
+            }
+            if (order.Status != OrderStatus.Ready)
+            {
+                AddError("can complete ready orders only");
+                return;
+            }
+            order.Status = OrderStatus.Completed;
             orderProcessingDbAccess.SaveOrder(order);
         }
 

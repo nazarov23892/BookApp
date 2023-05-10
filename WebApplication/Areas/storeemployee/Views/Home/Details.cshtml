@@ -45,20 +45,44 @@
         </dd>
     </dl>
     <div class="text-center">
-        <form method="post"
-              asp-action="GotoAssembling"
-              asp-controller="Home"
-              asp-area="storeemployee">
-            <input name="id" value="@Model.OrderId" hidden />
-            @if (Model.IsAssemblingStatusAble)
-            {
-                <button type="submit"
-                        class="btn btn-primary">assembly</button>
-            }
-            <a asp-action="Index"
-               asp-controller="Home"
-               asp-area="storeemployee"
-               class="btn btn-secondary">cancel</a>
-        </form>
+        @if (Model.IsAssemblingStatusAble)
+        {
+            <form method="post" id="assembling-form"
+                  asp-action="GotoAssembling"
+                  asp-controller="Home"
+                  asp-area="storeemployee">
+                <input name="id" value="@Model.OrderId" hidden />
+            </form>
+        }
+        @if (Model.IsFinishedStatusAble)
+        {
+            <form method="post" id="finished-form"
+                  asp-action="GotoCompleted"
+                  asp-controller="Home"
+                  asp-area="storeemployee">
+                <input name="id" value="@Model.OrderId" hidden />
+            </form>
+        }
+        @if (Model.IsAssemblingStatusAble)
+        {
+            <button type="submit"
+                    form="assembling-form"
+                    class="btn btn-primary">
+                assembly
+            </button>
+        }
+        @if (Model.IsFinishedStatusAble)
+        {
+            <button type="submit"
+                    form="finished-form"
+                    class="btn btn-primary">
+                finish
+            </button>
+        }
+        <a asp-action="Index"
+           asp-controller="Home"
+           asp-area="storeemployee"
+           class="btn btn-secondary">cancel</a>
+
     </div>
 </div>

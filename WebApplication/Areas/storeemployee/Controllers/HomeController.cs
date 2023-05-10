@@ -105,5 +105,26 @@ namespace WebApplication.Areas.storeemployee.Controllers
                 controllerName: "Home",
                 routeValues: new { id = orderAssemblingDto.OrderId, area = "storeemployee" });
         }
+
+        [HttpPost]
+        public IActionResult GotoCompleted(int id)
+        {
+            orderProcessingService.SetOrderStatusToCompleted(orderId: id);
+            if (orderProcessingService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in orderProcessingService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(),
+                    messageType: ViewAlertMessageType.Danger);
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Details),
+                controllerName: "Home",
+                routeValues: new { id = id, area = "storeemployee" });
+        }
     }
 }

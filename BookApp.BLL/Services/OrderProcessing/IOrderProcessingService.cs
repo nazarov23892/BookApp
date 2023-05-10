@@ -13,5 +13,6 @@ namespace BookApp.BLL.Services.OrderProcessing
         OrderDetailsDto GetOrderForAssembling(int orderId);
         void SetOrderStatusToAssembling(int orderId);
         void SetOrderStatusToReady(OrderAssemblingCompletedDto orderAssemblingDto);
+        void SetOrderStatusToCompleted(int orderId);
     }
 }
