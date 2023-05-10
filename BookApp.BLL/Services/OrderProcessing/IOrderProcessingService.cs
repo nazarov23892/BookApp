@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookApp.BLL.Entities;
+using BookApp.BLL.Generic;
 
 namespace BookApp.BLL.Services.OrderProcessing
 {
-    public interface IOrderProcessingDbAccess
+    public interface IOrderProcessingService: IServiceErrors
     {
-        IEnumerable<OrderItemDto> GetOrders();
         OrderDetailsDto GetOrder(int orderId);
-        Order GetOrderOrigin(int orderId);
-        void SaveOrder(Order order);
+        OrderDetailsDto GetOrderForAssembling(int orderId);
+        void SetOrderStatusToAssembling(int orderId);
     }
 }

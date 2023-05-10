@@ -2,11 +2,11 @@
 @model OrderDetailsDto
 
 @{
-    ViewBag.Title = "Order Details";
+    ViewBag.Title = "Order Assembling";
 }
 
 <div>
-    <h4>Order Details</h4>
+    <h4>Order Assembling</h4>
     <hr />
     <br />
     <dl>
@@ -29,9 +29,10 @@
         <dd>
             <table class="table">
                 <tr>
-                    <th>book</th>
+                    <th class="col-md-7">book</th>
                     <th>price</th>
                     <th>quantity</th>
+                    <th>included</th>
                 </tr>
                 @foreach (var line in Model.Lines ?? Enumerable.Empty<OrderDetailsLineDto>())
                 {
@@ -39,26 +40,18 @@
                         <td>@line.BookTitle</td>
                         <td>@line.BookPrice</td>
                         <td>@line.Quantity</td>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
                     </tr>
                 }
             </table>
         </dd>
     </dl>
     <div class="text-center">
-        <form method="post"
-              asp-action="GotoAssembling"
-              asp-controller="Home"
-              asp-area="storeemployee">
-            <input name="id" value="@Model.OrderId" hidden />
-            @if (Model.IsAssemblingStatusAble)
-            {
-                <button type="submit"
-                        class="btn btn-primary">assembly</button>
-            }
-            <a asp-action="Index"
-               asp-controller="Home"
-               asp-area="storeemployee"
-               class="btn btn-secondary">cancel</a>
-        </form>
+        <a asp-action="Index"
+           asp-controller="Home"
+           asp-area="storeemployee"
+           class="btn btn-secondary">cancel</a>
     </div>
 </div>

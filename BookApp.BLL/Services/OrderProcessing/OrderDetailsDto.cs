@@ -15,6 +15,7 @@ namespace BookApp.BLL.Services.OrderProcessing
         public string Firstname { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
+        public bool IsAssemblingStatusAble { get; set; }
         public IEnumerable<OrderDetailsLineDto> Lines { get; set; }
     }
 

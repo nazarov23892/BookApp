@@ -59,5 +59,18 @@ namespace BookApp.DAL.Concrete
                  })
                  .SingleOrDefault(o => o.OrderId == orderId);
         }
+
+        public Order GetOrderOrigin(int orderId)
+        {
+            return efDbContext.Orders
+                .SingleOrDefault(o => o.OrderId == orderId);
+        }
+
+        public void SaveOrder(Order order)
+        {
+            efDbContext.Orders
+                .Update(order);
+            efDbContext.SaveChanges();
+        }
     }
 }
