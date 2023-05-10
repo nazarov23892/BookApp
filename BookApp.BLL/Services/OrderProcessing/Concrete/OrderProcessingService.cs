@@ -58,5 +58,37 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
             order.Status = OrderStatus.Assembling;
             orderProcessingDbAccess.SaveOrder(order);
         }
+
+        public void SetOrderStatusToReady(OrderAssemblingCompletedDto orderAssemblingDto)
+        {
+            bool hasLinesNotIncluded = orderAssemblingDto.LineItems
+                .Where(b => !b.Included)
+                .Any();
+            if (hasLinesNotIncluded)
+            {
+                AddError("not all items included");
+                return;
+            }
+            Order order = orderProcessingDbAccess.GetOrderOrigin(orderId: orderAssemblingDto.OrderId);
+            if (order == null)
+            {
+                AddError($"order not found id='{orderAssemblingDto.OrderId}'");
+                return;
+            }
+            var orderBooks = orderAssemblingDto.LineItems
+                .Select(l => l.BookId);
+            var orderItemsBaseline = orderProcessingDbAccess.GetOrderLines(orderId: orderAssemblingDto.OrderId);
+            var orderBooksBaseline = orderItemsBaseline.Select(ol => ol.BookId);
+
+            bool isLinesMatch = orderBooks.Count() == orderBooksBaseline.Count()
+                && orderBooksBaseline.Intersect(orderBooks).Count() == orderBooksBaseline.Count();
+            if (!isLinesMatch)
+            {
+                AddError($"lines contain missing item");
+                return;
+            }
+            order.Status = OrderStatus.Ready;
+            orderProcessingDbAccess.SaveOrder(order);
+        }
     }
 }

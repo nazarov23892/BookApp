@@ -68,6 +68,7 @@ namespace WebApplication.Areas.storeemployee.Controllers
                 routeValues: new { id = id, area = "storeemployee" });
         }
 
+        [HttpGet]
         public IActionResult Assembling(int id)
         {
             var orderDto = orderProcessingService.GetOrderForAssembling(orderId: id);
@@ -76,6 +77,33 @@ namespace WebApplication.Areas.storeemployee.Controllers
                 return NotFound();
             }
             return View(model: orderDto);
+        }
+
+        [HttpPost]
+        public IActionResult GotoReady(OrderAssemblingCompletedDto orderAssemblingDto)
+        {
+            orderProcessingService.SetOrderStatusToReady(orderAssemblingDto);
+            if (!orderProcessingService.HasErrors)
+            {
+                return RedirectToAction(
+                    actionName: nameof(this.Index),
+                    controllerName: "Home",
+                    routeValues: new { area = "storeemployee" });
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var error in orderProcessingService.Errors)
+            {
+                stringBuilder.AppendLine(error.ErrorMessage);
+            }
+            TempData.WriteAlertMessage(
+                messageText: stringBuilder.ToString(),
+                messageType: ViewAlertMessageType.Danger);
+
+            return RedirectToAction(
+                actionName: nameof(this.Assembling),
+                controllerName: "Home",
+                routeValues: new { id = orderAssemblingDto.OrderId, area = "storeemployee" });
         }
     }
 }

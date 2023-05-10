@@ -34,24 +34,40 @@
                     <th>quantity</th>
                     <th>included</th>
                 </tr>
+                @{ 
+                    int i = 0;
+                }
                 @foreach (var line in Model.Lines ?? Enumerable.Empty<OrderDetailsLineDto>())
                 {
+                    string lineName = $"LineItems[{i}]";
+                    string line_bookIdName = $"{lineName}.BookId";
+                    string line_checkedName = $"{lineName}.Included";
                     <tr>
                         <td>@line.BookTitle</td>
                         <td>@line.BookPrice</td>
                         <td>@line.Quantity</td>
                         <td>
-                            <input type="checkbox" />
+                            <input form="form-submit" name="@line_bookIdName" value="@line.BookId" hidden />
+                            <input form="form-submit" name="@line_checkedName" type="checkbox" value="true" />
                         </td>
                     </tr>
+                    i++;
                 }
             </table>
         </dd>
     </dl>
     <div class="text-center">
+        <button type="submit" form="form-submit"
+                class="btn btn-primary">submit</button>
         <a asp-action="Index"
            asp-controller="Home"
            asp-area="storeemployee"
            class="btn btn-secondary">cancel</a>
     </div>
+    <form id="form-submit" method="post"
+          asp-action="GoToReady"
+          asp-controller="Home"
+          asp-area="storeemployee">
+        <input name="OrderId" value="@Model.OrderId" hidden />
+    </form>
 </div>

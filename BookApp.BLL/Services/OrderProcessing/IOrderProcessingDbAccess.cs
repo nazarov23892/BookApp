@@ -12,6 +12,7 @@ namespace BookApp.BLL.Services.OrderProcessing
         IEnumerable<OrderItemDto> GetOrders();
         OrderDetailsDto GetOrder(int orderId);
         Order GetOrderOrigin(int orderId);
+        IEnumerable<OrderLineItem> GetOrderLines(int orderId);
         void SaveOrder(Order order);
     }
 }

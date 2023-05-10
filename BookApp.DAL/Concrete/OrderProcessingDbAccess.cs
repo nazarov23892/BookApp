@@ -23,12 +23,12 @@ namespace BookApp.DAL.Concrete
         {
             return efDbContext.Orders
                 .AsNoTracking()
-                .OrderBy(o=>o.DateOrderedUtc)
-                .Select(o=>new OrderItemDto
+                .OrderBy(o => o.DateOrderedUtc)
+                .Select(o => new OrderItemDto
                 {
-                     OrderId = o.OrderId,
-                     DateOrderedUtc = o.DateOrderedUtc,
-                     Status = o.Status
+                    OrderId = o.OrderId,
+                    DateOrderedUtc = o.DateOrderedUtc,
+                    Status = o.Status
                 })
                 .ToList();
         }
@@ -71,6 +71,14 @@ namespace BookApp.DAL.Concrete
             efDbContext.Orders
                 .Update(order);
             efDbContext.SaveChanges();
+        }
+
+        public IEnumerable<OrderLineItem> GetOrderLines(int orderId)
+        {
+            return efDbContext.Set<OrderLineItem>()
+                .AsNoTracking()
+                .Where(ol => ol.OrderId == orderId)
+                .ToList();
         }
     }
 }
