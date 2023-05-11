@@ -12,6 +12,7 @@ namespace BookApp.BLL.Services.Orders
         public int OrderId { get; set; }
         public DateTime DateOrderedUtc { get; set; }
         public OrderStatus Status { get; set; }
+        public bool IsCancelAble { get; set; }
         public IEnumerable<DisplayOrderDetailsLineItemDto> Lines { get; set; }
     }
 

@@ -89,6 +89,8 @@ namespace WebApplication
             services.AddTransient<IBookImagesFileAccess, BookImagesFileAccess>();
             services.AddTransient<IOrderProcessingDbAccess, OrderProcessingDbAccess>();
             services.AddTransient<IOrderProcessingService, OrderProcessingService>();
+            services.AddTransient<IOrderManageService, OrderManageService>();
+            services.AddTransient<IOrderManageDbAccess, OrderManageDbAccess>();
             services.AddMvc();
         }
 

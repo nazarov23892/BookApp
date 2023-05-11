@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL.Generic;
 using BookApp.BLL.Interfaces;
+using BookApp.BLL.Entities;
 
 namespace BookApp.BLL.Services.Orders.Concrete
 {
@@ -34,6 +35,8 @@ namespace BookApp.BLL.Services.Orders.Concrete
             var orderDto = displayOrderDbAccess.GetItem(
                 orderId: orderId,
                 userId: userId);
+            orderDto.IsCancelAble = orderDto.Status != OrderStatus.Completed
+                && orderDto.Status != OrderStatus.Cancelled;
             return orderDto;
         }
 

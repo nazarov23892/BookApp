@@ -34,7 +34,7 @@
         <th>quantity</th>
         <th>subtotal</th>
     </tr>
-    @{ 
+    @{
         decimal total = 0.0M;
     }
     @foreach (var line in Model.Lines ?? Enumerable.Empty<DisplayOrderDetailsLineItemDto>())
@@ -60,4 +60,17 @@
     <a asp-action="List"
        asp-controller="Order"
        class="btn btn-secondary">Order List</a>
+    @if (Model.IsCancelAble)
+    {
+        <button form="cancel-form"
+                type="submit"
+                class="btn btn-danger">
+            cancel order
+        </button>
+        <form method="post" id="cancel-form"
+              asp-action="Cancel"
+              asp-controller="Order">
+            <input name="id" value="@Model.OrderId" hidden />
+        </form>
+    }
 </div>

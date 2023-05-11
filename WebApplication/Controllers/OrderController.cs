@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BookApp.BLL;
 using Microsoft.AspNetCore.Authorization;
 using BookApp.BLL.Services.Orders;
 using BookApp.BLL.Services.Cart;
+using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
@@ -16,15 +18,18 @@ namespace WebApplication.Controllers
         private readonly ICartService cartService;
         private readonly IPlaceOrderService placeOrderService;
         private readonly IDisplayOrderService displayOrderService;
+        private readonly IOrderManageService orderManageService;
 
         public OrderController(
             ICartService cartService,
             IPlaceOrderService placeOrderService,
-            IDisplayOrderService displayOrderService)
+            IDisplayOrderService displayOrderService,
+            IOrderManageService orderManageService)
         {
             this.cartService = cartService;
             this.placeOrderService = placeOrderService;
             this.displayOrderService = displayOrderService;
+            this.orderManageService = orderManageService;
         }
 
         [HttpGet]
@@ -104,6 +109,27 @@ namespace WebApplication.Controllers
                 return NotFound();
             }
             return View(model: order);
+        }
+
+        [HttpPost]
+        public IActionResult Cancel(int id)
+        {
+            orderManageService.Cancel(orderId: id);
+            if (orderManageService.HasErrors)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var error in orderManageService.Errors)
+                {
+                    stringBuilder.AppendLine(error.ErrorMessage);
+                }
+                TempData.WriteAlertMessage(
+                    messageText: stringBuilder.ToString(),
+                    messageType: ViewAlertMessageType.Danger);
+            }
+            return RedirectToAction(
+                actionName: nameof(this.Details),
+                controllerName: "Order",
+                routeValues: new { id = id });
         }
     }
 }
