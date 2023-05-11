@@ -9,6 +9,7 @@
     <tr>
         <th>order number</th>
         <th>date ordered</th>
+        <th>status</th>
         <th>price</th>
     </tr>
     @foreach (var order in Model ?? Enumerable.Empty<DisplayListOrderItemDto>())
@@ -16,7 +17,8 @@
         <tr>
             <td>@order.OrderId</td>
             <td>@order.DateOrderedUtc.ToString(format: "dd.MM.yyyy")</td>
-            <td>@order.Price</td>
+            <td>@order.Status</td>
+            <td>@($"${order.Price:F}")</td>
             <td>
                 <a asp-action="Details"
                    asp-controller="Order"

@@ -27,6 +27,7 @@ namespace BookApp.DAL.Concrete
                 {
                     OrderId = o.OrderId,
                     DateOrderedUtc = o.DateOrderedUtc,
+                    Status = o.Status,
                     Lines = o.Lines
                         .Select(l => new DisplayOrderDetailsLineItemDto
                         {
@@ -48,6 +49,7 @@ namespace BookApp.DAL.Concrete
                 {
                     OrderId = o.OrderId,
                     DateOrderedUtc = o.DateOrderedUtc,
+                    Status = o.Status,
                     Price = o.Lines
                         .Select(l => l.BookPrice * l.Quantity)
                         .Sum()

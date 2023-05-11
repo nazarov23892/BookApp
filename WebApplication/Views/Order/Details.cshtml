@@ -18,6 +18,12 @@
     <dd>
         @(Model.DateOrderedUtc.ToString(format: "dd.MM.yyyy"))
     </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Status)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Status)
+    </dd>
 </dl>
 <br />
 <h4>Items</h4>
@@ -36,15 +42,15 @@
         decimal subtotal = line.BookPrice * line.Quantity;
         <tr>
             <td>@line.BookTItle</td>
-            <td>@line.BookPrice</td>
+            <td>@($"${line.BookPrice:F}")</td>
             <td>@line.Quantity</td>
-            <td>@subtotal</td>
+            <td>@($"${subtotal:F}")</td>
         </tr>
         total += subtotal;
     }
     <tr>
         <th colspan="3">total</th>
-        <th>@total</th>
+        <th>@($"${total:F}")</th>
     </tr>
 </table>
 <div class="text-center">
