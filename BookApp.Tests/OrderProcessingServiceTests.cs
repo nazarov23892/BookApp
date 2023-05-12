@@ -304,6 +304,10 @@ namespace BookApp.Tests
                 .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
                     ? ordersDict[orderId]
                     : null);
+            mock.Setup(m => m.GetOrderLines(It.IsAny<int>()))
+                .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
+                    ? ordersDict[orderId].Lines
+                    : null);
 
             var target = new OrderProcessingService(orderProcessingDbAccess: mock.Object);
 

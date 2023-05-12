@@ -84,7 +84,7 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
                 .Any();
             if (hasLinesNotIncluded)
             {
-                AddError("not all items included");
+                AddError("has non included books");
                 return;
             }
             Order order = orderProcessingDbAccess.GetOrderOrigin(orderId: orderAssemblingDto.OrderId);
@@ -101,7 +101,13 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
             var nonExists = includedBookIds.Except(orderBookIds);
             if (nonExists.Any())
             {
-                AddError(errorMessage: $"order does not contain the book id=''{nonExists.First()}");
+                AddError(errorMessage: $"order does not contain the book id='{nonExists.First()}'");
+                return;
+            }
+            var nonExist2 = orderBookIds.Except(includedBookIds);
+            if (nonExist2.Any())
+            {
+                AddError(errorMessage: "not all books included");
                 return;
             }
             order.Status = OrderStatus.Ready;
