@@ -132,5 +132,99 @@ namespace BookApp.Tests
                     && o.Status == OrderStatus.Assembling)),
                 times: Times.Once);
         }
+
+        [Fact]
+        public void Cannot_Goto_Ready_Status_When_Order_Not_Exist_In_Db()
+        {
+            // arrange
+            Book book1 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000001") };
+            var ordersDict = new[]
+            {
+                new Order
+                {
+                    OrderId = 1, Status = OrderStatus.New,
+                    Lines = new [] { new OrderLineItem { BookId = book1.BookId } }
+                }
+            }
+            .ToDictionary(o => o.OrderId);
+
+            Mock<IOrderProcessingDbAccess> mock = new Mock<IOrderProcessingDbAccess>();
+            mock.Setup(m => m.GetOrderOrigin(It.IsAny<int>()))
+                .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
+                    ? ordersDict[orderId]
+                    : null);
+
+            var target = new OrderProcessingService(orderProcessingDbAccess: mock.Object);
+
+            var orderAssemblingDto = new OrderAssemblingCompletedDto
+            {
+                OrderId = 2,
+                LineItems = new[]
+                {
+                    new OrderAssemblyCompletedItemDto{BookId = book1.BookId, Included = true }
+                }
+            };
+
+            // act
+            target.SetOrderStatusToReady(orderAssemblingDto);
+
+            // assert
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Contains(
+                expectedSubstring: "order not found",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveOrder(It.IsAny<Order>()),
+                times: Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_Goto_Ready_Status_When_Order_Not_Contains_Included_Book()
+        {
+            // arrange
+            Book book1 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Book book2 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000002") };
+            var ordersDict = new[]
+            {
+                new Order
+                {
+                    OrderId = 1, Status = OrderStatus.New,
+                    Lines = new [] { new OrderLineItem { BookId = book1.BookId } }
+                }
+            }
+            .ToDictionary(o => o.OrderId);
+
+            Mock<IOrderProcessingDbAccess> mock = new Mock<IOrderProcessingDbAccess>();
+            mock.Setup(m => m.GetOrderOrigin(It.IsAny<int>()))
+                .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
+                    ? ordersDict[orderId]
+                    : null);
+
+            var target = new OrderProcessingService(orderProcessingDbAccess: mock.Object);
+
+            var orderAssemblingDto = new OrderAssemblingCompletedDto
+            {
+                OrderId = 1,
+                LineItems = new[]
+                {
+                    new OrderAssemblyCompletedItemDto { BookId = book1.BookId, Included = true },
+                    new OrderAssemblyCompletedItemDto { BookId = book2.BookId, Included = true }
+                }
+            };
+
+            // act
+            target.SetOrderStatusToReady(orderAssemblingDto);
+
+            // assert
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Contains(
+                expectedSubstring: "order not contains book",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveOrder(It.IsAny<Order>()),
+                times: Times.Never);
+        }
     }
 }
