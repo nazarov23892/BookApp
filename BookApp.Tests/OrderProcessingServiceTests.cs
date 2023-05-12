@@ -226,5 +226,108 @@ namespace BookApp.Tests
                 expression: m => m.SaveOrder(It.IsAny<Order>()),
                 times: Times.Never);
         }
+
+        [Fact]
+        public void Cannot_Goto_Ready_Status_When_Has_Nonincluded()
+        {
+            // arrange
+            Book book1 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Book book2 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000002") };
+            var ordersDict = new[]
+            {
+                new Order
+                {
+                    OrderId = 1, Status = OrderStatus.New,
+                    Lines = new []
+                    {
+                        new OrderLineItem { BookId = book1.BookId },
+                        new OrderLineItem { BookId = book2.BookId }
+                    }
+                }
+            }
+            .ToDictionary(o => o.OrderId);
+
+            Mock<IOrderProcessingDbAccess> mock = new Mock<IOrderProcessingDbAccess>();
+            mock.Setup(m => m.GetOrderOrigin(It.IsAny<int>()))
+                .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
+                    ? ordersDict[orderId]
+                    : null);
+
+            var target = new OrderProcessingService(orderProcessingDbAccess: mock.Object);
+
+            var orderAssemblingDto = new OrderAssemblingCompletedDto
+            {
+                OrderId = 1,
+                LineItems = new[]
+                {
+                    new OrderAssemblyCompletedItemDto { BookId = book1.BookId, Included = true },
+                    new OrderAssemblyCompletedItemDto { BookId = book2.BookId, Included = false },
+                }
+            };
+
+            // act
+            target.SetOrderStatusToReady(orderAssemblingDto);
+
+            // assert
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Contains(
+                expectedSubstring: "has non included books",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveOrder(It.IsAny<Order>()),
+                times: Times.Never);
+        }
+
+        [Fact]
+        public void Cannot_Goto_Ready_Status_When_Included_Not_All_Ordered_Books()
+        {
+            // arrange
+            Book book1 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000001") };
+            Book book2 = new Book { BookId = new Guid("00000000-0000-0000-0000-000000000002") };
+            var ordersDict = new[]
+            {
+                new Order
+                {
+                    OrderId = 1, Status = OrderStatus.New,
+                    Lines = new [] 
+                    { 
+                        new OrderLineItem { BookId = book1.BookId },
+                        new OrderLineItem { BookId = book2.BookId }
+                    }
+                }
+            }
+            .ToDictionary(o => o.OrderId);
+
+            Mock<IOrderProcessingDbAccess> mock = new Mock<IOrderProcessingDbAccess>();
+            mock.Setup(m => m.GetOrderOrigin(It.IsAny<int>()))
+                .Returns<int>(orderId => ordersDict.ContainsKey(orderId)
+                    ? ordersDict[orderId]
+                    : null);
+
+            var target = new OrderProcessingService(orderProcessingDbAccess: mock.Object);
+
+            var orderAssemblingDto = new OrderAssemblingCompletedDto
+            {
+                OrderId = 1,
+                LineItems = new[]
+                {
+                    new OrderAssemblyCompletedItemDto { BookId = book1.BookId, Included = true }
+                }
+            };
+
+            // act
+            target.SetOrderStatusToReady(orderAssemblingDto);
+
+            // assert
+            Assert.True(target.HasErrors);
+            Assert.Single(target.Errors);
+            Assert.Contains(
+                expectedSubstring: "not all books included",
+                actualString: target.Errors.Single().ErrorMessage);
+            mock.Verify(
+                expression: m => m.SaveOrder(It.IsAny<Order>()),
+                times: Times.Never);
+        }
     }
 }
