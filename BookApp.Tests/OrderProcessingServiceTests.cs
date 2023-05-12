@@ -220,7 +220,7 @@ namespace BookApp.Tests
             Assert.True(target.HasErrors);
             Assert.Single(target.Errors);
             Assert.Contains(
-                expectedSubstring: "order not contains book",
+                expectedSubstring: "order does not contain the book",
                 actualString: target.Errors.Single().ErrorMessage);
             mock.Verify(
                 expression: m => m.SaveOrder(It.IsAny<Order>()),

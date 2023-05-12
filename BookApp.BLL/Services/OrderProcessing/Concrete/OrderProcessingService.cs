@@ -93,16 +93,15 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
                 AddError($"order not found id='{orderAssemblingDto.OrderId}'");
                 return;
             }
-            var orderBooks = orderAssemblingDto.LineItems
+            var includedBookIds = orderAssemblingDto.LineItems
                 .Select(l => l.BookId);
             var orderItemsBaseline = orderProcessingDbAccess.GetOrderLines(orderId: orderAssemblingDto.OrderId);
-            var orderBooksBaseline = orderItemsBaseline.Select(ol => ol.BookId);
+            var orderBookIds = orderItemsBaseline.Select(ol => ol.BookId);
 
-            bool isLinesMatch = orderBooks.Count() == orderBooksBaseline.Count()
-                && orderBooksBaseline.Intersect(orderBooks).Count() == orderBooksBaseline.Count();
-            if (!isLinesMatch)
+            var nonExists = includedBookIds.Except(orderBookIds);
+            if (nonExists.Any())
             {
-                AddError($"lines contain missing item");
+                AddError(errorMessage: $"order does not contain the book id=''{nonExists.First()}");
                 return;
             }
             order.Status = OrderStatus.Ready;
