@@ -110,6 +110,11 @@ namespace BookApp.BLL.Services.OrderProcessing.Concrete
                 AddError(errorMessage: "not all books included");
                 return;
             }
+            if (order.Status != OrderStatus.Assembling)
+            {
+                AddError(errorMessage: "can set ready status for assembling only");
+                return;
+            }
             order.Status = OrderStatus.Ready;
             orderProcessingDbAccess.SaveOrder(order);
         }
