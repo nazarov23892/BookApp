@@ -10,6 +10,7 @@ namespace BookApp.BLL.Services.BookCatalog
     {
         BookDetailsDto GetItem(Guid bookId);
         IEnumerable<BookCatalogDto> GetList(PageOptionsIn pageOptionsIn);
+        IEnumerable<BookListTagDto> GetTags();
         int GetCount();
     }
 }

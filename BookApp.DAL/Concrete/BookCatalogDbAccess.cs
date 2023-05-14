@@ -37,12 +37,26 @@ namespace BookApp.DAL.Concrete
         {
             return efDbContext.Books
             .AsNoTracking()
+            .FilterByTag(pageOptionsIn.FilterTag)
             .MapToBookCatalogDto()
             .OrderBooksBy(pageOptionsIn.SortOption)
             .Paging(
                 pageNumZeroStart: pageOptionsIn.Page - 1,
                 pageSize: pageOptionsIn.PageSize)
             .ToArray();
+        }
+
+        public IEnumerable<BookListTagDto> GetTags()
+        {
+            return efDbContext.Set<Tag>()
+                .AsNoTracking()
+                .Select(t => new BookListTagDto
+                {
+                    TagId = t.TagId,
+                    TagText = t.Text
+                })
+                .OrderBy(t=>t.TagText)
+                .ToList();
         }
     }
 }

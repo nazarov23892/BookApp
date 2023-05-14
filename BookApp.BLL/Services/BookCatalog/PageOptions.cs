@@ -12,6 +12,7 @@ namespace BookApp.BLL.Services.BookCatalog
         public const int DefaultPageSize = 5;
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = DefaultPageSize;
+        public int FilterTag { get; set; }
         public PageSortOptions SortOption { get; set; }
     }
 

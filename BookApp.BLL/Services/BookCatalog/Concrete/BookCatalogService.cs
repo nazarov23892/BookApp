@@ -29,6 +29,7 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
                 + (booksNum % pageSize > 0 ? 1 : 0);
 
             var books = bookCatalogDbAccess.GetList(pageOptionsIn);
+            var tags = bookCatalogDbAccess.GetTags();
             var result = new BookListCombinedDto
             {
                 PageOptionsOut = new PageOptionsOut
@@ -36,9 +37,11 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
                     Page = pageOptionsIn.Page,
                     PageSize = pageOptionsIn.PageSize,
                     PageCount = pageCount,
-                    SortOption = pageOptionsIn.SortOption
+                    SortOption = pageOptionsIn.SortOption,
+                    FilterTag = pageOptionsIn.FilterTag
                 },
-                Books = books
+                Books = books,
+                Tags = tags
             };
             return result;
         }

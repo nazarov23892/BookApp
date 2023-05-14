@@ -19,8 +19,22 @@
                 {
                     bool isSelected = sortOption == Model.PageOptionsOut.SortOption;
                     <option value="@sortOption"
-                            selected="@isSelected">@sortOption</option>
-                    continue;
+                            selected="@isSelected">
+                        @sortOption
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Tag filter</label>
+            <select class="form-control sort-filter-width" name="filterTag">
+                <option selected="@(Model.PageOptionsOut.FilterTag == 0)">none</option>
+                @foreach (var tag in Model.Tags ?? Enumerable.Empty<BookListTagDto>())
+                {
+                    <option value="@tag.TagId"
+                            selected="@(tag.TagId == Model.PageOptionsOut.FilterTag)">
+                        @tag.TagText
+                    </option>
                 }
             </select>
         </div>
@@ -85,7 +99,8 @@
     @for (int i = 1; i <= Model.PageOptionsOut.PageCount; i++)
     {
         <button form="filter-form" name="page" value="@i"
-                class="btn btn-sm btn-light">@i
+                class="btn btn-sm btn-light">
+            @i
         </button>
     }
 </div>
