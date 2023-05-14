@@ -35,7 +35,8 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
                 {
                     Page = pageOptionsIn.Page,
                     PageSize = pageOptionsIn.PageSize,
-                    PageCount = pageCount
+                    PageCount = pageCount,
+                    SortOption = pageOptionsIn.SortOption
                 },
                 Books = books
             };

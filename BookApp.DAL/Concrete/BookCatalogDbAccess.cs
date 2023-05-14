@@ -38,7 +38,7 @@ namespace BookApp.DAL.Concrete
             return efDbContext.Books
             .AsNoTracking()
             .MapToBookCatalogDto()
-            .OrderBy(b => b.Title)
+            .OrderBooksBy(pageOptionsIn.SortOption)
             .Paging(
                 pageNumZeroStart: pageOptionsIn.Page - 1,
                 pageSize: pageOptionsIn.PageSize)
