@@ -20,9 +20,14 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
-        public int GetCount()
+        public int GetCount(PageOptionsIn pageOptionsIn)
         {
-            return efDbContext.Books.Count();
+            return efDbContext.Books
+            .AsNoTracking()
+            .FilterByTag(pageOptionsIn.FilterTag)
+            .MapToBookCatalogDto()
+            .OrderBooksBy(pageOptionsIn.SortOption)
+            .Count();
         }
 
         public BookDetailsDto GetItem(Guid bookId)

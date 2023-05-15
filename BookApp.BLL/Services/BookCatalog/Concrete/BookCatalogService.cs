@@ -23,7 +23,7 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
 
         public BookListCombinedDto GetList(PageOptionsIn pageOptionsIn)
         {
-            int booksNum = bookCatalogDbAccess.GetCount();
+            int booksNum = bookCatalogDbAccess.GetCount(pageOptionsIn);
             int pageSize = pageOptionsIn.PageSize;
             int pageCount = (booksNum / pageSize)
                 + (booksNum % pageSize > 0 ? 1 : 0);
