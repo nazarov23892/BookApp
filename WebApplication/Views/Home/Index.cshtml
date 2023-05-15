@@ -6,11 +6,8 @@
     var sortOptionsList = Enum.GetValues(Model.PageOptionsOut.SortOption.GetType());
 }
 
-<h2>Catalog</h2>
-<hr />
 <form role="form" id="filter-form" method="get"
       asp-action="Index" asp-controller="Home" asp-area="">
-    <input name="pageSize" value="@Model.PageOptionsOut.PageSize" hidden />
     <div class="row">
         <div class="col-sm-3">
             <label>Sort By</label>
@@ -34,6 +31,18 @@
                     <option value="@tag.TagId"
                             selected="@(tag.TagId == Model.PageOptionsOut.FilterTag)">
                         @tag.TagText
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-1">
+            <label>Page size</label>
+            <select class="form-control sort-filter-width" name="PageSize">
+                @foreach (var size in Model.PageOptionsOut.PageSizes)
+                {
+                    <option value="@size"
+                            selected="@(size == Model.PageOptionsOut.PageSize)">
+                        @size
                     </option>
                 }
             </select>
