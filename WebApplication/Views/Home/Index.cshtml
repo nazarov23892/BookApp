@@ -28,7 +28,7 @@
         <div class="col-sm-3">
             <label>Tag filter</label>
             <select class="form-control sort-filter-width" name="filterTag">
-                <option selected="@(Model.PageOptionsOut.FilterTag == 0)">none</option>
+                <option value="" selected="@(Model.PageOptionsOut.FilterTag == 0)">none</option>
                 @foreach (var tag in Model.Tags ?? Enumerable.Empty<BookListTagDto>())
                 {
                     <option value="@tag.TagId"
