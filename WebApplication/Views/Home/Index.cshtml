@@ -1,5 +1,6 @@
 ﻿
 @model BookListCombinedDto
+@using WebApplication.Infrastructure
 
 @{
     const string path = @"/uploads/images";
@@ -17,7 +18,7 @@
                     bool isSelected = sortOption == Model.PageOptionsOut.SortOption;
                     <option value="@sortOption"
                             selected="@isSelected">
-                        @sortOption
+                        @sortOption.GetDisplayName()
                     </option>
                 }
             </select>
