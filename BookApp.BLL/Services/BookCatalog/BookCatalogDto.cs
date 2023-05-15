@@ -16,6 +16,12 @@ namespace BookApp.BLL.Services.BookCatalog
         public IEnumerable<string> Tags { get; set; }
     }
 
+    public class BookCatalogListDto
+    {
+        public IEnumerable<BookCatalogDto> Items { get; set; }
+        public int TotalCount { get; set; }
+    }
+
     public class AuthorNameDto
     {
         public string FirstName { get; set; }

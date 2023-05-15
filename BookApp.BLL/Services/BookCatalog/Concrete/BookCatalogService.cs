@@ -23,12 +23,11 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
 
         public BookListCombinedDto GetList(PageOptionsIn pageOptionsIn)
         {
-            int booksNum = bookCatalogDbAccess.GetCount(pageOptionsIn);
+            BookCatalogListDto books = bookCatalogDbAccess.GetList(pageOptionsIn);
             int pageSize = pageOptionsIn.PageSize;
-            int pageCount = (booksNum / pageSize)
-                + (booksNum % pageSize > 0 ? 1 : 0);
+            int pageCount = (books.TotalCount / pageSize)
+                + (books.TotalCount % pageSize > 0 ? 1 : 0);
 
-            var books = bookCatalogDbAccess.GetList(pageOptionsIn);
             var tags = bookCatalogDbAccess.GetTags();
             var result = new BookListCombinedDto
             {
@@ -40,7 +39,7 @@ namespace BookApp.BLL.Services.BookCatalog.Concrete
                     SortOption = pageOptionsIn.SortOption,
                     FilterTag = pageOptionsIn.FilterTag
                 },
-                Books = books,
+                Books = books.Items,
                 Tags = tags
             };
             return result;

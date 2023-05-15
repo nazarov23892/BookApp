@@ -9,8 +9,7 @@ namespace BookApp.BLL.Services.BookCatalog
     public interface IBookCatalogDbAccess
     {
         BookDetailsDto GetItem(Guid bookId);
-        IEnumerable<BookCatalogDto> GetList(PageOptionsIn pageOptionsIn);
+        BookCatalogListDto GetList(PageOptionsIn pageOptionsIn);
         IEnumerable<BookListTagDto> GetTags();
-        int GetCount(PageOptionsIn pageOptionsIn);
     }
 }

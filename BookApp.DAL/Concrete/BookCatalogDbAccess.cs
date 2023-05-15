@@ -20,16 +20,6 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
-        public int GetCount(PageOptionsIn pageOptionsIn)
-        {
-            return efDbContext.Books
-            .AsNoTracking()
-            .FilterByTag(pageOptionsIn.FilterTag)
-            .MapToBookCatalogDto()
-            .OrderBooksBy(pageOptionsIn.SortOption)
-            .Count();
-        }
-
         public BookDetailsDto GetItem(Guid bookId)
         {
             return efDbContext.Books
@@ -38,17 +28,20 @@ namespace BookApp.DAL.Concrete
                 .SingleOrDefault(b => b.BookId == bookId);
         }
 
-        public IEnumerable<BookCatalogDto> GetList(PageOptionsIn pageOptionsIn)
+        public BookCatalogListDto GetList(PageOptionsIn pageOptionsIn)
         {
-            return efDbContext.Books
-            .AsNoTracking()
-            .FilterByTag(pageOptionsIn.FilterTag)
-            .MapToBookCatalogDto()
-            .OrderBooksBy(pageOptionsIn.SortOption)
-            .Paging(
-                pageNumZeroStart: pageOptionsIn.Page - 1,
-                pageSize: pageOptionsIn.PageSize)
-            .ToArray();
+            var query = efDbContext.Books
+                .AsNoTracking()
+                .FilterByTag(pageOptionsIn.FilterTag);
+            int count = query.Count();
+            var list = query
+                .MapToBookCatalogDto()
+                .OrderBooksBy(pageOptionsIn.SortOption)
+                .Paging(
+                    pageNumZeroStart: pageOptionsIn.Page - 1,
+                    pageSize: pageOptionsIn.PageSize)
+                .ToArray();
+            return new BookCatalogListDto { Items = list, TotalCount = count };
         }
 
         public IEnumerable<BookListTagDto> GetTags()
@@ -60,7 +53,7 @@ namespace BookApp.DAL.Concrete
                     TagId = t.TagId,
                     TagText = t.Text
                 })
-                .OrderBy(t=>t.TagText)
+                .OrderBy(t => t.TagText)
                 .ToList();
         }
     }
