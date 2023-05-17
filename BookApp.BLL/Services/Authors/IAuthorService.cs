@@ -9,7 +9,7 @@ namespace BookApp.BLL.Services.Authors
 {
     public interface IAuthorService: IServiceErrors
     {
-        IEnumerable<AuthorListItemDto> GetAuthors();
+        IEnumerable<AuthorListItemDto> GetAuthors(PageOptions pageOptions);
 
         Guid CreateAuthor(AuthorCreateDto newAuthor);
     }

@@ -17,9 +17,9 @@ namespace WebApplication.Areas.contentmanager.Controllers
             this.authorService = authorService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(PageOptions pageOptions)
         {
-            IEnumerable<AuthorListItemDto> authors = authorService.GetAuthors();
+            IEnumerable<AuthorListItemDto> authors = authorService.GetAuthors(pageOptions);
             return View(model: authors);
         }
 

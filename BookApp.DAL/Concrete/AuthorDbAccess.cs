@@ -19,8 +19,20 @@ namespace BookApp.DAL.Concrete
             this.efDbContext = efDbContext;
         }
 
-        public IEnumerable<AuthorListItemDto> GetAuthors()
+        public IEnumerable<AuthorListItemDto> GetAuthors(int pageStartsZero, int pageSize)
         {
+            if (pageStartsZero < 0)
+            {
+                throw new ArgumentException(
+                    message: "cannot be less than zero", 
+                    paramName: nameof(pageStartsZero));
+            }
+            if (pageSize <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    message: "cannot be less or equal zero",
+                    paramName: nameof(pageSize));
+            }
             var authors = efDbContext.Authors
                 .AsNoTracking()
                 .Select(a => new AuthorListItemDto
@@ -29,6 +41,8 @@ namespace BookApp.DAL.Concrete
                     Firstname = a.Firstname,
                     Lastname = a.Lastname
                 })
+                .Skip(count: pageStartsZero * pageSize)
+                .Take(count: pageSize)
                 .ToArray();
             return authors;
         }

@@ -9,7 +9,7 @@ namespace BookApp.BLL.Services.Authors
 {
     public interface IAuthorDbAccess
     {
-        IEnumerable<AuthorListItemDto> GetAuthors();
+        IEnumerable<AuthorListItemDto> GetAuthors(int pageStartsZero, int pageSize);
         void StoreAuthor(Author newAuthor);
     }
 }
