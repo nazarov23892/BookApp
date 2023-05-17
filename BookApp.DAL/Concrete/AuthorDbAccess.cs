@@ -47,6 +47,12 @@ namespace BookApp.DAL.Concrete
             return authors;
         }
 
+        public int GetAuthorsCount()
+        {
+            return efDbContext.Authors
+                .Count();
+        }
+
         public void StoreAuthor(Author newAuthor)
         {
             efDbContext.Authors.Add(newAuthor);

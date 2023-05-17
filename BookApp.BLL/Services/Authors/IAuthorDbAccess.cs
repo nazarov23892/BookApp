@@ -10,6 +10,7 @@ namespace BookApp.BLL.Services.Authors
     public interface IAuthorDbAccess
     {
         IEnumerable<AuthorListItemDto> GetAuthors(int pageStartsZero, int pageSize);
+        int GetAuthorsCount();
         void StoreAuthor(Author newAuthor);
     }
 }

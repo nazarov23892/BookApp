@@ -17,10 +17,10 @@ namespace WebApplication.Areas.contentmanager.Controllers
             this.authorService = authorService;
         }
 
-        public IActionResult Index(PageOptions pageOptions)
+        public IActionResult Index(PageOptionsIn pageOptions)
         {
-            IEnumerable<AuthorListItemDto> authors = authorService.GetAuthors(pageOptions);
-            return View(model: authors);
+            var authorsDto = authorService.GetAuthors(pageOptions);
+            return View(model: authorsDto);
         }
 
         [HttpGet]

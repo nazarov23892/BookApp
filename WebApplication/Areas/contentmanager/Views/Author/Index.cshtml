@@ -1,5 +1,5 @@
 ﻿@using BookApp.BLL.Services.Authors
-@model IEnumerable<AuthorListItemDto>
+@model AuthorListCombinedDto
 @{ 
     ViewBag.Title = "Authors";
 }
@@ -11,7 +11,7 @@
         <th>firstname</th>
         <th>lastname</th>
     </tr>
-    @foreach (var author in Model ?? Enumerable.Empty<AuthorListItemDto>())
+    @foreach (var author in Model.Authors ?? Enumerable.Empty<AuthorListItemDto>())
     {
         <tr>
             <td>@author.Firstname</td>
@@ -26,4 +26,20 @@
        class="btn btn-primary">
         Create
     </a>
+</div>
+<br />
+<div>
+    @for (int i = 1; i <= Model.PageOptions.PageCount; i++)
+    {
+        if (i > 1)
+        {
+            <text>|</text>
+        }
+        <a asp-action="Index"
+           asp-controller="Author"
+           asp-area="contentmanager"
+           asp-route-page="@i">
+            @i
+        </a>
+    }
 </div>

@@ -29,11 +29,25 @@ namespace BookApp.BLL.Services.Authors.Concrete
             return author.AuthorId;
         }
 
-        public IEnumerable<AuthorListItemDto> GetAuthors(PageOptions pageOptions)
+        public AuthorListCombinedDto GetAuthors(PageOptionsIn pageOptions)
         {
-            return authorDbAccess.GetAuthors(
+            int totalCount = authorDbAccess.GetAuthorsCount();
+            int pagesCount = (totalCount / pageOptions.PageSize)
+                + (totalCount % pageOptions.PageSize > 0 ? 1 : 0);
+            var authors = authorDbAccess.GetAuthors(
                 pageStartsZero: pageOptions.Page - 1,
                 pageSize: pageOptions.PageSize);
+
+            return new AuthorListCombinedDto
+            {
+                Authors = authors,
+                PageOptions = new PageOptionsOut
+                {
+                    Page = pageOptions.Page,
+                    PageSize = pageOptions.PageSize,
+                    PageCount = pagesCount
+                }
+            };
         }
     }
 }
